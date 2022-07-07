@@ -1,7 +1,7 @@
 import { createGlobalStyle } from 'styled-components';
 import { reset } from 'styled-reset';
-import EliceBold from './fonts/EliceDigitalBaeumOTF_Bold.woff';
-import EliceRegular from './fonts/EliceDigitalBaeumOTF_Regular.woff';
+import EliceBold from '@assets/fonts/EliceDigitalBaeumOTF_Bold.woff';
+import EliceRegular from '@assets/fonts/EliceDigitalBaeumOTF_Regular.woff';
 
 const GlobalStyle = createGlobalStyle`
   ${reset};
