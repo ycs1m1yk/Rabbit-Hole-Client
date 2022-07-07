@@ -3,18 +3,19 @@ import SelectBox from '../components/selectBox';
 
 export default function Home() {
   const selectItem: string[] = ['Own Data', 'Home', 'Select', 'My Page'];
-  const [selectedOption, SetSelectedOption] = useState('페이지 선택');
+  const [selectedOption, SetSelectedOption] = useState('');
 
-  const handleSelectedOptionClick = (e) => console.log(e);
+  const handleSelectedOptionClick = (option) => console.log(option);
   return (
     <>
       <div>Home</div>
       <SelectBox
         options={selectItem}
-        defaultValue={selectedOption}
+        defaultValue="페이지 선택"
+        selectedOption={selectedOption}
         setSelectedOption={SetSelectedOption}
         width={250}
-        handleSelectOptionClick={handleSelectedOptionClick}
+        requestFunc={handleSelectedOptionClick}
       />
     </>
   );

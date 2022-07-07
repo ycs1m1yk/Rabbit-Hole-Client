@@ -1,5 +1,5 @@
 import React, {
-  Dispatch, KeyboardEvent, MouseEvent, SetStateAction, useRef,
+  Dispatch, MouseEvent, SetStateAction, useRef,
 } from 'react';
 import styled from 'styled-components';
 import useSelect from '../hooks/useSelect';
@@ -35,51 +35,57 @@ const SelectItem = styled.option`
 interface ISelectBoxProps {
   options: string[];
   defaultValue: string;
+  selectedOption: string;
   setSelectedOption: Dispatch<SetStateAction<string>>;
   width: string | number;
-  handleSelectOptionClick: any;
+  requestFunc: any;
 }
+
+/**
+ * @param {string[]} options 설정하려는 select box의 option 배열
+ * @param {string} defaultValue select box의 기본 값
+ * @param {string} selectedOption 현재 선택한 option, 호출하는 컴포넌트에서 option 상태 관리
+ * @param {string | number} width select box를 감싸고 있는 label의 넓이
+ * @param {Dispatch<SetStateAction<string>>} setSelectedOption 선택한 option값으로 변경해주는 함수,
+ * 호출하는 컴포넌트에서 option 상태 관리
+ * @param {any} requestFunc 현재 선택한 option의 값을 인자로 요청하려는 함수
+ */
 
 function SelectBox({
   options,
   defaultValue,
+  selectedOption,
   setSelectedOption,
   width,
-  handleSelectOptionClick,
+  requestFunc,
 }: ISelectBoxProps) {
   const labelRef = useRef<HTMLLabelElement>(null);
-  const [clickSelectedBox, setClickSelectedBox] = useSelect(labelRef); // 선택된 option이 있는지 여부 체크
+  const [clickSelectedBox, setClickSelectedBox] = useSelect(labelRef); // SelectBox가 클릭됐는지 여부 체크
 
+  // SelectBox 클릭 이벤트 핸들러
   const handleOpenSelectBox = (e: MouseEvent) => {
     e.preventDefault();
     setClickSelectedBox(true);
   };
 
-  const handleKeyDown = (e: KeyboardEvent) => {
-    if (!e.code) return;
-    if (e.code === 'Enter' || e.code === 'Space') {
-      setClickSelectedBox(true);
-    }
-  };
+  // requestFunc로 넘어온 API 요청 등을 여기서 처리
+  const handleSelectItemClick = (e: any) => {
+    const optionValue = e.target.value; // 선택한 option
 
-  const handleSelectBox = (e: any, option?: string) => {
-    const optionValue = option || e.target.value;
-    setSelectedOption(optionValue);
+    setSelectedOption(optionValue); // 선택된 Option Value 설정
+    setClickSelectedBox(false); // Option 선택하면 Select Box 닫기
 
-    setClickSelectedBox(false);
-    handleSelectOptionClick(optionValue);
+    requestFunc(optionValue); // 선택된 Option을 인자로 요청 함수 실행
   };
 
   return (
     <Label
-      tabIndex={0}
-      role="group"
       width={width}
       ref={labelRef}
-      onKeyDown={handleKeyDown}
       onMouseDown={handleOpenSelectBox}
     >
-      <Select value={defaultValue} onChange={handleSelectBox}>
+      <Select value={selectedOption} onChange={handleSelectItemClick}>
+        <option>{defaultValue}</option>
         {options.map((option) => (
           <option key={option} value={option}>
             {option}
@@ -91,7 +97,7 @@ function SelectBox({
           {options.map((option) => (
             <SelectItem
               key={option}
-              onClick={(e) => handleSelectBox(e, option)}
+              onClick={handleSelectItemClick}
             >
               {option}
             </SelectItem>
