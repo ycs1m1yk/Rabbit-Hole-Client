@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import SelectBox from '../components/selectBox';
 
 export default function Home() {
-  const selectItem: string[] = ['Own Data', 'Home', 'Select', 'My Page'];
+  const selectItem: string[] = ['Own Data', 'Home', 'Select', 'My Page', 'My Page', 'My Page'];
   const [selectedOption, SetSelectedOption] = useState('');
 
   const handleSelectedOptionClick = (option) => console.log(option);

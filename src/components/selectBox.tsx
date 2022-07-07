@@ -86,17 +86,17 @@ function SelectBox({
     >
       <Select value={selectedOption} onChange={handleSelectItemClick}>
         <option>{defaultValue}</option>
-        {options.map((option) => (
-          <option key={option} value={option}>
+        {options.map((option, i) => (
+          <option key={String(i) + option} value={option}>
             {option}
           </option>
         ))}
       </Select>
       {clickSelectedBox && (
         <SelectItemContainer>
-          {options.map((option) => (
+          {options.map((option, i) => (
             <SelectItem
-              key={option}
+              key={String(i) + option}
               onClick={handleSelectItemClick}
             >
               {option}
