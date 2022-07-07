@@ -2,7 +2,7 @@ import React, {
   Dispatch, MouseEvent, SetStateAction, useRef,
 } from 'react';
 import styled from 'styled-components';
-import useSelect from '../hooks/useSelect';
+import useSelect from '@hooks/useSelect';
 
 const Label = styled.label<{ width: number | string }>`
   position: relative;
