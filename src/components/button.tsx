@@ -74,7 +74,7 @@ const defaultProps = {
   outline: false,
 };
 
-function Button({
+export default function Button({
   children, size = 'medium', outline = false, onClick,
 }:ButtonProps) {
   return (
@@ -89,5 +89,3 @@ function Button({
 }
 
 Button.defaultProps = defaultProps;
-
-export default Button;
