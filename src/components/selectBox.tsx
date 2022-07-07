@@ -8,7 +8,7 @@ const Label = styled.label<{ width: number | string }>`
   position: relative;
   display: inline-block;
   width: ${({ width }) => (typeof width === 'string' ? width : `${width}px`)};
-
+  
   margin: 100px;
 `;
 
@@ -16,12 +16,18 @@ const Select = styled.select`
   padding: 1rem;
   width: 100%;
   outline: none;
+  border: none;
+  border-bottom: 1px solid black;
   border-radius: 4px;
   cursor: pointer;
+  font-size: 2rem;
 `;
 
 const SelectItemContainer = styled.div`
+  margin-top: 0.5rem;
   border: 1px solid black;
+  border-radius: 5px;
+  box-shadow: 0px 4px 13px rgba(0, 0, 0, 0.25);
 `;
 
 const SelectItem = styled.option`
@@ -29,7 +35,13 @@ const SelectItem = styled.option`
   font-size: 2rem;
   cursor: pointer;
   border-bottom: 1px solid black;
-  margin: 1rem;
+  
+  :not(:last-child) {
+    margin: 1rem 0rem;
+  }
+  :hover {
+    color: ${(props) => props.theme.palette.eliceViolet}
+  }
 `;
 
 interface ISelectBoxProps {
@@ -61,6 +73,7 @@ function SelectBox({
 }: ISelectBoxProps) {
   const labelRef = useRef<HTMLLabelElement>(null);
   const [clickSelectedBox, setClickSelectedBox] = useSelect(labelRef); // SelectBox가 클릭됐는지 여부 체크
+  // const selectRef = useRef<HTMLSelectElement>(null);
 
   // SelectBox 클릭 이벤트 핸들러
   const handleOpenSelectBox = (e: MouseEvent) => {
