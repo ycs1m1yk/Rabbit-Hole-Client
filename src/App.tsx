@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Footer from './components/footer';
 
 import Board from './pages/board';
 import Home from './pages/home';
@@ -17,6 +18,7 @@ function App() {
         <Route path="/projects" element={<Projects />} />
         <Route path="/mypage" element={<Mypage />} />
       </Routes>
+      <Footer />
     </BrowserRouter>
   );
 }
