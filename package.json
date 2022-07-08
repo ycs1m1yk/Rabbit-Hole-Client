@@ -12,9 +12,17 @@
     "@rollup/plugin-alias": "^3.1.9",
     "@vitejs/plugin-react": "^1.3.2",
     "path": "^0.12.7",
+<<<<<<< HEAD
+=======
+    "polished": "^4.2.2",
+>>>>>>> 7e3445898385f58c04a781492505fa5c66131caa
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
+    "react-hook-form": "^7.33.1",
+    "react-icons": "^4.4.0",
+    "react-query": "^3.39.1",
     "react-router-dom": "^6.3.0",
+    "recoil": "^0.7.4",
     "styled-components": "^5.3.5",
     "styled-reset": "^4.4.2",
     "vite": "^2.9.9"
