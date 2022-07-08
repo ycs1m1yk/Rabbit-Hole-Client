@@ -7,7 +7,8 @@ interface ButtonProps{
   size?: string,
   outline?: boolean,
   // eslint-disable-next-line no-unused-vars
-  onClick: (event: React.MouseEvent<HTMLDivElement>)=>void;
+  onClick: (event: React.MouseEvent<HTMLDivElement>)=>void,
+  fullSize?: boolean,
 }
 
 interface SizeProps{
@@ -19,16 +20,16 @@ interface SizeProps{
 
 const sizes:SizeProps = {
   large: {
-    height: '5rem',
-    fontSize: '2.2rem',
+    height: '4.8rem',
+    fontSize: '2rem',
   },
   medium: {
-    height: '4rem',
-    fontSize: '1.5rem',
+    height: '3.6rem',
+    fontSize: '1.6rem',
   },
   small: {
-    height: '3rem',
-    fontSize: '1rem',
+    height: '2.8rem',
+    fontSize: '1.4rem',
   },
 };
 
@@ -40,7 +41,7 @@ const sizeStyles = css`
 `;
 
 const StyledButton = styled.div<ButtonProps>`
-
+  width: ${(props) => props.fullSize && '100%'};
   display: inline-flex;
   justify-content: center;
   align-items: center;
@@ -72,16 +73,18 @@ const StyledButton = styled.div<ButtonProps>`
 const defaultProps = {
   size: 'medium',
   outline: false,
+  fullSize: false,
 };
 
 export default function Button({
-  children, size = 'medium', outline = false, onClick,
+  children, size = 'medium', outline = false, onClick, fullSize = false,
 }:ButtonProps) {
   return (
     <StyledButton
       size={size}
       outline={outline}
       onClick={onClick}
+      fullSize={fullSize}
     >
       {children}
     </StyledButton>
