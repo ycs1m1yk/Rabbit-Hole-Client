@@ -6,6 +6,7 @@ const RegisterFormContainer = styled.div``;
 
 const ModalTitle = styled.h1`
   margin-bottom: 1rem;
+  text-align: center;
 `;
 
 const StyledRegisterForm = styled.form`

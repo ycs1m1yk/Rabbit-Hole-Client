@@ -25,6 +25,16 @@ const DialogBox = styled.dialog<{width: number, height: number}>`
   font-size: 2rem;
 `;
 
+const CloseButton = styled.button`
+  position: relative;
+  top: -1%;
+  right: -50%;
+  border: none;
+  background-color: inherit;
+  font-size: 2rem;
+  cursor: pointer;
+`;
+
 const Backdrop = styled.div`
   width: 100vw;
   height: 100vh;
@@ -59,7 +69,10 @@ function Modal({
   };
   return (
     <ModalContainer>
-      <DialogBox width={width} height={height}>{children}</DialogBox>
+      <DialogBox width={width} height={height}>
+        <CloseButton onClick={handleModalClick}>☓</CloseButton>
+        {children}
+      </DialogBox>
       <Backdrop onClick={handleModalClick} />
     </ModalContainer>
   );
