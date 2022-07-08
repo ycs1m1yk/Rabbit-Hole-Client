@@ -30,6 +30,7 @@ const StyledRegisterInput = styled.input`
   margin: 1rem 0rem;
   border-radius: 5px;
   border: 1px solid ${(props) => props.theme.palette.eliceViolet};
+  padding: 0.5rem;
 `;
 
 const SubmitButton = styled.button`
