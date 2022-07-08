@@ -41,6 +41,16 @@ const Posts = styled.div`
   justify-content: center;
   align-items: flex-start;
 `;
+
+const EmptyField = styled.p`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 40px;
+  font-weight: 700;
+  color: ${({ theme }) => theme.palette.black};
+`;
+
 interface postInterface{
   articleId:string;
   author:string;
@@ -63,7 +73,7 @@ export default function PostList({ posts } :postList) {
         <Alignment>인기순</Alignment>
       </Alignments>
       <Posts>
-        { posts && posts.map((post) => (
+        { posts.length > 0 ? posts.map((post) => (
           <PostItem
             key={post.articleId}
             profile={post.author}
@@ -73,7 +83,7 @@ export default function PostList({ posts } :postList) {
             comment={post.comment}
             heart={post.likes}
           />
-        )) }
+        )) : <EmptyField>게시물이 존재하지 않습니다.</EmptyField> }
       </Posts>
     </Container>
   );
