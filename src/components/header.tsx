@@ -1,5 +1,6 @@
 import React, { MouseEvent, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import { lighten } from 'polished';
 import styled from 'styled-components';
 import Logo from '@components/logo';
 import Search from '@components/search';
@@ -61,7 +62,7 @@ const StyledLink = styled(Link)`
     color: ${(props) => props.theme.palette.eliceViolet}
   }
   :hover {
-    background-color: #f9fafc
+    background-color: ${(props) => lighten(0.5, props.theme.palette.eliceViolet)};;
   }
 `;
 
