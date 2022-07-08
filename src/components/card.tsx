@@ -9,6 +9,10 @@ const Container = styled.div`
   border: 1px solid ${({ theme }): string => theme.palette.borderGray};
   background-color: #fff;
   margin: 2rem;
+
+  & :hover{
+    opacity: 80%;
+  }
 `;
 
 const Header = styled.div`
@@ -113,20 +117,20 @@ const LikeCount = styled.span`
 `;
 
 interface cardProps {
-  profileImg: string;
+  authorImage: string;
   title: string;
-  profileName: string;
+  author: string;
   content: string;
-  thumbnailImg: string;
+  thumbnail: string;
   like: number;
 }
 
 export default function Card({
-  profileImg,
+  authorImage,
   title,
-  profileName,
+  author,
   content,
-  thumbnailImg,
+  thumbnail,
   like,
 }: cardProps) {
   const handleClick = ():void => {
@@ -136,13 +140,13 @@ export default function Card({
   return (
     <Container onClick={handleClick}>
       <Header>
-        <ProfileImg src={profileImg} />
+        <ProfileImg src={authorImage} />
         <HeaderText>
           <Title>{title}</Title>
-          <ProfileInfo>{profileName}</ProfileInfo>
+          <ProfileInfo>{author}</ProfileInfo>
         </HeaderText>
       </Header>
-      <ThumbnailImg src={thumbnailImg} />
+      <ThumbnailImg src={thumbnail} />
       <Main>
         <Body>{content}</Body>
       </Main>
