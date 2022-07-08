@@ -71,8 +71,9 @@ const boardListMock = [
 ];
 
 const Container = styled.aside`
-    min-width: 130px;
-    width: 100%;
+    font-size: 1.6rem;
+    min-width: 13rem;
+    width: 30rem;
     height: 100%;
     display: flex;
     border-right: 1px solid ${(props) => props.theme.palette.borderGray};
@@ -86,21 +87,22 @@ const List = styled.ul`
 `;
 
 const BoardItem = styled.li<{selected: boolean}>`
-    margin: 20px auto;
-    height: 1rem;
+    margin: 2rem auto;
+    height: 1.6rem;
     width: 50%;
     cursor: pointer;
     color: ${(props) => (props.selected ? props.theme.palette.eliceViolet : props.theme.palette.gray)};
     &:hover{
-        font-size:1.05rem;
+        font-size:1.65rem;
         color: ${(props) => props.theme.palette.eliceViolet};
     }
 `;
 
 const MyPageItem = styled.li<{selected: boolean}>`
     width: 100%;
-    height: 30px;
-    margin: 5px 0;
+    height: 5rem;
+    margin: 1rem 0;
+    font-size: 1.8rem;
     border-radius: 5px;
     cursor: pointer;
     display: flex;
