@@ -53,16 +53,6 @@ interface ISelectBoxProps {
   requestFunc: any;
 }
 
-/**
- * @param {string[]} options 설정하려는 select box의 option 배열
- * @param {string} defaultValue select box의 기본 값
- * @param {string} selectedOption 현재 선택한 option, 호출하는 컴포넌트에서 option 상태 관리
- * @param {string | number} width select box를 감싸고 있는 label의 넓이
- * @param {Dispatch<SetStateAction<string>>} setSelectedOption 선택한 option값으로 변경해주는 함수,
- * 호출하는 컴포넌트에서 option 상태 관리
- * @param {any} requestFunc 현재 선택한 option의 값을 인자로 요청하려는 함수
- */
-
 function SelectBox({
   options,
   defaultValue,
