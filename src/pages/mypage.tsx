@@ -1,8 +1,9 @@
-import RegisterForm from '@/components/forms/registerForm';
 import React, { useCallback, useState } from 'react';
 import styled from 'styled-components';
 
-import Modal from '../components/modal';
+import Modal from '@components/modal';
+import RegisterForm from '@/components/forms/registerForm';
+import LoginDialog from '@/components/forms/loginDialog';
 
 const Main = styled.main`
   width: 100%;
@@ -44,8 +45,9 @@ export default function Mypage() {
     <Main>
       <Title>여긴 배경화면 입니다</Title>
       {isOpenModal && (
-        <Modal modalHandler={onClickToggleModal} width={400} height={600}>
-          <RegisterForm />
+        <Modal modalHandler={onClickToggleModal} width={400} height={400}>
+          {/* <RegisterForm /> */}
+          <LoginDialog />
         </Modal>
       )}
       <DialogButton onClick={onClickToggleModal}>Open Modal</DialogButton>
