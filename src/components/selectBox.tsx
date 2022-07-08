@@ -31,11 +31,11 @@ const SelectItemContainer = styled.div`
 `;
 
 const SelectItem = styled.option`
-  height: 2rem;
+  height: 2.5rem;
   font-size: 2rem;
   cursor: pointer;
   border-bottom: 1px solid black;
-  
+  padding: 0rem 1rem;
   :not(:last-child) {
     margin: 1rem 0rem;
   }

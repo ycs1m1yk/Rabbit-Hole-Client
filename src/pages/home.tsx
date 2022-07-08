@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import SelectBox from '../components/selectBox';
 
 export default function Home() {
-  const selectItem: string[] = ['1', '2', '332131231', '4', '54324234234', '6'];
+  const selectItem: string[] = ['1', '2', '33213121', '4', '54324234234', '6'];
   const [selectedOption, SetSelectedOption] = useState('');
 
   // API 요청 테스트
