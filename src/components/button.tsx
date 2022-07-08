@@ -48,7 +48,7 @@ const StyledButton = styled.div<ButtonProps>`
   padding-left: 1rem;
   padding-right: 1rem;
   font-family: 'EliceBold';
-  border-radius: 2px;
+  border-radius: 4px;
   ${(props) => (props.outline
     ? css`
       color: ${props.theme.palette.eliceViolet};
