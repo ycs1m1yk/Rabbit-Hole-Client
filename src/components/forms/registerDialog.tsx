@@ -10,7 +10,7 @@ const ModalTitle = styled.h1`
 
 const ModalContent = styled.div``;
 
-const LoginDialog = () => {
+const RegisterDialog = () => {
   return <Container>
     <ModalTitle>로그인</ModalTitle>
     {/* Logo Component*/}
@@ -19,4 +19,4 @@ const LoginDialog = () => {
   </Container>;
 }
 
-export default LoginDialog;
+export default RegisterDialog;

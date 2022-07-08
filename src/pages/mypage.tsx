@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import Modal from '@components/modal';
 import RegisterForm from '@/components/forms/registerForm';
 import LoginDialog from '@/components/forms/loginDialog';
+import RegisterDialog from "@components/forms/registerDialog";
 
 const Main = styled.main`
   width: 100%;
@@ -47,7 +48,8 @@ export default function Mypage() {
       {isOpenModal && (
         <Modal modalHandler={onClickToggleModal} width={400} height={400}>
           {/* <RegisterForm /> */}
-          <LoginDialog />
+          {/* <LoginDialog /> */}
+          <RegisterDialog />
         </Modal>
       )}
       <DialogButton onClick={onClickToggleModal}>Open Modal</DialogButton>
