@@ -50,13 +50,6 @@ interface IModalProps {
   height: number;
 }
 
-/**
- *
- * @param {() => void} modalHandler Modal을 trigger 시키는 함수
- * @param {number} width Modal의 가로 크기
- * @param {number} height Modal의 세로 크기
- */
-
 function Modal({
   modalHandler, width, height, children,
 }: PropsWithChildren<IModalProps>) {

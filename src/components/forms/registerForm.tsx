@@ -30,7 +30,14 @@ const StyledRegisterInput = styled.input`
   margin: 1rem 0rem;
   border-radius: 5px;
   border: 1px solid ${(props) => props.theme.palette.eliceViolet};
-  padding: 0.5rem;
+  padding-left: 0.5rem;
+`;
+
+const DiscordImageInput = styled.input`
+  width: 100%;
+  height: 2.5rem;
+  margin: 1rem 0rem;
+  border-radius: 5px;
 `;
 
 const SubmitButton = styled.button`
@@ -73,7 +80,7 @@ function RegisterForm() {
         <StyledRegisterInput {...register('blogAddress')} placeholder="ex:https://myblog.com" />
         <InputTitle>Discord 인증 이미지</InputTitle>
         <DiscordDescription>본인이 속해 있는 트랙의 디스코드 채널을 캡처해서 업로드 해주세요:)</DiscordDescription>
-        <StyledRegisterInput {...register('authImage', { required: true })} type="file" />
+        <DiscordImageInput {...register('authImage', { required: true })} type="file" />
         <SubmitButton>입력 완료</SubmitButton>
       </StyledRegisterForm>
     </RegisterFormContainer>
