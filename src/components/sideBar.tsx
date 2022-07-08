@@ -76,7 +76,6 @@ const Container = styled.aside`
     width: 30rem;
     height: 100%;
     display: flex;
-    border-right: 1px solid ${(props) => props.theme.palette.borderGray};
     justify-content: center;
 `;
 
