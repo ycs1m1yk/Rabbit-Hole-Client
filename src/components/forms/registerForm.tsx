@@ -11,11 +11,11 @@ const ModalTitle = styled.h1`
 const StyledRegisterForm = styled.form`
   display: flex;
   flex-direction: column;
-  
 `;
 
 const InputTitle = styled.div`
   font-size: 1.5rem;
+  font-weight: bold;
 `;
 
 const DiscordDescription = styled.div`
@@ -25,11 +25,20 @@ const DiscordDescription = styled.div`
 
 const StyledRegisterInput = styled.input`
   width: 100%;
+  height: 2.5rem;
   margin: 1rem 0rem;
   border-radius: 5px;
+  border: 1px solid ${(props) => props.theme.palette.eliceViolet};
 `;
 
-const SubmitButton = styled.button``;
+const SubmitButton = styled.button`
+  width: 8rem;
+  margin: 1rem auto;
+  color: white;
+  background-color: ${(props) => props.theme.palette.eliceViolet};
+  padding: 0.8rem;
+  border-radius: 5px;
+`;
 
 function RegisterForm() {
   const { register, handleSubmit } = useForm();
@@ -62,7 +71,7 @@ function RegisterForm() {
         <StyledRegisterInput {...register('blogAddress')} placeholder="ex:https://myblog.com" />
         <InputTitle>Discord 인증 이미지</InputTitle>
         <DiscordDescription>본인이 속해 있는 트랙의 디스코드 채널을 캡처해서 업로드 해주세요:)</DiscordDescription>
-        <StyledRegisterInput {...register('authImage', { required: true })} placeholder="authImage" />
+        <StyledRegisterInput {...register('authImage', { required: true })} type="file" />
         <SubmitButton>입력 완료</SubmitButton>
       </StyledRegisterForm>
     </RegisterFormContainer>

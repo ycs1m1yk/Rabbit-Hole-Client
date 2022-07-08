@@ -44,7 +44,7 @@ export default function Mypage() {
     <Main>
       <Title>여긴 배경화면 입니다</Title>
       {isOpenModal && (
-        <Modal modalHandler={onClickToggleModal} width={400} height={520}>
+        <Modal modalHandler={onClickToggleModal} width={400} height={560}>
           <RegisterForm />
         </Modal>
       )}
