@@ -19,16 +19,16 @@ interface SizeProps{
 
 const sizes:SizeProps = {
   large: {
-    height: '3rem',
-    fontSize: '1.25rem',
+    height: '5rem',
+    fontSize: '2.2rem',
   },
   medium: {
-    height: '2.25rem',
-    fontSize: '1rem',
+    height: '4rem',
+    fontSize: '1.5rem',
   },
   small: {
-    height: '1.75rem',
-    fontSize: '0.875rem',
+    height: '3rem',
+    fontSize: '1rem',
   },
 };
 
