@@ -47,6 +47,7 @@ const SearchInput = styled.input`
 const defaultProps = {
   width: 300,
   height: 45,
+  submitHandler: () => console.log('임시 submit 핸들러'),
 };
 
 // TODO:
@@ -54,7 +55,7 @@ const defaultProps = {
 type SearchProps = {
     width?: number;
     height?: number;
-    submitHandler: () => void;
+    submitHandler?: () => void;
   } & typeof defaultProps
 
 export default function Search({ width, height, submitHandler }: SearchProps) {
