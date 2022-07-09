@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
 import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
@@ -50,7 +51,7 @@ const SubmitButton = styled.button`
 `;
 
 function RegisterForm() {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, formState } = useForm();
 
   // Form 데이터가 유효한 경우 호출되는 함수
   const onValid = (data: any) => {
@@ -59,7 +60,8 @@ function RegisterForm() {
 
   // Form 데이터가 유효하지 않은 경우 호출되는 함수
   const onInvalid = (data: any) => {
-    console.log('Invalid', data);
+    const errors = { ...formState.errors };
+    console.log(errors);
   };
 
   return (
@@ -67,20 +69,55 @@ function RegisterForm() {
       <ModalTitle>추가 정보 입력</ModalTitle>
       <StyledRegisterForm onSubmit={handleSubmit(onValid, onInvalid)}>
         <InputTitle>이름</InputTitle>
-        <StyledRegisterInput {...register('name', { required: true })} placeholder="ex:설재혁" />
+        <StyledRegisterInput
+          {...register('name', {
+            required: '이름은 필수 입력사항입니다:)',
+            maxLength: {
+              value: 5,
+              message: '이름은 5글자를 넘길 수 없습니다:)',
+            },
+          })}
+          placeholder="ex:설재혁"
+        />
         <InputTitle>엘리스 트랙명</InputTitle>
-        <StyledRegisterInput {...register('track', { required: true })} placeholder="ex:SW Engineer" />
+        <StyledRegisterInput {...register('track', { required: '트랙명은 필수 입력사항입니다:)' })} placeholder="ex:SW Engineer" />
         <InputTitle>엘리스 기수</InputTitle>
-        <StyledRegisterInput {...register('trackCardinalNumber', { required: true })} placeholder="ex:2기" />
+        <StyledRegisterInput
+          {...register('trackCardinalNumber', {
+            required: '기수는 필수 입력사항입니다:)',
+            pattern: {
+              value: /^[0-9]+$/,
+              message: '숫자만 입력 가능합니다:)',
+            },
+          })}
+          placeholder="ex:2"
+        />
         <InputTitle>전화번호</InputTitle>
-        <StyledRegisterInput {...register('phoneNumber', { required: true })} placeholder="ex:010-1234-5678" />
+        <StyledRegisterInput
+          {...register('phoneNumber', {
+            required: '전화번호는 필수 입력사항입니다:)',
+            pattern: {
+              value: /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/,
+              message: '전화번호 형식에 맞춰 입력해주세요:)',
+            },
+          })}
+          placeholder="ex:01012345678"
+        />
         <InputTitle>희망 포지션</InputTitle>
         <StyledRegisterInput {...register('position')} placeholder="ex:프론트엔드" />
         <InputTitle>블로그 주소</InputTitle>
-        <StyledRegisterInput {...register('blogAddress')} placeholder="ex:https://myblog.com" />
+        <StyledRegisterInput
+          {...register('blogAddress', {
+            pattern: {
+              value: /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/,
+              message: '올바른 형식의 주소를 입력해주세요:)',
+            },
+          })}
+          placeholder="ex:https://myblog.com"
+        />
         <InputTitle>Discord 인증 이미지</InputTitle>
         <DiscordDescription>본인이 속해 있는 트랙의 디스코드 채널을 캡처해서 업로드 해주세요:)</DiscordDescription>
-        <DiscordImageInput {...register('authImage', { required: true })} type="file" />
+        <DiscordImageInput {...register('authImage', { required: '인증 이미지는 필수 입력사항입니다:)' })} type="file" />
         <SubmitButton>입력 완료</SubmitButton>
       </StyledRegisterForm>
     </RegisterFormContainer>
