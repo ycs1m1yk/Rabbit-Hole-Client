@@ -50,10 +50,10 @@ const StyledLink = styled(Link)`
   align-items: center;
   justify-content: center;
   height: inherit;
-  padding: 1.6rem;
 
   font-weight: 600;
   font-size: 1.8rem;
+  white-space: nowrap;
 
   & + & {
     margin-left: 2rem;
