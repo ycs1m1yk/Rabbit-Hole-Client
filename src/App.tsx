@@ -6,6 +6,7 @@ import Home from '@pages/home';
 import Mentoring from '@pages/mentoring';
 import Mypage from '@pages/mypage';
 import Projects from '@pages/projects';
+import Footer from '@components/footer';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/projects" element={<Projects />} />
         <Route path="/mypage" element={<Mypage />} />
       </Routes>
+      <Footer />
     </BrowserRouter>
   );
 }
