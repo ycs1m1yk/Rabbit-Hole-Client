@@ -1,7 +1,7 @@
 // postList
 import React from 'react';
 import styled from 'styled-components';
-import PostItem from './postItem';
+import PostItem from '@components/postItem';
 
 const Container = styled.div`
   max-width: 800px;
