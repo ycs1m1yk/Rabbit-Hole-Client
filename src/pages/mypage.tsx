@@ -1,7 +1,5 @@
 import React from 'react';
 
 export default function Mypage() {
-  return (
-    <div>Mypage</div>
-  );
+  return <div>My Page</div>;
 }
