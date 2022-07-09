@@ -85,7 +85,7 @@ export default function Header() {
   return (
     <StyledHeader onClick={handleClick}>
       <Link to="/">
-        <Logo />
+        <Logo width={210} heigth={74} />
       </Link>
       <Nav>
         <StyledLink to="/board">게시판</StyledLink>
