@@ -1,3 +1,4 @@
+/* eslint no-underscore-dangle: 0 */
 import React from 'react';
 import styled from 'styled-components';
 
@@ -48,92 +49,141 @@ const Checkbox = styled.input`
 `;
 
 interface articleObj{
-  articleNumber: number;
+  type: 'article';
+  articleId: string;
   title: string;
-  date: string;
-}
-interface mentoringObj{
-  mentee: string;
-  phone: string;
-  email: string;
-  content: string;
-  date: string;
-}
-interface projectObj{
-  projectNumber: number;
-  title: string;
-  date: string;
-}
-interface TableProps{
-  type: string;
-  items: articleObj[] | mentoringObj[] | projectObj[];
+  createdAt: Date;
 }
 
-export default function Table({ type, items }:TableProps) {
+// interface mentoringObj{
+//   type: 'mentoring';
+//   username: string;
+//   phone: string;
+//   email: string;
+//   content: string;
+//   createdAt: Date;
+// }
+interface projectObj{
+  type: 'project';
+  _id: string;
+  title: string;
+  createdAt: Date;
+}
+interface TableProps{
+  items: articleObj[] | projectObj[];
+}
+
+export default function Table({ items }:TableProps) {
+  const padTo2Digits = (num: number):string => num.toString().padStart(2, '0');
+
+  const formatDate = (date: Date):string => (
+    `${[
+      date.getFullYear(),
+      padTo2Digits(date.getMonth() + 1),
+      padTo2Digits(date.getDate()),
+    ].join('-')
+    } ${
+      [
+        padTo2Digits(date.getHours()),
+        padTo2Digits(date.getMinutes()),
+        padTo2Digits(date.getSeconds()),
+      ].join(':')}`
+  );
+
+  const clickHandler = (item : articleObj | projectObj) => {
+    console.log('디테일 이동', item);
+  };
+
   return (
-    <TableContainer>
-      {type === 'article' && (
-      <colgroup>
-        <col width="5%" />
-        <col width="10%" />
-        <col width="65%" />
-        <col width="20%" />
-      </colgroup>
-      )}
-      {type === 'mentoring' && (
-      <colgroup>
-        <col width="5%" />
-        <col width="15%" />
-        <col width="20%" />
-        <col width="20%" />
-        <col width="20%" />
-        <col width="20%" />
-      </colgroup>
-      )}
-      {type === 'project' && (
-      <colgroup>
-        <col width="5%" />
-        <col width="10%" />
-        <col width="65%" />
-        <col width="20%" />
-      </colgroup>
-      )}
-      <TableHead>
-        {type === 'article' && (
-          <tr>
-            <HeadItem scope="col"><Checkbox type="checkbox" name="selectAll" id="" /></HeadItem>
-            <HeadItem scope="col">글 번호</HeadItem>
-            <HeadItem scope="col">제목</HeadItem>
-            <HeadItem scope="col">작성 날짜</HeadItem>
-          </tr>
+    <div>
+      {items.length > 0 && (
+      <TableContainer>
+        {items[0].type === 'article' && (
+        <colgroup>
+          <col width="5%" />
+          <col width="10%" />
+          <col width="65%" />
+          <col width="20%" />
+        </colgroup>
         )}
-        {type === 'mentoring' && (
-          <tr>
-            <HeadItem scope="col"><Checkbox type="checkbox" name="selectAll" id="" /></HeadItem>
-            <HeadItem scope="col">신청인</HeadItem>
-            <HeadItem scope="col">연락처</HeadItem>
-            <HeadItem scope="col">이메일</HeadItem>
-            <HeadItem scope="col">신청 내용</HeadItem>
-            <HeadItem scope="col">신청 날자</HeadItem>
-          </tr>
+        {/* {items[0].type === 'mentoring' && (
+        <colgroup>
+          <col width="5%" />
+          <col width="15%" />
+          <col width="20%" />
+          <col width="20%" />
+          <col width="20%" />
+          <col width="20%" />
+        </colgroup>
+        )} */}
+        {items[0].type === 'project' && (
+        <colgroup>
+          <col width="5%" />
+          <col width="10%" />
+          <col width="65%" />
+          <col width="20%" />
+        </colgroup>
         )}
-        {type === 'project' && (
-          <tr>
-            <HeadItem scope="col"><Checkbox type="checkbox" name="selectAll" id="" /></HeadItem>
-            <HeadItem scope="col">프로젝트 번호</HeadItem>
-            <HeadItem scope="col">제목</HeadItem>
-            <HeadItem scope="col">작성 날짜</HeadItem>
-          </tr>
-        )}
-      </TableHead>
-      <TableBody>
-        <TableRow>
-          <TableItem><input type="checkbox" name="table" id="" /></TableItem>
-          <TableItem>1</TableItem>
-          <TableItem>1asdfasdfsdfasdfasd</TableItem>
-          <TableItem>1</TableItem>
-        </TableRow>
-      </TableBody>
-    </TableContainer>
+        <TableHead>
+          {items[0].type === 'article' && (
+            <tr>
+              <HeadItem scope="col"><Checkbox type="checkbox" name="selectAll" id="" /></HeadItem>
+              <HeadItem scope="col">글 번호</HeadItem>
+              <HeadItem scope="col">제목</HeadItem>
+              <HeadItem scope="col">작성 날짜</HeadItem>
+            </tr>
+          )}
+          {/* {items[0].type === 'mentoring' && (
+            <tr>
+              <HeadItem scope="col"><Checkbox type="checkbox" name="selectAll" id="" /></HeadItem>
+              <HeadItem scope="col">신청인</HeadItem>
+              <HeadItem scope="col">연락처</HeadItem>
+              <HeadItem scope="col">이메일</HeadItem>
+              <HeadItem scope="col">신청 내용</HeadItem>
+              <HeadItem scope="col">신청 날자</HeadItem>
+            </tr>
+          )} */}
+          {items[0].type === 'project' && (
+            <tr>
+              <HeadItem scope="col"><Checkbox type="checkbox" name="selectAll" id="" /></HeadItem>
+              <HeadItem scope="col">프로젝트 번호</HeadItem>
+              <HeadItem scope="col">제목</HeadItem>
+              <HeadItem scope="col">작성 날짜</HeadItem>
+            </tr>
+          )}
+        </TableHead>
+        <TableBody>
+          {
+            items.length > 0 && items.map((item):React.ReactNode => {
+              if (item.type === 'article') {
+                return (
+                  <TableRow key={item.articleId} onClick={() => { clickHandler(item); }}>
+                    <TableItem><input type="checkbox" name={item.articleId} id={item.articleId} /></TableItem>
+                    <TableItem>{item.articleId}</TableItem>
+                    <TableItem>{item.title}</TableItem>
+                    <TableItem>{formatDate(item.createdAt)}</TableItem>
+                  </TableRow>
+                );
+              }
+              if (item.type === 'project') {
+                return (
+                  <TableRow key={item._id} onClick={() => { clickHandler(item); }}>
+                    <TableItem><input type="checkbox" name={item._id} id={item._id} /></TableItem>
+                    <TableItem>{item._id}</TableItem>
+                    <TableItem>{item.title}</TableItem>
+                    <TableItem>{formatDate(item.createdAt)}</TableItem>
+                  </TableRow>
+                );
+              }
+              return (
+                <div> Err</div>
+              );
+            })
+          }
+        </TableBody>
+      </TableContainer>
+      )}
+      {items.length === 0 && <div>No data</div>}
+    </div>
   );
 }
