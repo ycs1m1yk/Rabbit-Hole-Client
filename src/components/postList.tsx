@@ -56,8 +56,7 @@ interface postInterface{
   author:string;
   title:string;
   content:string;
-  date:string;
-  comment:number;
+  createdAt:Date;
   likes :number;
 }
 
@@ -66,6 +65,11 @@ interface postList{
 }
 
 export default function PostList({ posts } :postList) {
+  const padTo2Digits = (num: number):string => num.toString().padStart(2, '0');
+
+  const formatDate = (date: Date):string => (
+    `${date.getFullYear()}년${padTo2Digits(date.getMonth() + 1)}월${padTo2Digits(date.getDate())}일`
+  );
   return (
     <Container>
       <Alignments>
@@ -79,8 +83,7 @@ export default function PostList({ posts } :postList) {
             profile={post.author}
             title={post.title}
             content={post.content}
-            date={post.date}
-            comment={post.comment}
+            date={formatDate(post.createdAt)}
             heart={post.likes}
           />
         )) : <EmptyField>게시물이 존재하지 않습니다.</EmptyField> }
