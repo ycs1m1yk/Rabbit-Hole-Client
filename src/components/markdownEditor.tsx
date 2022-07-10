@@ -16,7 +16,13 @@ const defaultProps = {
   height: '300px',
 };
 
+/**
+ * ref const ref = useRef(null) 방식으로 선언한 ref필요 (null로 initializing 필요)
+ * Ref.current.getInstance().getMarkdown(); 방식으로 string value 얻음
+ */
+
 const MarkdownEditor = forwardRef<Editor, EditorProps>((props, ref) => {
+  // 이상한 default value bug 제거
   useEffect(() => {
     const bug = document.querySelector('.ProseMirror');
     if (bug) bug.innerHTML = '';
