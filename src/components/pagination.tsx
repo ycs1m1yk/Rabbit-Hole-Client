@@ -56,6 +56,7 @@ export default function Pagination({ length = 10, show = 5, handler }:Pagination
   const initArray = Array.from({ length }, (_, i) => i);
   const [pageKey, setPageKey] = useState(0);
 
+  // 버튼(Card) 클릭 시 페이지 상태관리 및 props의 handler(maybe routing) 실행
   const numberingHandler = (e:React.MouseEvent<HTMLDivElement>, pageNumber: number) => {
     if (pageNumber >= 0 && pageNumber < length) {
       setPageKey(pageNumber);
@@ -66,20 +67,24 @@ export default function Pagination({ length = 10, show = 5, handler }:Pagination
   return (
     <Container>
       <CardContainer>
+        {/* 맨 앞으로 */}
         <Card disable={pageKey === 0} onClick={(e) => { numberingHandler(e, 0); }}>
           <AiOutlineDoubleLeft />
         </Card>
+        {/* 한 페이지 앞 */}
         <Card disable={pageKey === 0} onClick={(e) => { numberingHandler(e, pageKey - 1); }}>
           <AiOutlineLeft />
         </Card>
       </CardContainer>
       <CardContainer>
+        {/* show 단위 이동 */}
         {pageKey >= show
         && (
         <Card onClick={(e) => { numberingHandler(e, (Math.floor(pageKey / show) - 1) * show); }}>
           ...
         </Card>
         )}
+        {/* 직접 이동 */}
         {initArray.slice(
           Math.floor(pageKey / show) * show,
           (Math.floor(pageKey / show) * show) + show,
@@ -92,6 +97,7 @@ export default function Pagination({ length = 10, show = 5, handler }:Pagination
             {page + 1}
           </Card>
         ))}
+        {/* show 단위 이동 */}
         {(pageKey < ((Math.floor(length / show)) * show) - (length % show ? 0 : show))
         && (
         <Card onClick={(e) => { numberingHandler(e, (Math.floor(pageKey / show) + 1) * show); }}>
@@ -100,12 +106,14 @@ export default function Pagination({ length = 10, show = 5, handler }:Pagination
         )}
       </CardContainer>
       <CardContainer>
+        {/* 한 페이지 뒤 */}
         <Card
           disable={pageKey === length - 1}
           onClick={(e) => { numberingHandler(e, pageKey + 1); }}
         >
           <AiOutlineRight />
         </Card>
+        {/* 맨 뒤로 */}
         <Card
           disable={pageKey === length - 1}
           onClick={(e) => { numberingHandler(e, length - 1); }}
