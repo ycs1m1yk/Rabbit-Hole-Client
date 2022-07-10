@@ -7,7 +7,7 @@ interface ViewerProps{
 }
 
 // markdownViewer
-export default function MarkdownViewer({ text = 'dfsf' }:ViewerProps) {
+export default function MarkdownViewer({ text = '' }:ViewerProps) {
   return (
     <Viewer initialValue={text} />
   );
