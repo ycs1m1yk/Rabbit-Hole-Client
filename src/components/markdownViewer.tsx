@@ -7,8 +7,8 @@ interface ViewerProps{
 }
 
 // markdownViewer
-export default function MarkdownViewer({ text = '' }:ViewerProps) {
+export default function MarkdownViewer({ text = 'dfsf' }:ViewerProps) {
   return (
-    <Viewer initialValue="![티모](https://c.tenor.com/sK02BXIShR0AAAAC/%ED%8B%B0%EB%AA%A8-%EB%A9%94%EB%A1%B1.gif)" />
+    <Viewer initialValue={text} />
   );
 }
