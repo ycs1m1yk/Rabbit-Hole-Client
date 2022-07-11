@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import Board from '@pages/board';
-import Home from '@pages/home';
+import Home from '@/pages/home/home';
 import Mentoring from '@pages/mentoring';
 import Mypage from '@pages/mypage';
 import Projects from '@pages/projects';
@@ -20,7 +20,7 @@ function App() {
         <Route path="/projects" element={<Projects />} />
         <Route path="/mypage" element={<Mypage />} />
       </Routes>
-      <Footer />
+      {/* <Footer /> */}
     </BrowserRouter>
   );
 }
