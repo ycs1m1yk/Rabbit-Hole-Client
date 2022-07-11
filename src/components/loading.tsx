@@ -2,18 +2,15 @@ import React from 'react';
 import styled from 'styled-components';
 
 const defaultProps = {
-  position: 'relative',
   size: 5,
 };
 
 type circleProps = {
   size?:number,
-  position?: string,
 } & typeof defaultProps
 
 const LoadingCircle = styled.div<circleProps>`
   display: inline-block;
-  position: ${(props) => props.position};
   width: ${(props) => props.size}rem;
   height:${(props) => props.size}rem;
   border:${(props) => (props.size / 15)}rem solid white;
@@ -29,9 +26,9 @@ const LoadingCircle = styled.div<circleProps>`
   } 
 `;
 
-function Loading({ size, position }:circleProps) {
+function Loading({ size }:circleProps) {
   return (
-    <LoadingCircle size={size} position={position} />
+    <LoadingCircle size={size} />
   );
 }
 
