@@ -8,6 +8,7 @@ import { lighten } from 'polished';
 interface PaginationProps{
   length?: number,
   show?: number,
+  start?: number,
   // eslint-disable-next-line no-unused-vars
   handler: (pageNumber: number)=>void
 }
@@ -50,11 +51,14 @@ const Card = styled.div<{selected?: boolean, disable?: boolean}>`
 const defaultProps = {
   length: 10,
   show: 5,
+  start: 0,
 };
 
-export default function Pagination({ length = 10, show = 5, handler }:PaginationProps) {
+export default function Pagination({
+  length = 10, show = 5, start = 0, handler,
+}:PaginationProps) {
   const initArray = Array.from({ length }, (_, i) => i);
-  const [pageKey, setPageKey] = useState(0);
+  const [pageKey, setPageKey] = useState(start);
 
   // 버튼(Card) 클릭 시 페이지 상태관리 및 props의 handler(maybe routing) 실행
   const numberingHandler = (e:React.MouseEvent<HTMLDivElement>, pageNumber: number) => {
@@ -68,7 +72,7 @@ export default function Pagination({ length = 10, show = 5, handler }:Pagination
     <Container>
       <CardContainer>
         {/* 맨 앞으로 */}
-        <Card disable={pageKey === 0} onClick={(e) => { numberingHandler(e, 0); }}>
+        <Card disable={pageKey === 0} onClick={(e) => { if (pageKey > 0)numberingHandler(e, 0); }}>
           <AiOutlineDoubleLeft />
         </Card>
         {/* 한 페이지 앞 */}
@@ -116,7 +120,7 @@ export default function Pagination({ length = 10, show = 5, handler }:Pagination
         {/* 맨 뒤로 */}
         <Card
           disable={pageKey === length - 1}
-          onClick={(e) => { numberingHandler(e, length - 1); }}
+          onClick={(e) => { if (pageKey < length - 1)numberingHandler(e, length - 1); }}
         >
           <AiOutlineDoubleRight />
         </Card>
