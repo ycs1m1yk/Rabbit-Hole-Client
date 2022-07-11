@@ -1,4 +1,3 @@
-// postList
 import React from 'react';
 import styled from 'styled-components';
 import PostItem from '@components/postItem';
@@ -9,7 +8,7 @@ const Container = styled.div`
   flex-direction: column;
   align-items: flex-start;
   gap: 20px;
-  margin: 5rem;
+  margin: 5rem 0;
 `;
 
 const Alignments = styled.ul`
