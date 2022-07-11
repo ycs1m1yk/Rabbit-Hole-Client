@@ -57,6 +57,10 @@ const EmptyField = styled.p`
   color: ${({ theme }) => theme.palette.black};
 `;
 
+const defaultProps = {
+  type: '',
+};
+
 interface postInterface{
   articleType: string;
   articleId: string;
@@ -68,13 +72,13 @@ interface postInterface{
   likes: number;
   views: number;
   carrots: number;
-  tags: [],
+  tags: string[],
 }
 
-interface postList{
-  type: string;
-  posts:postInterface[];
-}
+type postList = {
+  type?: string;
+  posts: postInterface[];
+} & typeof defaultProps
 
 export default function PostList({ type, posts } :postList) {
   // 기준에 맞춰 정렬된 데이터 불러오기
@@ -112,3 +116,5 @@ export default function PostList({ type, posts } :postList) {
     </Container>
   );
 }
+
+PostList.defaultProps = defaultProps;

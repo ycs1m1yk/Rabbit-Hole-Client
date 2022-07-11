@@ -136,6 +136,8 @@ interface cardProps {
   content: string;
   thumbnail?: string;
   likes: number;
+  projectId: string;
+  type?: string;
 }
 
 export default function Card({
@@ -144,9 +146,13 @@ export default function Card({
   content,
   thumbnail,
   likes,
+  projectId,
+  type,
 }: cardProps) {
   const handleClick = ():void => {
-    console.log('디테일 페이지 이동');
+    if (type === 'project') {
+      console.log('프로젝트 디테일 페이지 이동', `/project?projectId=${projectId}`);
+    }
   };
 
   return (

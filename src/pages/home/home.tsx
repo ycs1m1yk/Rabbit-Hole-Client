@@ -180,7 +180,7 @@ export default function Home() {
       <MainSliderContainer>
         <Slider>
           <Link to="/board"><MainSliderImage src={BoardImage} /></Link>
-          <Link to="/metoring"><MainSliderImage src={MentoringImage} /></Link>
+          <Link to="/mentoring"><MainSliderImage src={MentoringImage} /></Link>
           <Link to="/projects"><MainSliderImage src={ProjectImage} /></Link>
         </Slider>
       </MainSliderContainer>
@@ -195,6 +195,8 @@ export default function Home() {
               content={project.content}
               thumbnail={project.thumbnail}
               likes={project.likes}
+              projectId={project.projectId}
+              type="project"
             />
           ))}
         </Slider>
