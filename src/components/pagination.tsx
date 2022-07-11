@@ -5,13 +5,19 @@ import {
 } from 'react-icons/ai';
 import { lighten } from 'polished';
 
-interface PaginationProps{
+const defaultProps = {
+  length: 10,
+  show: 5,
+  start: 0,
+};
+
+type PaginationProps = {
   length?: number,
   show?: number,
   start?: number,
   // eslint-disable-next-line no-unused-vars
   handler: (pageNumber: number)=>void
-}
+} & typeof defaultProps;
 
 const Container = styled.div`
   display:inline-flex;
@@ -48,14 +54,8 @@ const Card = styled.div<{selected?: boolean, disable?: boolean}>`
   }
 `;
 
-const defaultProps = {
-  length: 10,
-  show: 5,
-  start: 0,
-};
-
 export default function Pagination({
-  length = 10, show = 5, start = 0, handler,
+  length, show, start, handler,
 }:PaginationProps) {
   const initArray = Array.from({ length }, (_, i) => i);
   const [pageKey, setPageKey] = useState(start);
