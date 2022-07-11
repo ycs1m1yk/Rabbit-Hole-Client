@@ -2,6 +2,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
+import { regNumber, regPhoneNumber, regURL } from '@utils/regex/regex';
 
 const RegisterFormContainer = styled.div``;
 
@@ -30,7 +31,7 @@ const StyledRegisterInput = styled.input`
   height: 2.5rem;
   margin: 1rem 0rem;
   border-radius: 5px;
-  border: 1px solid ${(props) => props.theme.palette.eliceViolet};
+  border: 1px solid ${({ theme }) => theme.palette.eliceViolet};
   padding-left: 0.5rem;
 `;
 
@@ -45,7 +46,7 @@ const SubmitButton = styled.button`
   width: 8rem;
   margin: 1rem auto;
   color: white;
-  background-color: ${(props) => props.theme.palette.eliceViolet};
+  background-color: ${({ theme }) => theme.palette.eliceViolet};
   padding: 0.8rem;
   border-radius: 5px;
 `;
@@ -86,7 +87,7 @@ function RegisterForm() {
           {...register('trackCardinalNumber', {
             required: '기수는 필수 입력사항입니다:)',
             pattern: {
-              value: /^[0-9]+$/,
+              value: regNumber,
               message: '숫자만 입력 가능합니다:)',
             },
           })}
@@ -97,7 +98,7 @@ function RegisterForm() {
           {...register('phoneNumber', {
             required: '전화번호는 필수 입력사항입니다:)',
             pattern: {
-              value: /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/,
+              value: regPhoneNumber,
               message: '전화번호 형식에 맞춰 입력해주세요:)',
             },
           })}
@@ -109,7 +110,7 @@ function RegisterForm() {
         <StyledRegisterInput
           {...register('blogAddress', {
             pattern: {
-              value: /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/,
+              value: regURL,
               message: '올바른 형식의 주소를 입력해주세요:)',
             },
           })}
