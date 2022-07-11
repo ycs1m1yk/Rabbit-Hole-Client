@@ -184,4 +184,5 @@ export default function Card({
 }
 Card.defaultProps = {
   thumbnail: '',
+  type: '',
 };
