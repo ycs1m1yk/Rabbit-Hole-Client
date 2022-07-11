@@ -27,7 +27,9 @@ const Post = styled.div<{type: string}>`
   padding: 0px 20px;
   isolation: isolate;
 
-  border-top: 1px solid ${({ theme }):string => theme.palette.borderGray};
+  :first-child {
+    border-top: 1px solid ${({ theme }):string => theme.palette.borderGray};
+  }
   border-bottom: 1px solid ${({ theme }):string => theme.palette.borderGray};
 
   & :hover {
