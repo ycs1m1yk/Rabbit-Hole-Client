@@ -12,19 +12,19 @@ import PostList from '@/components/postList';
 const Container = styled.div``;
 
 const MainSliderContainer = styled.div`
-  width: 800px;
+  width: 1000px;
   margin: 2rem auto;
 `;
 
 const MainSliderImage = styled.img`
-  height: 300px;
+  height: 400px;
   width: 100%;
 `;
 
 const Title = styled.div`
-  font-size: 2rem;
+  font-size: 2.5rem;
   text-align: center;
-  margin: 10rem 0rem;
+  margin: 10rem 0rem 5rem 0rem;
 `;
 
 const ProjectSliderContainer = styled.div`
@@ -40,7 +40,6 @@ const ContentContainer = styled.div`
   margin: 10rem auto; 
 `;
 
-// Schema 추가 요청 -> likes, projectId
 const projects = [
   {
     projectId: '1234324',
@@ -49,6 +48,7 @@ const projects = [
     authorId: '123432432',
     content: 'abcdefghijklmnop abcdefghijklmnop',
     thumbnail: 'https://via.placeholder.com/200',
+    likes: 12,
   },
   {
     projectId: '123432432',
@@ -57,6 +57,7 @@ const projects = [
     authorId: '123432432',
     content: 'abcdefghijklmnop abcdefghijklmnop',
     thumbnail: 'https://via.placeholder.com/200',
+    likes: 9,
   },
   {
     projectId: '123893048239',
@@ -65,6 +66,7 @@ const projects = [
     authorId: '123432432',
     content: 'abcdefghijklmnop abcdefghijklmnop',
     thumbnail: 'https://via.placeholder.com/200',
+    likes: 1023,
   },
   {
     projectId: '1233821903809',
@@ -73,6 +75,7 @@ const projects = [
     authorId: '123432432',
     content: 'abcdefghijklmnop abcdefghijklmnop',
     thumbnail: 'https://via.placeholder.com/200',
+    likes: 65,
   },
 ];
 
@@ -83,9 +86,12 @@ const posts = [
     author: '설재혁',
     title: '설재혁의 게시글',
     content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet doloribus aut, nemo nulla dicta molestias veniam voluptas culpa pariatur vero explicabo, accusantium dolores? Ullam, vero mollitia placeat animi aut eum.',
-    date: '2022.07.07',
+    createdAt: '2022.07.07',
     comment: 10,
     likes: 10,
+    views: 1801,
+    carrots: 50,
+    tags: ['aaa', 'bbb', 'ccc'],
   },
   {
     articleType: 'free',
@@ -93,9 +99,12 @@ const posts = [
     author: '설재혁',
     title: '설재혁의 게시글',
     content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet doloribus aut, nemo nulla dicta molestias veniam voluptas culpa pariatur vero explicabo, accusantium dolores? Ullam, vero mollitia placeat animi aut eum.',
-    date: '2022.07.07',
+    createdAt: '2022.07.07',
     comment: 10,
     likes: 10,
+    views: 1801,
+    carrots: 50,
+    tags: ['aaa', 'bbb', 'ccc'],
   },
   {
     articleType: 'qna',
@@ -103,9 +112,12 @@ const posts = [
     author: '설재혁',
     title: '설재혁의 게시글',
     content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet doloribus aut, nemo nulla dicta molestias veniam voluptas culpa pariatur vero explicabo, accusantium dolores? Ullam, vero mollitia placeat animi aut eum.',
-    date: '2022.07.07',
+    createdAt: '2022.07.07',
     comment: 10,
     likes: 10,
+    views: 1801,
+    carrots: 50,
+    tags: ['aaa', 'bbb', 'ccc'],
   },
   {
     articleType: 'study',
@@ -113,9 +125,12 @@ const posts = [
     author: '설재혁',
     title: '설재혁의 게시글',
     content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet doloribus aut, nemo nulla dicta molestias veniam voluptas culpa pariatur vero explicabo, accusantium dolores? Ullam, vero mollitia placeat animi aut eum.',
-    date: '2022.07.07',
+    createdAt: '2022.07.07',
     comment: 10,
     likes: 10,
+    views: 1801,
+    carrots: 50,
+    tags: ['aaa', 'bbb', 'ccc'],
   },
   {
     articleType: 'free',
@@ -123,9 +138,12 @@ const posts = [
     author: '설재혁',
     title: '설재혁의 게시글',
     content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet doloribus aut, nemo nulla dicta molestias veniam voluptas culpa pariatur vero explicabo, accusantium dolores? Ullam, vero mollitia placeat animi aut eum.',
-    date: '2022.07.07',
+    createdAt: '2022.07.07',
     comment: 10,
     likes: 10,
+    views: 1801,
+    carrots: 50,
+    tags: ['aaa', 'bbb', 'ccc'],
   },
 ];
 
@@ -166,7 +184,7 @@ export default function Home() {
           <Link to="/projects"><MainSliderImage src={ProjectImage} /></Link>
         </Slider>
       </MainSliderContainer>
-      <Title>프로젝트 갤러리</Title>
+      <Title>프로젝트</Title>
       <ProjectSliderContainer>
         <Slider settings={projectSettings}>
           {projects.map((project) => (
@@ -176,12 +194,13 @@ export default function Home() {
               author={project.author}
               content={project.content}
               thumbnail={project.thumbnail}
+              likes={project.likes}
             />
           ))}
         </Slider>
       </ProjectSliderContainer>
       <ContentContainer>
-        <PostList type="main" posts={posts} />
+        <PostList type="qna" posts={posts} />
         <PostList type="free" posts={posts} />
       </ContentContainer>
     </Container>

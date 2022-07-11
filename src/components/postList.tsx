@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import PostItem from '@components/postItem';
@@ -58,13 +59,16 @@ const EmptyField = styled.p`
 
 interface postInterface{
   articleType: string;
-  articleId:string;
-  author:string;
-  title:string;
-  content:string;
-  date:string;
-  comment:number;
-  likes :number;
+  articleId: string;
+  author: string;
+  title: string;
+  content: string;
+  createdAt: string;
+  comment: number;
+  likes: number;
+  views: number;
+  carrots: number;
+  tags: [],
 }
 
 interface postList{
@@ -75,7 +79,7 @@ interface postList{
 export default function PostList({ type, posts } :postList) {
   // 기준에 맞춰 정렬된 데이터 불러오기
   const handleSort = async (sortBy: string): Promise<any> => {
-    console.log(sortBy);
+    console.log(type, sortBy);
   };
 
   useEffect(() => {
@@ -84,10 +88,10 @@ export default function PostList({ type, posts } :postList) {
 
   return (
     <Container>
-      {type === 'main' ? <Title>질의응답</Title> : type === 'free' ? <Title>자유게시판</Title> : null}
+      {type === 'qna' ? <Title>질의응답</Title> : type === 'free' ? <Title>자유게시판</Title> : null}
       <Alignments>
-        <Alignment onClick={(e) => handleSort('new')}>최신순</Alignment>
-        <Alignment onClick={(e) => handleSort('popular')}>인기순</Alignment>
+        <Alignment onClick={() => handleSort('new')}>최신순</Alignment>
+        <Alignment onClick={() => handleSort('popular')}>인기순</Alignment>
       </Alignments>
       <Posts>
         { posts.length > 0 ? posts.map((post) => (
@@ -96,7 +100,7 @@ export default function PostList({ type, posts } :postList) {
             profile={post.author}
             title={post.title}
             content={post.content}
-            date={post.date}
+            date={post.createdAt}
             comment={post.comment}
             heart={post.likes}
             type={type}
