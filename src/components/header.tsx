@@ -4,6 +4,7 @@ import { lighten } from 'polished';
 import styled from 'styled-components';
 import Logo from '@components/logo';
 import Search from '@components/search';
+import Button from '@components/button';
 
 const StyledHeader = styled.header`
   display: flex;
@@ -31,17 +32,8 @@ const HeaderRight = styled.div`
   display: flex;
   align-items: center;
   
-  & div:first-child {
-    margin-right: 5rem;
-  }
-`;
-
-const Buttons = styled.div`
-  display: flex;
-  align-items: center;
-
-  & :focus {
-    color: ${(props) => props.theme.palette.eliceViolet}
+  & :not(:first-child) {
+    margin-left: 2rem;
   }
 `;
 
@@ -50,10 +42,10 @@ const StyledLink = styled(Link)`
   align-items: center;
   justify-content: center;
   height: inherit;
-  padding: 1.6rem;
 
   font-weight: 600;
   font-size: 1.8rem;
+  white-space: nowrap;
 
   & + & {
     margin-left: 2rem;
@@ -85,7 +77,7 @@ export default function Header() {
   return (
     <StyledHeader onClick={handleClick}>
       <Link to="/">
-        <Logo />
+        <Logo width={210} heigth={74} />
       </Link>
       <Nav>
         <StyledLink to="/board">게시판</StyledLink>
@@ -94,10 +86,8 @@ export default function Header() {
       </Nav>
       <HeaderRight>
         <Search />
-        <Buttons>
-          <StyledLink to="/login">로그인</StyledLink>
-          <StyledLink to="/register">회원가입</StyledLink>
-        </Buttons>
+        <Button onClick={() => console.log('임시 onClick')}>로그인</Button>
+        <Button onClick={() => console.log('임시 onClick')}>회원가입</Button>
       </HeaderRight>
     </StyledHeader>
   );
