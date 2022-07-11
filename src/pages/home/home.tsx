@@ -7,6 +7,7 @@ import BoardImage from '@assets/images/main_board.jpg';
 import ProjectImage from '@assets/images/main_project.jpg';
 import MentoringImage from '@assets/images/main_mentoring.jpg';
 import Card from '@/components/card';
+import PostList from '@/components/postList';
 
 const Container = styled.div``;
 
@@ -29,6 +30,14 @@ const Title = styled.div`
 const ProjectSliderContainer = styled.div`
   width: 1000px;
   margin: 2rem auto;
+`;
+
+const ContentContainer = styled.div`
+  margin-top: 10rem;
+  place-items: center;
+  display: grid;
+  grid-template-columns: 50% 50%;
+  margin: 10rem auto; 
 `;
 
 // Schema 추가 요청 -> likes, projectId
@@ -67,6 +76,59 @@ const projects = [
   },
 ];
 
+const posts = [
+  {
+    articleType: 'qna',
+    articleId: '12343423324',
+    author: '설재혁',
+    title: '설재혁의 게시글',
+    content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet doloribus aut, nemo nulla dicta molestias veniam voluptas culpa pariatur vero explicabo, accusantium dolores? Ullam, vero mollitia placeat animi aut eum.',
+    date: '2022.07.07',
+    comment: 10,
+    likes: 10,
+  },
+  {
+    articleType: 'free',
+    articleId: '12343442342234',
+    author: '설재혁',
+    title: '설재혁의 게시글',
+    content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet doloribus aut, nemo nulla dicta molestias veniam voluptas culpa pariatur vero explicabo, accusantium dolores? Ullam, vero mollitia placeat animi aut eum.',
+    date: '2022.07.07',
+    comment: 10,
+    likes: 10,
+  },
+  {
+    articleType: 'qna',
+    articleId: '12343543534234',
+    author: '설재혁',
+    title: '설재혁의 게시글',
+    content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet doloribus aut, nemo nulla dicta molestias veniam voluptas culpa pariatur vero explicabo, accusantium dolores? Ullam, vero mollitia placeat animi aut eum.',
+    date: '2022.07.07',
+    comment: 10,
+    likes: 10,
+  },
+  {
+    articleType: 'study',
+    articleId: '123434524513523234',
+    author: '설재혁',
+    title: '설재혁의 게시글',
+    content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet doloribus aut, nemo nulla dicta molestias veniam voluptas culpa pariatur vero explicabo, accusantium dolores? Ullam, vero mollitia placeat animi aut eum.',
+    date: '2022.07.07',
+    comment: 10,
+    likes: 10,
+  },
+  {
+    articleType: 'free',
+    articleId: '1234332131231314234',
+    author: '설재혁',
+    title: '설재혁의 게시글',
+    content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet doloribus aut, nemo nulla dicta molestias veniam voluptas culpa pariatur vero explicabo, accusantium dolores? Ullam, vero mollitia placeat animi aut eum.',
+    date: '2022.07.07',
+    comment: 10,
+    likes: 10,
+  },
+];
+
 export default function Home() {
   const projectSettings = {
     dots: true,
@@ -91,6 +153,7 @@ export default function Home() {
         <Slider settings={projectSettings}>
           {projects.map((project) => (
             <Card
+              key={project.projectId}
               title={project.title}
               author={project.author}
               content={project.content}
@@ -99,6 +162,9 @@ export default function Home() {
           ))}
         </Slider>
       </ProjectSliderContainer>
+      <ContentContainer>
+        <PostList type="main" posts={posts} />
+      </ContentContainer>
     </Container>
   );
 }

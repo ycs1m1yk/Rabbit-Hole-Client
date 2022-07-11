@@ -1,5 +1,4 @@
-// postList
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import PostItem from '@components/postItem';
 
@@ -26,7 +25,7 @@ const Alignments = styled.ul`
 const Alignment = styled.li`
   cursor: pointer;
   list-style-type: disc;
-  font-size: 20px;
+  font-size: 1.5rem;
   font-weight: 500;
   line-height: 26px;
   vertical-align: middle;
@@ -52,6 +51,7 @@ const EmptyField = styled.p`
 `;
 
 interface postInterface{
+  articleType: string;
   articleId:string;
   author:string;
   title:string;
@@ -62,15 +62,25 @@ interface postInterface{
 }
 
 interface postList{
-  posts:postInterface[]
+  type: string;
+  posts:postInterface[];
 }
 
-export default function PostList({ posts } :postList) {
+export default function PostList({ type, posts } :postList) {
+  // 기준에 맞춰 정렬된 데이터 불러오기
+  const handleSort = async (sortBy: string): Promise<any> => {
+    console.log(sortBy);
+  };
+
+  useEffect(() => {
+
+  }, [handleSort]);
+
   return (
     <Container>
       <Alignments>
-        <Alignment>최신순</Alignment>
-        <Alignment>인기순</Alignment>
+        <Alignment onClick={(e) => handleSort('new')}>최신순</Alignment>
+        <Alignment onClick={(e) => handleSort('popular')}>인기순</Alignment>
       </Alignments>
       <Posts>
         { posts.length > 0 ? posts.map((post) => (
@@ -82,6 +92,9 @@ export default function PostList({ posts } :postList) {
             date={post.date}
             comment={post.comment}
             heart={post.likes}
+            type={type}
+            articleId={post.articleId}
+            articleType={post.articleType}
           />
         )) : <EmptyField>게시물이 존재하지 않습니다.</EmptyField> }
       </Posts>
