@@ -19,6 +19,7 @@ export default defineConfig({
       { find: '@pages', replacement: resolve(__dirname, 'src/pages') },
       { find: '@styles', replacement: resolve(__dirname, 'src/styles') },
       { find: '@interfaces', replacement: resolve(__dirname, 'src/interfaces') },
+      { find: '@utils', replacement: resolve(__dirname, 'src/utils') },
     ],
   },
 });
