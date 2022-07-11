@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
@@ -139,6 +139,24 @@ export default function Home() {
     autoplay: true,
     autoplaySpeed: 2000,
   };
+
+  const [qnaPosts, setQnaPosts] = useState([]);
+  const [freePosts, setFreePosts] = useState([]);
+
+  // Data fetching and set data
+  const getQnaPostsFromApi = async () => {
+
+  };
+
+  const getFreePostsFromApi = async () => {
+
+  };
+
+  useEffect(() => {
+    getQnaPostsFromApi();
+    getFreePostsFromApi();
+  }, [qnaPosts, freePosts]);
+
   return (
     <Container>
       <MainSliderContainer>
@@ -164,6 +182,7 @@ export default function Home() {
       </ProjectSliderContainer>
       <ContentContainer>
         <PostList type="main" posts={posts} />
+        <PostList type="free" posts={posts} />
       </ContentContainer>
     </Container>
   );

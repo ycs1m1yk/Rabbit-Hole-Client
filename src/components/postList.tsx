@@ -11,6 +11,12 @@ const Container = styled.div`
   margin: 5rem;
 `;
 
+const Title = styled.div`
+  font-size: 2rem;
+  margin: 2rem auto;
+  font-weight: bold;
+`;
+
 const Alignments = styled.ul`
   width: 100%;
   display: flex;
@@ -78,6 +84,7 @@ export default function PostList({ type, posts } :postList) {
 
   return (
     <Container>
+      {type === 'main' ? <Title>질의응답</Title> : type === 'free' ? <Title>자유게시판</Title> : null}
       <Alignments>
         <Alignment onClick={(e) => handleSort('new')}>최신순</Alignment>
         <Alignment onClick={(e) => handleSort('popular')}>인기순</Alignment>

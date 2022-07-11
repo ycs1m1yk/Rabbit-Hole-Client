@@ -19,7 +19,7 @@ type IPostItemProps = {
 
 const Post = styled.div<{type: string}>`
   cursor: pointer;
-  width: ${(props) => (props.type === 'default' ? '800px' : '400px')};
+  width: ${(props) => (props.type === 'default' ? '800px' : '500px')};
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -62,8 +62,8 @@ const Profile = styled.p<{type: string}>`
 `;
 
 const Title = styled.h3<{type: string}>`
-  max-width: ${(props) => (props.type === 'default' ? '700px' : '350px')};
-  font-size:  ${(props) => (props.type === 'default' ? '40px' : '15px')};
+  max-width: ${(props) => (props.type === 'default' ? '700px' : '400px')};
+  font-size:  ${(props) => (props.type === 'default' ? '40px' : '20px')};
   font-weight: 700;
   letter-spacing: 0.15px;
   color : ${({ theme }):string => theme.palette.black};
@@ -76,8 +76,8 @@ const Title = styled.h3<{type: string}>`
 `;
 
 const Body = styled.p<{type: string}>`
-  max-width:  ${(props) => (props.type === 'default' ? '700px' : '350px')};
-  font-size: 20px;
+  max-width:  ${(props) => (props.type === 'default' ? '700px' : '400px')};
+  font-size: ${(props) => (props.type === 'default' ? '20px' : '12px')};
   font-weight: 300;
   letter-spacing: 0.25px;
   line-height: 20px;
