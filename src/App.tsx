@@ -5,7 +5,7 @@ import Header from '@components/header';
 import Footer from '@components/footer';
 import Loading from '@components/loading';
 
-const Home = lazy(() => import('@pages/home'));
+const Home = lazy(() => import('@pages/home/home'));
 const Board = lazy(() => import('@pages/board'));
 const Mentoring = lazy(() => import('@pages/mentoring'));
 const Projects = lazy(() => import('@pages/projects'));
