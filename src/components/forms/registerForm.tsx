@@ -3,8 +3,11 @@ import React from 'react';
 import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
 import { regNumber, regPhoneNumber, regURL } from '@utils/regex/regex';
+import Button from '@components/button';
 
-const RegisterFormContainer = styled.div``;
+const RegisterFormContainer = styled.div`
+  width: 90%;
+`;
 
 const ErrorMessage = styled.span`
   margin-bottom: 0.5rem;
@@ -13,7 +16,7 @@ const ErrorMessage = styled.span`
 `;
 
 const ModalTitle = styled.h1`
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
   text-align: center;
 `;
 
@@ -22,19 +25,18 @@ const StyledRegisterForm = styled.form`
   flex-direction: column;
 `;
 
-const InputTitle = styled.div`
-  font-size: 1.5rem;
+const InputTitle = styled.h3`
   font-weight: bold;
 `;
 
-const DiscordDescription = styled.div`
-  font-size: 1rem;
+const DiscordDescription = styled.p`
+  font-size: 1.6rem;
   margin-top: 1rem;
 `;
 
 const StyledRegisterInput = styled.input`
   width: 100%;
-  height: 2.5rem;
+  height: 3rem;
   margin: 1rem 0rem;
   border-radius: 5px;
   border: 1px solid ${({ theme }) => theme.palette.eliceViolet};
@@ -45,15 +47,6 @@ const DiscordImageInput = styled.input`
   width: 100%;
   height: 2.5rem;
   margin: 1rem 0rem;
-  border-radius: 5px;
-`;
-
-const SubmitButton = styled.button`
-  width: 8rem;
-  margin: 1rem auto;
-  color: white;
-  background-color: ${({ theme }) => theme.palette.eliceViolet};
-  padding: 0.8rem;
   border-radius: 5px;
 `;
 
@@ -76,14 +69,15 @@ function RegisterForm() {
   };
 
   // Form 데이터가 유효하지 않은 경우 호출되는 함수
-  const onInvalid = (data: any) => {
+  const onInvalid = () => {
     console.log(errors);
   };
 
   return (
     <RegisterFormContainer>
       <ModalTitle>추가 정보 입력</ModalTitle>
-      <StyledRegisterForm onSubmit={handleSubmit(onValid, onInvalid)}>
+      <h2 style={{ marginBottom: '2rem' }}>회원가입을 위해 추가정보가 필요합니다.</h2>
+      <StyledRegisterForm>
         <InputTitle>이름</InputTitle>
         <StyledRegisterInput
           {...register('name', {
@@ -138,8 +132,8 @@ function RegisterForm() {
         <InputTitle>Discord 인증 이미지</InputTitle>
         <DiscordDescription>본인이 속해 있는 트랙의 디스코드 채널을 캡처해서 업로드 해주세요:)</DiscordDescription>
         <DiscordImageInput {...register('authImage', { required: '인증 이미지는 필수 입력사항입니다:)' })} type="file" />
+        <Button onClick={handleSubmit(onValid, onInvalid)}>가입 완료!</Button>
         <ErrorMessage>{errors?.authImage?.message}</ErrorMessage>
-        <SubmitButton>입력 완료</SubmitButton>
       </StyledRegisterForm>
     </RegisterFormContainer>
   );
