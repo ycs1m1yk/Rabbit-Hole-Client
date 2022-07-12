@@ -1,10 +1,14 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
-import { regNumber, regPhoneNumber, regURL } from '@utils/regex/regex';
+import { regPhoneNumber, regURL } from '@utils/regex/regex';
+import SelectBox from '../selectBox';
 
-const RegisterFormContainer = styled.div``;
+const RegisterFormContainer = styled.div`
+  width: 1000px;
+  margin: 0 auto;
+`;
 
 const ModalTitle = styled.h1`
   margin-bottom: 1rem;
@@ -53,10 +57,18 @@ const SubmitButton = styled.button`
 
 function RegisterForm() {
   const { register, handleSubmit, formState } = useForm();
+  const [selectedTrack, setSelectedTrack] = useState<string>('');
+  const [selectedTrackNum, setSelectedTrackNum] = useState<number>(0);
 
   // Form 데이터가 유효한 경우 호출되는 함수
   const onValid = (data: any) => {
-    console.log('Valid', data);
+    // console.log('Valid', data);
+    const formData = {
+      ...data,
+      track: selectedTrack,
+      trackCardinalNumber: Number(selectedTrackNum),
+    };
+    console.log(formData);
   };
 
   // Form 데이터가 유효하지 않은 경우 호출되는 함수
@@ -81,18 +93,9 @@ function RegisterForm() {
           placeholder="ex:설재혁"
         />
         <InputTitle>엘리스 트랙명</InputTitle>
-        <StyledRegisterInput {...register('track', { required: '트랙명은 필수 입력사항입니다:)' })} placeholder="ex:SW Engineer" />
+        <SelectBox options={['SW', 'AI']} defaultValue="트랙명" selectedOption={selectedTrack} setSelectedOption={setSelectedTrack} width={200} type="register" />
         <InputTitle>엘리스 기수</InputTitle>
-        <StyledRegisterInput
-          {...register('trackCardinalNumber', {
-            required: '기수는 필수 입력사항입니다:)',
-            pattern: {
-              value: regNumber,
-              message: '숫자만 입력 가능합니다:)',
-            },
-          })}
-          placeholder="ex:2"
-        />
+        <SelectBox options={[1, 2, 3, 4, 5]} defaultValue="기수" selectedOption={selectedTrackNum} setSelectedOption={setSelectedTrackNum} width={200} type="register" />
         <InputTitle>전화번호</InputTitle>
         <StyledRegisterInput
           {...register('phoneNumber', {
