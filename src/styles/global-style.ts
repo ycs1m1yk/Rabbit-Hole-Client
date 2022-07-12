@@ -8,10 +8,12 @@ const GlobalStyle = createGlobalStyle`
   @font-face {
     font-family: 'EliceBold';
     src: url(${EliceBold}) format('woff');
+    font-display: swap;
   }
   @font-face {
     font-family: 'EliceRegular';
     src: url(${EliceRegular}) format('woff');
+    font-display: swap;
   }
   html {
     font-family: "EliceRegular", sans-serif;
@@ -30,17 +32,17 @@ const GlobalStyle = createGlobalStyle`
   }
   h1{
     width:100%;
-    padding-bottom: 10px;
-    font-size: 2rem;
+    padding-bottom: 2rem;
+    font-size: 3.5rem;
     font-weight: Bolder;
     border-bottom: 1px solid ${(props) => props.theme.palette.borderGray} ;
   };
   h2{
-    font-size: 1.5rem;
+    font-size: 2.5rem;
     font-weight: bold;
   };
   h3{
-     font-size: 1.17rem;
+     font-size: 1.7rem;
      font-weight: bold;
   };
 `;

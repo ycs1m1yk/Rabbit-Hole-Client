@@ -1,6 +1,5 @@
-// card
 import React from 'react';
-// import { AiOutlineLike } from 'react-icons/ai';
+import { AiOutlineLike } from 'react-icons/ai';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -115,27 +114,30 @@ const LongBody = styled.p`
   color: ${({ theme }): string => theme.palette.gray};
 `;
 
-// const Info = styled.div`
-//   display: flex;
-//   align-items: center;
-//   justify-content: flex-start;
-//   gap: 5px;
-//   padding: 0px 16px;
-//   color: ${({ theme }): string => theme.palette.black};
-// `;
+const Info = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 5px;
+  padding: 0px 16px;
+  color: ${({ theme }): string => theme.palette.black};
+`;
 
-// const LikeCount = styled.span`
-//   font-weight: 400;
-//   font-size: 14px;
-//   line-height: 22px;
-//   padding-top: 5px;
-// `;
+const LikeCount = styled.span`
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 22px;
+  padding-top: 5px;
+`;
 
 interface cardProps {
   title: string;
   author: string;
   content: string;
   thumbnail?: string;
+  likes: number;
+  projectId: string;
+  type?: string;
 }
 
 export default function Card({
@@ -143,9 +145,14 @@ export default function Card({
   author,
   content,
   thumbnail,
+  likes,
+  projectId,
+  type,
 }: cardProps) {
   const handleClick = ():void => {
-    console.log('디테일 페이지 이동');
+    if (type === 'project') {
+      console.log('프로젝트 디테일 페이지 이동', `/project?projectId=${projectId}`);
+    }
   };
 
   return (
@@ -168,13 +175,14 @@ export default function Card({
           thumbnail ? <ShortBody>{content}</ShortBody> : <LongBody>{content}</LongBody>
         }
       </Main>
-      {/* <Info>
+      <Info>
         <AiOutlineLike size={35} />
-        <LikeCount>{like}</LikeCount>
-      </Info> */}
+        <LikeCount>{likes}</LikeCount>
+      </Info>
     </Container>
   );
 }
 Card.defaultProps = {
   thumbnail: '',
+  type: '',
 };
