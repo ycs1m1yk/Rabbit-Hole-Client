@@ -3,8 +3,11 @@ import React from 'react';
 import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
 import { regNumber, regPhoneNumber, regURL } from '@utils/regex/regex';
+import Button from '@components/button';
 
-const RegisterFormContainer = styled.div``;
+const RegisterFormContainer = styled.div`
+  width: 90%;
+`;
 
 const ModalTitle = styled.h1`
   margin-bottom: 1rem;
@@ -119,7 +122,7 @@ function RegisterForm() {
         <InputTitle>Discord 인증 이미지</InputTitle>
         <DiscordDescription>본인이 속해 있는 트랙의 디스코드 채널을 캡처해서 업로드 해주세요:)</DiscordDescription>
         <DiscordImageInput {...register('authImage', { required: '인증 이미지는 필수 입력사항입니다:)' })} type="file" />
-        <SubmitButton>입력 완료</SubmitButton>
+        <Button>가입 완료!</Button>
       </StyledRegisterForm>
     </RegisterFormContainer>
   );

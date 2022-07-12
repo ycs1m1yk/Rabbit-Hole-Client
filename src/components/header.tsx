@@ -4,7 +4,9 @@ import { lighten } from 'polished';
 import styled from 'styled-components';
 import Logo from '@components/logo';
 import Search from '@components/search';
-import Button from '@components/button';
+
+import modalAtom from '@/recoil/modal/modalAtom';
+import { useSetRecoilState } from 'recoil';
 
 const StyledHeader = styled.header`
   display: flex;
@@ -42,7 +44,6 @@ const StyledLink = styled(Link)`
   align-items: center;
   justify-content: center;
   height: inherit;
-
   font-weight: 600;
   font-size: 1.8rem;
   white-space: nowrap;
@@ -58,8 +59,23 @@ const StyledLink = styled(Link)`
   }
 `;
 
+const StyledAuth = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-weight: 600;
+  font-size: 1.8rem;
+  white-space: nowrap;
+  cursor: pointer;
+  & + & {
+    margin-left: 2rem;
+  }
+`;
+
 export default function Header() {
   const anchorRef = useRef<HTMLAnchorElement>();
+  const setModal = useSetRecoilState(modalAtom);
 
   const handleClick = (e: MouseEvent) => {
     e.preventDefault();
@@ -74,10 +90,14 @@ export default function Header() {
     anchorRef.current.classList.add('active');
   };
 
+  const handleAuth = (type: '' | 'Login') => {
+    setModal(type);
+  };
+
   return (
     <StyledHeader onClick={handleClick}>
       <Link to="/">
-        <Logo width={210} heigth={74} />
+        <Logo />
       </Link>
       <Nav>
         <StyledLink to="/board">게시판</StyledLink>
@@ -86,8 +106,7 @@ export default function Header() {
       </Nav>
       <HeaderRight>
         <Search />
-        <Button onClick={() => console.log('임시 onClick')}>로그인</Button>
-        <Button onClick={() => console.log('임시 onClick')}>회원가입</Button>
+        <StyledAuth onClick={() => handleAuth('Login')}>로그인</StyledAuth>
       </HeaderRight>
     </StyledHeader>
   );

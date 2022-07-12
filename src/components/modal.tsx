@@ -1,6 +1,6 @@
 import React, { MouseEvent, PropsWithChildren } from 'react';
 import styled from 'styled-components';
-
+import { AiOutlineClose } from 'react-icons/ai';
 const ModalContainer = styled.div`
   width: 100%;
   height: 100%;
@@ -8,6 +8,10 @@ const ModalContainer = styled.div`
   align-items: center;
   justify-content: center;
   position: fixed;
+  top: 50%;
+  left: 50%;
+  /* bring your own prefixes */
+  transform: translate(-50%, -50%);
 `;
 
 const DialogBox = styled.dialog<{width: number, height: number}>`
@@ -28,7 +32,7 @@ const DialogBox = styled.dialog<{width: number, height: number}>`
 const CloseButton = styled.button`
   position: relative;
   top: -1%;
-  right: -50%;
+  right: -49%;
   border: none;
   background-color: inherit;
   font-size: 2rem;
@@ -63,7 +67,7 @@ function Modal({
   return (
     <ModalContainer>
       <DialogBox width={width} height={height}>
-        <CloseButton onClick={handleModalClick}>☓</CloseButton>
+        <CloseButton onClick={handleModalClick}><AiOutlineClose /></CloseButton>
         {children}
       </DialogBox>
       <Backdrop onClick={handleModalClick} />
