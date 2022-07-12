@@ -16,6 +16,9 @@ const LoadingCircle = styled.div<circleProps>`
   border:${(props) => (props.size / 15)}rem solid white;
   border-radius: 50%;
   border-top-color: ${(props) => props.theme.palette.gray};
+  position: fixed;
+  top: calc(50% - ${(props) => (props.size) / 2}rem);
+  left: calc(50% - ${(props) => (props.size) / 2}rem);
   animation: spin 1s ease-in-out infinite;
   -webkit-animation: spin 1s ease-in-out infinite;
   @keyframes spin {
