@@ -9,7 +9,7 @@ import Token from '@pages/auth/token';
 
 import useModal from '@hooks/useModal';
 
-const Home = lazy(() => import('@pages/home'));
+const Home = lazy(() => import('@pages/home/home'));
 const Board = lazy(() => import('@pages/board'));
 const Mentoring = lazy(() => import('@pages/mentoring'));
 const Projects = lazy(() => import('@pages/projects'));
