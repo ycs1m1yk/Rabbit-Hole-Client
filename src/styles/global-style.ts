@@ -8,10 +8,12 @@ const GlobalStyle = createGlobalStyle`
   @font-face {
     font-family: 'EliceBold';
     src: url(${EliceBold}) format('woff');
+    font-display: swap;
   }
   @font-face {
     font-family: 'EliceRegular';
     src: url(${EliceRegular}) format('woff');
+    font-display: swap;
   }
   html {
     font-family: "EliceRegular", sans-serif;
