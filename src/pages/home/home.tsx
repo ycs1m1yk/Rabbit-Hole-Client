@@ -3,9 +3,9 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
 import Slider from '@pages/home/components/Slider';
-import BoardImage from '@assets/images/main_board.jpg';
-import ProjectImage from '@assets/images/main_project.jpg';
-import MentoringImage from '@assets/images/main_mentoring.jpg';
+import BoardImage from '@assets/images/main_board.avif';
+import ProjectImage from '@assets/images/main_project.avif';
+import MentoringImage from '@assets/images/main_mentoring.avif';
 import Card from '@/components/card';
 import PostList from '@/components/postList';
 
@@ -157,7 +157,7 @@ export default function Home() {
     autoplay: true,
     autoplaySpeed: 2000,
   };
-
+  const images: string[] = [BoardImage, ProjectImage, MentoringImage];
   const [qnaPosts, setQnaPosts] = useState([]);
   const [freePosts, setFreePosts] = useState([]);
 
@@ -169,6 +169,14 @@ export default function Home() {
   const getFreePostsFromApi = async () => {
 
   };
+
+  // 이미지 preloading
+  useEffect(() => {
+    images.forEach((image) => {
+      const img = new Image();
+      img.src = image;
+    });
+  }, []);
 
   useEffect(() => {
     getQnaPostsFromApi();
