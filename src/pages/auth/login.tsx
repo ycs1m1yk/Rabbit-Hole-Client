@@ -1,8 +1,10 @@
 import React from 'react';
+import { useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 import Logo from '@/components/logo';
 import Button from '@/components/button';
 import { AiFillGithub } from 'react-icons/ai';
+import modalAtom from '@/recoil/modal/modalAtom';
 
 const Container = styled.div`
   height: 90%;
@@ -14,13 +16,16 @@ const Container = styled.div`
 `;
 
 export default function Login() {
+  const setModalState = useSetRecoilState(modalAtom);
+
   const handler = () => {
     const width = 700;
     const height = 700;
     const left = window.screenX + (window.outerWidth - width) / 2;
     const top = window.screenY + (window.outerHeight - height) / 2.5;
     const title = 'Github Login';
-    const url = 'https://github.com/login/oauth/authorize?client_id=425d7356064b00a8307f&scope=repo:status read:repo_hook user:email';
+    const url = 'http://localhost:4000/auth/github';
+    setModalState('');
     window.open(url, title, `width=${width},height=${height},left=${left},top=${top}`);
   };
   return (
@@ -34,7 +39,7 @@ export default function Login() {
       </h2>
       <div style={{ width: '90%' }}>
         <Button size="large" fullSize onClick={handler}>
-          <AiFillGithub style={{ fontSize: '3rem', marginRight: '1rem' }} />
+          <AiFillGithub style={{ fontSize: '3rem', marginRight: '2rem' }} />
           {' '}
           Github 계정으로 로그인
         </Button>

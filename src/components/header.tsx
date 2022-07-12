@@ -8,6 +8,8 @@ import Search from '@components/search';
 import modalAtom from '@/recoil/modal/modalAtom';
 import { useSetRecoilState } from 'recoil';
 
+import useToken from '@/hooks/useToken';
+
 const StyledHeader = styled.header`
   display: flex;
   align-items: center;
@@ -75,7 +77,8 @@ const StyledAuth = styled.div`
 
 export default function Header() {
   const anchorRef = useRef<HTMLAnchorElement>();
-  const setModal = useSetRecoilState(modalAtom);
+  const setModal = useSetRecoilState(modalAtom); // 모달 상태 전역관리
+  const { authInfo, setLogout } = useToken(); // 로그인 상태 확인
 
   const handleClick = (e: MouseEvent) => {
     e.preventDefault();
@@ -90,10 +93,6 @@ export default function Header() {
     anchorRef.current.classList.add('active');
   };
 
-  const handleAuth = (type: '' | 'Login') => {
-    setModal(type);
-  };
-
   return (
     <StyledHeader onClick={handleClick}>
       <Link to="/">
@@ -106,7 +105,17 @@ export default function Header() {
       </Nav>
       <HeaderRight>
         <Search />
-        <StyledAuth onClick={() => handleAuth('Login')}>로그인</StyledAuth>
+        {
+          authInfo // 로그인 상태 조건부 렌더링
+            ? (
+              <>
+                <StyledAuth onClick={setLogout}>로그아웃</StyledAuth>
+                <StyledLink to="/mypage">마이페이지</StyledLink>
+              </>
+            )
+            : <StyledAuth onClick={() => setModal('Login')}>로그인</StyledAuth>
+        }
+
       </HeaderRight>
     </StyledHeader>
   );

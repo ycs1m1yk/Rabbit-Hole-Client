@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React from 'react';
 
 import modalAtom from '@/recoil/modal/modalAtom';
 import { useRecoilState } from 'recoil';
@@ -14,7 +14,7 @@ export default function useModal() {
         return null;
       case 'Login':
         return (
-          <Modal width={480} height={500} modalHandler={()=>{setModalState('')}}>
+          <Modal width={480} height={500} modalHandler={() => { setModalState(''); }}>
             <Login />
           </Modal>
         );
