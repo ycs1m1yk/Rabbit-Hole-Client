@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
@@ -8,6 +8,8 @@ import ProjectImage from '@assets/images/main_project.avif';
 import MentoringImage from '@assets/images/main_mentoring.avif';
 import Card from '@/components/card';
 import PostList from '@/components/postList';
+import { useQueries } from 'react-query';
+import { getAllArticle } from '@/lib/api';
 
 const Container = styled.div``;
 
@@ -157,18 +159,25 @@ export default function Home() {
     autoplay: true,
     autoplaySpeed: 2000,
   };
+
+  // Main Slider Image
   const images: string[] = [BoardImage, ProjectImage, MentoringImage];
-  const [qnaPosts, setQnaPosts] = useState([]);
-  const [freePosts, setFreePosts] = useState([]);
 
   // Data fetching and set data
-  const getQnaPostsFromApi = async () => {
+  const questionParams = { articleType: 'question' };
+  const freeParams = { articleType: 'free' };
+  const results = useQueries([
+    {
+      queryKey: ['question'],
+      queryFn: () => getAllArticle(questionParams),
+    },
+    {
+      queryKey: ['free'],
+      queryFn: () => getAllArticle(freeParams),
+    },
+  ]);
 
-  };
-
-  const getFreePostsFromApi = async () => {
-
-  };
+  console.log(results);
 
   // 이미지 preloading
   useEffect(() => {
@@ -177,11 +186,6 @@ export default function Home() {
       img.src = image;
     });
   }, []);
-
-  useEffect(() => {
-    getQnaPostsFromApi();
-    getFreePostsFromApi();
-  }, [qnaPosts, freePosts]);
 
   return (
     <Container>

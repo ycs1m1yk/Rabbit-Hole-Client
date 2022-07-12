@@ -2,6 +2,7 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import PostItem from '@components/postItem';
+import { IArticleProps } from '@/interfaces/interface';
 
 const Container = styled.div`
   max-width: 800px;
@@ -61,26 +62,12 @@ const defaultProps = {
   type: '',
 };
 
-interface postInterface{
-  articleType: string;
-  articleId: string;
-  author: string;
-  title: string;
-  content: string;
-  createdAt: string;
-  comment: number;
-  likes: number;
-  views: number;
-  carrots: number;
-  tags: string[],
-}
-
 type postList = {
   type?: string;
-  posts: postInterface[];
+  posts: IArticleProps[];
 } & typeof defaultProps
 
-export default function PostList({ type, posts } :postList) {
+export default function PostList({ type, posts } : postList) {
   // 기준에 맞춰 정렬된 데이터 불러오기
   const handleSort = async (sortBy: string): Promise<any> => {
     console.log(type, sortBy);

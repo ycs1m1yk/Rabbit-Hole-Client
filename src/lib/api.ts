@@ -110,7 +110,7 @@ export const getAllArticle = (params: any) => {
   const param = new URLSearchParams(params);
   const par = param.toString();
 
-  return fetch(`${BASE_URL}?${par}`)
+  return fetch(`${BASE_URL}/articles?${par}`)
     .then((res) => res.json());
 };
 
