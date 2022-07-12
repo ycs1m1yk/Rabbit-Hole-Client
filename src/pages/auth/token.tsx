@@ -12,10 +12,15 @@ export default function Token() {
   useEffect(() => {
     try {
       const token = query.get('token');
-      const username = query.get('username');
-      const expire = query.get('expire');
-      if (token && username && expire) {
-        setAuthState({ token, username, expire });
+      const userId = query.get('userId');
+      const userName = query.get('userName');
+      const expireTime = query.get('expire');
+      const date = new Date();
+      if (token && userName && expireTime && userId) {
+        const expire = date.getTime() + parseInt(expireTime, 10) * 1000;
+        setAuthState({
+          token, userName, expire: expire.toString(), userId,
+        });
       }
     } catch (error) {
       alert(error);

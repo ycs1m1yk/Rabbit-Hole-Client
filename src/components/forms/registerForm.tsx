@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { ReactHTMLElement, useRef } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
 import { regNumber, regPhoneNumber, regURL } from '@utils/regex/regex';
@@ -7,6 +7,12 @@ import Button from '@components/button';
 
 const RegisterFormContainer = styled.div`
   width: 90%;
+`;
+
+const ErrorMessage = styled.span`
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  color: ${({ theme }) => theme.status.warningRed};
 `;
 
 const ModalTitle = styled.h1`
@@ -44,27 +50,27 @@ const DiscordImageInput = styled.input`
   border-radius: 5px;
 `;
 
-const SubmitButton = styled.button`
-  width: 8rem;
-  margin: 1rem auto;
-  color: white;
-  background-color: ${({ theme }) => theme.palette.eliceViolet};
-  padding: 0.8rem;
-  border-radius: 5px;
-`;
+interface IForm {
+  name: string;
+  track: string;
+  trackCardinalNumber: string;
+  phoneNumber: string;
+  position?: string;
+  blogAddress?: string;
+  authImage: string;
+}
 
 function RegisterForm() {
-  const { register, handleSubmit, formState } = useForm();
-  
+  const { register, handleSubmit, formState: { errors } } = useForm<IForm>();
+
   // Form 데이터가 유효한 경우 호출되는 함수
   const onValid = (data: any) => {
     console.log('Valid', data);
   };
 
   // Form 데이터가 유효하지 않은 경우 호출되는 함수
-  const onInvalid = (data: any) => {
-    const errors = { ...formState.errors };
-    console.log('errors');
+  const onInvalid = () => {
+    console.log(errors);
   };
 
   return (
@@ -83,8 +89,10 @@ function RegisterForm() {
           })}
           placeholder="ex:설재혁"
         />
+        <ErrorMessage>{errors?.name?.message}</ErrorMessage>
         <InputTitle>엘리스 트랙명</InputTitle>
         <StyledRegisterInput {...register('track', { required: '트랙명은 필수 입력사항입니다:)' })} placeholder="ex:SW Engineer" />
+        <ErrorMessage>{errors?.track?.message}</ErrorMessage>
         <InputTitle>엘리스 기수</InputTitle>
         <StyledRegisterInput
           {...register('trackCardinalNumber', {
@@ -96,17 +104,19 @@ function RegisterForm() {
           })}
           placeholder="ex:2"
         />
+        <ErrorMessage>{errors?.trackCardinalNumber?.message}</ErrorMessage>
         <InputTitle>전화번호</InputTitle>
         <StyledRegisterInput
           {...register('phoneNumber', {
             required: '전화번호는 필수 입력사항입니다:)',
             pattern: {
               value: regPhoneNumber,
-              message: '전화번호 형식에 맞춰 입력해주세요:)',
+              message: '전화번호 형식에 맞춰 입력해주세요:) Ex: 01099999999',
             },
           })}
           placeholder="ex:01012345678"
         />
+        <ErrorMessage>{errors?.phoneNumber?.message}</ErrorMessage>
         <InputTitle>희망 포지션</InputTitle>
         <StyledRegisterInput {...register('position')} placeholder="ex:프론트엔드" />
         <InputTitle>블로그 주소</InputTitle>
@@ -123,6 +133,7 @@ function RegisterForm() {
         <DiscordDescription>본인이 속해 있는 트랙의 디스코드 채널을 캡처해서 업로드 해주세요:)</DiscordDescription>
         <DiscordImageInput {...register('authImage', { required: '인증 이미지는 필수 입력사항입니다:)' })} type="file" />
         <Button onClick={handleSubmit(onValid, onInvalid)}>가입 완료!</Button>
+        <ErrorMessage>{errors?.authImage?.message}</ErrorMessage>
       </StyledRegisterForm>
     </RegisterFormContainer>
   );

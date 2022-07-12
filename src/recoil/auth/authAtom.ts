@@ -2,9 +2,10 @@ import { atom } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
 
 interface AuthProps {
-  username: string,
+  userName: string,
   token: string,
-  expire: string
+  expire: string,
+  userId: string,
 }
 
 const { persistAtom } = recoilPersist({

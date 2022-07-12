@@ -1,6 +1,10 @@
-import React, { MouseEvent, PropsWithChildren } from 'react';
+import React, { MouseEvent, PropsWithChildren, useCallback } from 'react';
 import styled from 'styled-components';
 import { AiOutlineClose } from 'react-icons/ai';
+
+import modalAtom from '@/recoil/modal/modalAtom';
+import { useSetRecoilState } from 'recoil';
+
 const ModalContainer = styled.div`
   width: 100%;
   height: 100%;
@@ -49,21 +53,19 @@ const Backdrop = styled.div`
 `;
 
 interface IModalProps {
-  modalHandler: () => void;
   width: number;
   height: number;
 }
 
 function Modal({
-  modalHandler, width, height, children,
+  width, height, children,
 }: PropsWithChildren<IModalProps>) {
-  const handleModalClick = (e: MouseEvent) => {
-    e.preventDefault();
+  const setModalState = useSetRecoilState(modalAtom);
 
-    if (modalHandler) {
-      modalHandler();
-    }
-  };
+  const handleModalClick = useCallback((e: MouseEvent) => {
+    e.preventDefault();
+    setModalState(null);
+  }, []);
   return (
     <ModalContainer>
       <DialogBox width={width} height={height}>

@@ -1,8 +1,9 @@
 import { atom } from 'recoil';
+import { ModalTypes } from '@/interfaces/type';
 
-const modalAtom = atom<'' | 'Login'>({
+const modalAtom = atom<ModalTypes>({
   key: 'modalAtom', // 해당 atom의 고유 key
-  default: '', // 기본값
+  default: null, // 기본값
 });
 
 export default modalAtom;

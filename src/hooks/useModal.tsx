@@ -1,20 +1,20 @@
 import React from 'react';
 
 import modalAtom from '@/recoil/modal/modalAtom';
-import { useRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 
 import Modal from '@/components/modal';
 import Login from '@/pages/auth/login';
 
 export default function useModal() {
   const getModalPage = () => {
-    const [modalState, setModalState] = useRecoilState(modalAtom);
+    const modalState = useRecoilValue(modalAtom);
     switch (modalState) {
-      case '':
+      case null:
         return null;
       case 'Login':
         return (
-          <Modal width={480} height={500} modalHandler={() => { setModalState(''); }}>
+          <Modal width={480} height={500}>
             <Login />
           </Modal>
         );

@@ -9,7 +9,12 @@ export default function useToken() {
     window.location.reload();
   };
   useEffect(() => {
-    // if authInfo.token expired, remove token
+    if (authInfo) {
+      const date = new Date();
+      if (date.getTime() >= parseInt(authInfo.expire, 10)) {
+        setLogout();
+      }
+    }
   }, []);
   return { authInfo, setAuthInfo, setLogout };
 }

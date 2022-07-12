@@ -1,4 +1,4 @@
-import React, { MouseEvent, useRef } from 'react';
+import React, { MouseEvent, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { lighten } from 'polished';
 import styled from 'styled-components';
@@ -80,7 +80,7 @@ export default function Header() {
   const setModal = useSetRecoilState(modalAtom); // 모달 상태 전역관리
   const { authInfo, setLogout } = useToken(); // 로그인 상태 확인
 
-  const handleClick = (e: MouseEvent) => {
+  const handleClick = useCallback((e: MouseEvent) => {
     e.preventDefault();
 
     const target = e.target as HTMLElement;
@@ -91,7 +91,11 @@ export default function Header() {
     }
     anchorRef.current = anchorTarget;
     anchorRef.current.classList.add('active');
-  };
+  }, []);
+
+  const handleModal = useCallback((type:any) => {
+    setModal(type);
+  }, []);
 
   return (
     <StyledHeader onClick={handleClick}>
@@ -113,7 +117,7 @@ export default function Header() {
                 <StyledLink to="/mypage">마이페이지</StyledLink>
               </>
             )
-            : <StyledAuth onClick={() => setModal('Login')}>로그인</StyledAuth>
+            : <StyledAuth onClick={() => handleModal('Login')}>로그인</StyledAuth>
         }
 
       </HeaderRight>
