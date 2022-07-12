@@ -5,7 +5,7 @@ const BASE_URL = `${import.meta.env.VITE_API_BASE_URL}`;
 export const postRegister = (bodyData: Object | null) => fetch(`${BASE_URL}/users/register`, { method: 'POST', body: JSON.stringify(bodyData) }).then((res) => res.json());
 
 // 로그인
-export const getUserLogin = () => fetch(`${BASE_URL}/auth/github/login`).then((res) => res.json());
+export const getUserLogin = `${BASE_URL}/auth/github/login`;
 
 // 내 정보 삭제하기
 export const deleteUser = (token: string) => fetch(`${BASE_URL}/users`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } }).then((res) => res.json());
