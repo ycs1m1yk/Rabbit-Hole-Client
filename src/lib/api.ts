@@ -65,10 +65,10 @@ export const adoptComment = (token: string, commentId: string) => fetch(`${BASE_
   },
 }).then((res) => res.json());
 
-// 채팅 조회 및 페이지네이션
-export const getChattingLog = (roomType: string) => fetch(`${BASE_URL}?room=${roomType}`).then((res) => res.json());
+// 채팅 조회
+export const getChattingLog = (roomType? : string) => fetch(`${BASE_URL}?room=${roomType}`).then((res) => res.json());
 
-// 채팅 이미지 전송 및 이미지 구현 -> 추후 작성
+// 채팅 페이지네이션, 이미지 전송 및 이미지 구현 -> 추후 작성
 
 // 게시글 작성
 export const createArticle = (token: string, bodyData: Object | null) => fetch(`${BASE_URL}/articles`, {
@@ -102,9 +102,17 @@ export const deleteArticleById = (token: string, articleId: string) => fetch(`${
 export const getArticleById = (articleId: string) => fetch(`${BASE_URL}/articles/${articleId}`)
   .then((res) => res.json());
 
-// 전체 게시글 조회
-export const getAllArticle = (articleType: string, filter: string, page: number, perPage: number) => fetch(`${BASE_URL}?articleType=${articleType}&filter=${filter}&page=${page}&perPage=${perPage}`)
-  .then((res) => res.json());
+/*
+전체 게시글 조회
+params: articleId, filter, page, perPage
+*/
+export const getAllArticle = (params: any) => {
+  const param = new URLSearchParams(params);
+  const par = param.toString();
+
+  return fetch(`${BASE_URL}/articles?${par}`)
+    .then((res) => res.json());
+};
 
 // 게시글 좋아요
 export const increaseArticleLikes = (token: string, articleId: string) => fetch(`${BASE_URL}/${articleId}`, {
@@ -115,10 +123,26 @@ export const increaseArticleLikes = (token: string, articleId: string) => fetch(
   },
 }).then((res) => res.json());
 
-// 작성자 검색
-export const searchByAuthor = (author: string, type: string) => fetch(`${BASE_URL}?author=${author}&type=${type}`)
-  .then((res) => res.json());
+/*
+제목 검색
+params: author, type
+*/
+export const searchByAuthor = (params: any) => {
+  const param = new URLSearchParams(params);
+  const par = param.toString();
 
-// 제목 검색
-export const searchByTitle = (title: string, type: string) => fetch(`${BASE_URL}?title=${title}&type=${type}`)
-  .then((res) => res.json());
+  return fetch(`${BASE_URL}?${par}`)
+    .then((res) => res.json());
+};
+
+/*
+제목 검색
+params: title, type
+*/
+export const searchByTitle = (params: any) => {
+  const param = new URLSearchParams(params);
+  const par = param.toString();
+
+  return fetch(`${BASE_URL}?${par}`)
+    .then((res) => res.json());
+};
