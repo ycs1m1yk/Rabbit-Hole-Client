@@ -1,5 +1,9 @@
-import React, { MouseEvent, PropsWithChildren } from 'react';
+import React, { MouseEvent, PropsWithChildren, useCallback } from 'react';
 import styled from 'styled-components';
+import { AiOutlineClose } from 'react-icons/ai';
+
+import modalAtom from '@/recoil/modal/modalAtom';
+import { useSetRecoilState } from 'recoil';
 
 const ModalContainer = styled.div`
   width: 100%;
@@ -8,6 +12,10 @@ const ModalContainer = styled.div`
   align-items: center;
   justify-content: center;
   position: fixed;
+  top: 50%;
+  left: 50%;
+  /* bring your own prefixes */
+  transform: translate(-50%, -50%);
 `;
 
 const DialogBox = styled.dialog<{width: number, height: number}>`
@@ -28,7 +36,7 @@ const DialogBox = styled.dialog<{width: number, height: number}>`
 const CloseButton = styled.button`
   position: relative;
   top: -1%;
-  right: -50%;
+  right: -49%;
   border: none;
   background-color: inherit;
   font-size: 2rem;
@@ -45,25 +53,23 @@ const Backdrop = styled.div`
 `;
 
 interface IModalProps {
-  modalHandler: () => void;
   width: number;
   height: number;
 }
 
 function Modal({
-  modalHandler, width, height, children,
+  width, height, children,
 }: PropsWithChildren<IModalProps>) {
-  const handleModalClick = (e: MouseEvent) => {
-    e.preventDefault();
+  const setModalState = useSetRecoilState(modalAtom);
 
-    if (modalHandler) {
-      modalHandler();
-    }
-  };
+  const handleModalClick = useCallback((e: MouseEvent) => {
+    e.preventDefault();
+    setModalState(null);
+  }, []);
   return (
     <ModalContainer>
       <DialogBox width={width} height={height}>
-        <CloseButton onClick={handleModalClick}>☓</CloseButton>
+        <CloseButton onClick={handleModalClick}><AiOutlineClose /></CloseButton>
         {children}
       </DialogBox>
       <Backdrop onClick={handleModalClick} />

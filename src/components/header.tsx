@@ -1,10 +1,14 @@
-import React, { MouseEvent, useRef } from 'react';
+import React, { MouseEvent, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { lighten } from 'polished';
 import styled from 'styled-components';
 import Logo from '@components/logo';
 import Search from '@components/search';
-import Button from '@components/button';
+
+import modalAtom from '@/recoil/modal/modalAtom';
+import { useSetRecoilState } from 'recoil';
+
+import useToken from '@/hooks/useToken';
 
 const StyledHeader = styled.header`
   display: flex;
@@ -42,7 +46,6 @@ const StyledLink = styled(Link)`
   align-items: center;
   justify-content: center;
   height: inherit;
-
   font-weight: 600;
   font-size: 1.8rem;
   white-space: nowrap;
@@ -58,10 +61,26 @@ const StyledLink = styled(Link)`
   }
 `;
 
+const StyledAuth = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-weight: 600;
+  font-size: 1.8rem;
+  white-space: nowrap;
+  cursor: pointer;
+  & + & {
+    margin-left: 2rem;
+  }
+`;
+
 export default function Header() {
   const anchorRef = useRef<HTMLAnchorElement>();
+  const setModal = useSetRecoilState(modalAtom); // 모달 상태 전역관리
+  const { authInfo, setLogout } = useToken(); // 로그인 상태 확인
 
-  const handleClick = (e: MouseEvent) => {
+  const handleClick = useCallback((e: MouseEvent) => {
     e.preventDefault();
 
     const target = e.target as HTMLElement;
@@ -72,12 +91,16 @@ export default function Header() {
     }
     anchorRef.current = anchorTarget;
     anchorRef.current.classList.add('active');
-  };
+  }, []);
+
+  const handleModal = useCallback((type:any) => {
+    setModal(type);
+  }, []);
 
   return (
     <StyledHeader onClick={handleClick}>
       <Link to="/">
-        <Logo width={210} heigth={74} />
+        <Logo />
       </Link>
       <Nav>
         <StyledLink to="/board">게시판</StyledLink>
@@ -86,8 +109,17 @@ export default function Header() {
       </Nav>
       <HeaderRight>
         <Search />
-        <Button onClick={() => console.log('임시 onClick')}>로그인</Button>
-        <Button onClick={() => console.log('임시 onClick')}>회원가입</Button>
+        {
+          authInfo // 로그인 상태 조건부 렌더링
+            ? (
+              <>
+                <StyledAuth onClick={setLogout}>로그아웃</StyledAuth>
+                <StyledLink to="/mypage">마이페이지</StyledLink>
+              </>
+            )
+            : <StyledAuth onClick={() => handleModal('Login')}>로그인</StyledAuth>
+        }
+
       </HeaderRight>
     </StyledHeader>
   );
