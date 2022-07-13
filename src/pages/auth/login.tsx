@@ -1,20 +1,10 @@
 import React from 'react';
 import modalAtom from '@/recoil/modal/modalAtom';
 import { useSetRecoilState } from 'recoil';
-import styled from 'styled-components';
 import Logo from '@/components/logo';
 import Button from '@/components/button';
 import { AiFillGithub } from 'react-icons/ai';
 import { getUserLogin } from '@/lib/api';
-
-const Container = styled.div`
-  height: 90%;
-  width: 90%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-`;
 
 export default function Login() {
   const setModalState = useSetRecoilState(modalAtom);
@@ -28,7 +18,7 @@ export default function Login() {
     window.open(getUserLogin, title, `width=${width},height=${height},left=${left},top=${top}`);
   };
   return (
-    <Container>
+    <>
       <h1 style={{ textAlign: 'center' }}>
         로그인
       </h1>
@@ -43,6 +33,6 @@ export default function Login() {
           Github 계정으로 로그인
         </Button>
       </div>
-    </Container>
+    </>
   );
 }

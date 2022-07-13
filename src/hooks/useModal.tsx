@@ -14,7 +14,7 @@ export default function useModal() {
         return null;
       case 'Login':
         return (
-          <Modal width={480} height={500}>
+          <Modal>
             <Login />
           </Modal>
         );
