@@ -8,6 +8,7 @@ import Layout from '@pages/layout';
 import Token from '@pages/auth/token';
 
 import useModal from '@hooks/useModal';
+import useToken from '@hooks/useToken';
 
 const Home = lazy(() => import('@pages/home/home'));
 const Board = lazy(() => import('@pages/board'));
@@ -18,6 +19,7 @@ const BoardDetail = lazy(() => import('@pages/boardDetail/boardDetail'));
 
 function App() {
   const [getModalPage] = useModal();
+  const { authInfo } = useToken();
   return (
     <BrowserRouter>
       <Routes>
@@ -33,6 +35,7 @@ function App() {
         <Route path="/github/login" element={<Token />} />
       </Routes>
       {getModalPage()}
+      {authInfo && <></>}
     </BrowserRouter>
   );
 }
