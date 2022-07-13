@@ -1,7 +1,7 @@
-import { ILikesProps, ITagsProps } from '@/interfaces/interface';
 import React from 'react';
 import { AiOutlineLike } from 'react-icons/ai';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
   width: 300px;
@@ -173,9 +173,12 @@ export default function Card({
   tags,
   type,
 }: cardProps) {
+  const navigate = useNavigate();
+
   const handleClick = ():void => {
     if (type === 'project') {
       console.log('프로젝트 디테일 페이지 이동', `/project?projectId=${projectId}`);
+      navigate(`/projects?projectId=${projectId}`);
     } else if (type === 'mentoring') {
       console.log('멘토링 디테일 모달 띄우기');
     }

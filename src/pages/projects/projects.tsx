@@ -134,7 +134,7 @@ const projects = [
 export default function Projects() {
   const setModal = useSetRecoilState(modalAtom);
 
-  const handlePagination = (pageNum: string) => {
+  const handlePagination = (pageNum: number) => {
     console.log(pageNum);
   };
 
