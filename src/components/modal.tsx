@@ -1,4 +1,4 @@
-import React, { MouseEvent, PropsWithChildren, useCallback } from 'react';
+import React, { MouseEvent, useCallback } from 'react';
 import styled from 'styled-components';
 import { AiOutlineClose } from 'react-icons/ai';
 
@@ -14,16 +14,17 @@ const ModalContainer = styled.div`
   position: fixed;
   top: 50%;
   left: 50%;
-  /* bring your own prefixes */
   transform: translate(-50%, -50%);
 `;
 
-const DialogBox = styled.dialog<{width: number, height: number}>`
-  width: ${(props) => `${props.width}px`};
-  height: ${(props) => `${props.height}px`};
+const DialogBox = styled.dialog`
   display: flex;
   flex-direction: column;
   align-items: center;
+  height: fit-content;
+  width: fit-content;
+  padding: 2rem 4rem;
+  white-space: nowrap;
   border: none;
   border-radius: 3px;
   box-shadow: 0 0 30px rgba(30, 30, 30, 0.185);
@@ -43,6 +44,16 @@ const CloseButton = styled.button`
   cursor: pointer;
 `;
 
+const FormContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  & > * {
+    margin-bottom: 6rem;
+  }
+`;
+
 const Backdrop = styled.div`
   width: 100vw;
   height: 100vh;
@@ -52,14 +63,9 @@ const Backdrop = styled.div`
   backdrop-filter: blur(2px);
 `;
 
-interface IModalProps {
-  width: number;
-  height: number;
-}
-
 function Modal({
-  width, height, children,
-}: PropsWithChildren<IModalProps>) {
+  children,
+}: {children: React.ReactNode }) {
   const setModalState = useSetRecoilState(modalAtom);
 
   const handleModalClick = useCallback((e: MouseEvent) => {
@@ -68,9 +74,9 @@ function Modal({
   }, []);
   return (
     <ModalContainer>
-      <DialogBox width={width} height={height}>
+      <DialogBox>
         <CloseButton onClick={handleModalClick}><AiOutlineClose /></CloseButton>
-        {children}
+        <FormContainer>{children}</FormContainer>
       </DialogBox>
       <Backdrop onClick={handleModalClick} />
     </ModalContainer>
