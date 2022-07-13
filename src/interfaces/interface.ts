@@ -49,7 +49,7 @@ export interface ICommentProps {
     articleId: string;
     authorId: string;
     content: string;
-    likes: ILikesProps[];
+    likes: string[];
     isAdopted: boolean;
     createdAt: Date;
     updatedAt: Date;
@@ -72,8 +72,8 @@ export interface IProjectProps {
     _id: string;
     author: string;
     authorId: string;
+    shortDescription: string;
     description: string;
-    content: string;
     thumbnail: string;
     likes?: ILikesProps[];
     tags: ITagsProps[];

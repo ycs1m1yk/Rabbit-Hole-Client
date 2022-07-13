@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
@@ -44,40 +45,88 @@ const ContentContainer = styled.div`
 
 const projects = [
   {
-    projectId: '1234324',
-    title: 'Main Project',
+    _id: '1322345',
+    title: '설재혁의 프로젝트',
     author: '설재혁',
-    authorId: '123432432',
-    content: 'abcdefghijklmnop abcdefghijklmnop',
+    authorId: '326823',
+    shortDescription: '개인 프로젝트입니다.',
+    description: 'aaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbcccc',
     thumbnail: 'https://via.placeholder.com/200',
-    likes: 12,
+    likes: ['1', '2', '3', '4', '5', '56'],
+    tags: ['React', 'Typescript'],
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    __v: '21321',
   },
   {
-    projectId: '123432432',
-    title: 'Main Project',
+    _id: '123445',
+    title: '설재혁의 프로젝트',
     author: '설재혁',
-    authorId: '123432432',
-    content: 'abcdefghijklmnop abcdefghijklmnop',
+    authorId: '326823',
+    shortDescription: '개인 프로젝트입니다.',
+    description: 'aaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbcccc',
     thumbnail: 'https://via.placeholder.com/200',
-    likes: 9,
+    likes: ['1', '2', '3', '4', '5', '56'],
+    tags: ['React', 'Typescript'],
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    __v: '21321',
   },
   {
-    projectId: '123893048239',
-    title: 'Main Project',
+    _id: '123425',
+    title: '설재혁의 프로젝트',
     author: '설재혁',
-    authorId: '123432432',
-    content: 'abcdefghijklmnop abcdefghijklmnop',
+    authorId: '326823',
+    shortDescription: '개인 프로젝트입니다.',
+    description: 'aaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbcccc',
     thumbnail: 'https://via.placeholder.com/200',
-    likes: 1023,
+    likes: ['1', '2', '3', '4', '5', '56'],
+    tags: ['React', 'Typescript'],
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    __v: '21321',
   },
   {
-    projectId: '1233821903809',
-    title: 'Main Project',
+    _id: '1233245',
+    title: '설재혁의 프로젝트',
     author: '설재혁',
-    authorId: '123432432',
-    content: 'abcdefghijklmnop abcdefghijklmnop',
+    authorId: '326823',
+    shortDescription: '개인 프로젝트입니다.',
+    description: 'aaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbcccc',
     thumbnail: 'https://via.placeholder.com/200',
-    likes: 65,
+    likes: ['1', '2', '3', '4', '5', '56'],
+    tags: ['React', 'Typescript'],
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    __v: '21321',
+  },
+  {
+    _id: '1233432432245',
+    title: '설재혁의 프로젝트',
+    author: '설재혁',
+    authorId: '326823',
+    shortDescription: '개인 프로젝트입니다.',
+    description: 'aaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbcccc',
+    thumbnail: 'https://via.placeholder.com/200',
+    likes: ['1', '2', '3', '4', '5', '56'],
+    tags: ['React', 'Typescript'],
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    __v: '21321',
+  },
+  {
+    _id: '1233232345',
+    title: '설재혁의 프로젝트',
+    author: '설재혁',
+    authorId: '326823',
+    shortDescription: '개인 프로젝트입니다.',
+    description: 'aaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbcccc',
+    thumbnail: 'https://via.placeholder.com/200',
+    likes: ['1', '2', '3', '4', '5', '56'],
+    tags: ['React', 'Typescript'],
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    __v: '21321',
   },
 ];
 
@@ -201,13 +250,15 @@ export default function Home() {
         <Slider settings={projectSettings}>
           {projects.map((project) => (
             <Card
-              key={project.projectId}
+              key={project._id}
+              projectId={project._id}
               title={project.title}
               author={project.author}
-              content={project.content}
+              shortDescription={project.shortDescription}
+              description={project.description}
               thumbnail={project.thumbnail}
-              likes={project.likes}
-              projectId={project.projectId}
+              likes={project.likes.length}
+              tags={project.tags}
               type="project"
             />
           ))}

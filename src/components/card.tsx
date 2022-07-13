@@ -1,3 +1,4 @@
+import { ILikesProps, ITagsProps } from '@/interfaces/interface';
 import React from 'react';
 import { AiOutlineLike } from 'react-icons/ai';
 import styled from 'styled-components';
@@ -117,10 +118,16 @@ const LongBody = styled.p`
 const Info = styled.div`
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-between;
   gap: 5px;
   padding: 0px 16px;
   color: ${({ theme }): string => theme.palette.black};
+  position: relative;
+`;
+
+const LikeContainer = styled.div`
+  display: flex;
+  justify-content: center;
 `;
 
 const LikeCount = styled.span`
@@ -130,28 +137,47 @@ const LikeCount = styled.span`
   padding-top: 5px;
 `;
 
+const TagContainer = styled.div`
+
+`;
+
+const Tag = styled.span`
+  background-color: ${({ theme }) => theme.palette.gray};
+  color: white;
+  font-size: 1.2rem;
+  padding: 0.8rem 1rem;
+  border-radius: 5px;
+  margin-left: 0.5rem;
+`;
+
 interface cardProps {
+  projectId: string;
   title: string;
   author: string;
-  content: string;
+  shortDescription: string;
+  description: string;
   thumbnail?: string;
   likes: number;
-  projectId: string;
+  tags: string[];
   type?: string;
 }
 
 export default function Card({
+  projectId,
   title,
   author,
-  content,
+  shortDescription,
+  description,
   thumbnail,
   likes,
-  projectId,
+  tags,
   type,
 }: cardProps) {
   const handleClick = ():void => {
     if (type === 'project') {
       console.log('프로젝트 디테일 페이지 이동', `/project?projectId=${projectId}`);
+    } else if (type === 'mentoring') {
+      console.log('멘토링 디테일 모달 띄우기');
     }
   };
 
@@ -172,12 +198,17 @@ export default function Card({
       }
       <Main>
         {
-          thumbnail ? <ShortBody>{content}</ShortBody> : <LongBody>{content}</LongBody>
+          thumbnail ? <ShortBody>{shortDescription}</ShortBody> : <LongBody>{description}</LongBody>
         }
       </Main>
       <Info>
-        <AiOutlineLike size={35} />
-        <LikeCount>{likes}</LikeCount>
+        <LikeContainer>
+          <AiOutlineLike size={25} />
+          <LikeCount>{likes}</LikeCount>
+        </LikeContainer>
+        <TagContainer>
+          {tags.slice(0, 2).map((tag, i) => <Tag key={String(i) + tag}>{tag}</Tag>)}
+        </TagContainer>
       </Info>
     </Container>
   );
