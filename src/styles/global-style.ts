@@ -21,7 +21,12 @@ const GlobalStyle = createGlobalStyle`
   }
   html, body, #root{
     width: 100%;
-    height: 100%;
+  }
+  #root {
+    min-width: 144rem;
+    min-height: 100vh;
+    position: relative;
+    padding-bottom: 13.5rem;
   }
   a {
     text-decoration: none;

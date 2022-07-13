@@ -2,12 +2,12 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 import { darken, lighten } from 'polished';
 
-interface ButtonProps{
+interface ButtonProps extends React.ComponentProps<'button'> {
   children: React.ReactNode,
   size?: string,
   outline?: boolean,
   // eslint-disable-next-line no-unused-vars
-  onClick: (event: React.MouseEvent<HTMLDivElement>)=>void,
+  onClick: (event: React.MouseEvent<HTMLButtonElement>)=>void,
   fullSize?: boolean,
 }
 
@@ -41,8 +41,8 @@ const sizeStyles = css`
 `;
 
 const StyledButton = styled.button<ButtonProps>`
+  width: ${(props) => (props.fullSize ? '100%' : 'fit-content')};
   border: none;
-  width: ${(props) => props.fullSize && '100%'};
   display: inline-flex;
   justify-content: center;
   align-items: center;
@@ -79,10 +79,11 @@ const defaultProps = {
 };
 
 export default function Button({
-  children, size = 'medium', outline = false, onClick, fullSize = false,
+  children, size = 'medium', outline = false, onClick, fullSize = false, ...props
 }:ButtonProps) {
   return (
     <StyledButton
+      className={props.className}
       size={size}
       outline={outline}
       onClick={onClick}
