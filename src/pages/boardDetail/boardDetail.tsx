@@ -1,354 +1,152 @@
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import { FaQuestion } from 'react-icons/fa';
-import { AiOutlineHeart } from 'react-icons/ai';
-import { BsFillBookmarkCheckFill } from 'react-icons/bs';
 import { useSearchParams } from 'react-router-dom';
+import { useSetRecoilState, useRecoilValue } from 'recoil';
+import * as styles from '@pages/boardDetail/styled';
+import authAtom from '@/recoil/auth/authAtom';
 // import { getArticleById } from '@/lib/api';
-
-import MarkdownViewer from '@/components/markdownViewer';
 import MarkdownEditor from '@/components/markdownEditor';
 import Button from '@/components/button';
+import Article from '@/pages/boardDetail/components/Article';
+import Answer from '@/pages/boardDetail/components/Answer';
+import { IArticleProps, ICommentProps } from '@/interfaces/interface';
 
-const Container = styled.main`
-  min-width: 1000px;
-  display: flex;
-  flex-direction: column;
-  align-items: center; 
-`;
+const articleData = {
+  _id: 'asdfasef',
+  articleType: 'qna',
+  author: '엘리스발',
+  authorId: 'asdf',
+  title: '이것은 타이틀 예시입니다.',
+  content: '# 안녕하세요 ### 반갑습니다.',
+  likes: [{ userId: 'vanoiev' },{ userId: 'asdf' }],
+  views: 14,
+  carrots: 100,
+  tags: [{ name: '테스트' }],
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  __v: 1234,
+};
 
-const ArticleSection = styled.section`
-  width: 100vw;
-  min-width: 1000px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const AnswerSection = styled.section`
-  width: 100vw;
-  min-width: 1000px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: #F8F9FA;
-  padding: 4rem 0;
-`;
-
-const ArticleContainer = styled.div`
-  width: 1000px;
-  padding: 4rem 2rem;
-
-`;
-const ArticleIconBox = styled.div`
-  margin-left: -10px;
-  color: ${({ theme }) => theme.palette.lightViolet};
-`;
-
-const InfoHead = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 2rem;
-  padding-bottom: 2rem;
-  border-bottom: 1px solid ${({ theme }) => theme.palette.borderGray};
-`;
-
-const TitleBox = styled.div`
-  display: flex;
-  align-items: flex-start;
-  gap: 1rem;
-`;
-
-const Title = styled.h1`
-  font-size: 3rem;
-  color: ${({ theme }) => theme.palette.black};
-  border-bottom: none;
-  padding: 0;
-  
-`;
-
-const ButtonBox = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-`;
-
-const InfoBox = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 1rem;
-`;
-
-const Author = styled.span`
-  font-size: 1.3rem;
-  color: ${({ theme }) => theme.palette.black};
-`;
-const DateField = styled.span`
-  font-size: 1.3rem;
-  color: ${({ theme }) => theme.palette.gray};
-`;
-
-const Main = styled.div`
-  width: 100%;
-  padding: 2rem 1rem;
-`;
-
-const SubInfo = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  padding-top: 2rem;
-`;
-
-const LikeBox = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: ${({ theme }) => theme.palette.gray};
-  border: 1px solid ${({ theme }) => theme.palette.borderGray};
-  border-radius: 10px;
-  padding: 0.5rem 1rem ;
-`;
-
-const LikeCount = styled.span`
-  font-size: 14px;
-  vertical-align: middle;
-`;
-
-const AnswerBox = styled.div`
-  width: 1000px;
-  padding: 2rem;
-  background-color: #FFFF;
-  border: 1px solid ${({ theme }) => theme.palette.borderGray};
-  box-shadow: 4px 4px 10px ${({ theme }) => theme.palette.borderGray};
-  margin-bottom: 4rem;
-`;
-
-const InfoHeadBox = styled.div`
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1rem;
-`;
-
-const ProfileBox = styled.div`
-  color: ${({ theme }) => theme.palette.lightViolet};
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-`;
-
-// const Rank = styled(Author)`
-//   font-size: 12px;
-//   color: ${({ theme }) => theme.palette.gray};
-// `;
-
-const Profile = styled(Author)`
-  font-size: 18px;
-  font-weight: 700;
-`;
-
-const CreateDate = styled(DateField)`
-  font-size: 12px;
-  color: ${({ theme }) => theme.palette.gray};
-`;
-
-interface articleInterface{
-  _id: string;
-  articleType: string;
-  author: string;
-  authorId: string;
-  title: string;
-  content: string;
-  carrots: number;
-  likes: number;
-  createdAt: string;
-}
-
-interface ArticleProps{
-  article: articleInterface;
-}
-
-function Article({ article }:ArticleProps) {
-  const handleUpdate = React.useCallback(() => {
-
-  }, []);
-  const handleDelete = React.useCallback(() => {
-
-  }, []);
-  return (
-    <ArticleSection>
-      <ArticleContainer>
-        <InfoHead>
-          <TitleBox>
-            <ArticleIconBox>
-              <FaQuestion size={30} />
-            </ArticleIconBox>
-            <Title>{article.title}</Title>
-          </TitleBox>
-          <InfoBox>
-            <Author>{article.author}</Author>
-            <DateField>{article.createdAt}</DateField>
-          </InfoBox>
-        </InfoHead>
-        <Main>
-          <MarkdownViewer text={article.content} />
-        </Main>
-        <SubInfo>
-          <LikeBox>
-            <AiOutlineHeart size={20} />
-            <LikeCount>{article.likes}</LikeCount>
-          </LikeBox>
-          <ButtonBox>
-            <Button onClick={() => { handleUpdate(); }}>수정하기</Button>
-            <Button onClick={() => { handleDelete(); }}>삭제하기</Button>
-          </ButtonBox>
-        </SubInfo>
-      </ArticleContainer>
-    </ArticleSection>
-  );
-}
-
-interface commentInterface{
-  _id: string;
-  author: string;
-  authorId: string;
-  content: string;
-  likes: number;
-  isAdopted: boolean
-  createdAt: string;
-}
-
-interface AnswerProps{
-  comment: commentInterface;
-}
-
-function Answer({ comment }:AnswerProps) {
-  const handleUpdate = React.useCallback(() => {
-
-  }, []);
-  const handleDelete = React.useCallback(() => {
-
-  }, []);
-
-  return (
-    <AnswerBox>
-      <InfoHead>
-        <InfoHeadBox>
-          <ProfileBox>
-            { comment.isAdopted && <BsFillBookmarkCheckFill size={30} />}
-            <Profile>{comment.author}</Profile>
-          </ProfileBox>
-          <CreateDate>{comment.createdAt}</CreateDate>
-        </InfoHeadBox>
-      </InfoHead>
-      <Main>
-        <MarkdownViewer text={comment.content} />
-      </Main>
-      <SubInfo>
-        <LikeBox>
-          <AiOutlineHeart size={20} />
-          <LikeCount>{comment.likes}</LikeCount>
-        </LikeBox>
-        <ButtonBox>
-          <Button onClick={() => { handleUpdate(); }}>수정하기</Button>
-          <Button onClick={() => { handleDelete(); }}>삭제하기</Button>
-        </ButtonBox>
-      </SubInfo>
-    </AnswerBox>
-  );
-}
+const commentData = [
+  {
+    _id: 'adfegaave',
+    commentType: 'wow',
+    author: '엘리시발',
+    articleId: 'davnoe',
+    authorId: 'asdf',
+    content: '## 안녕하세요 ### 답변입니다.',
+    likes: [{ userId: 'asdf' }],
+    isAdopted: false,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    __v: 123,
+  },
+  {
+    _id: 'adfavase',
+    commentType: 'wow',
+    author: '엘리시발',
+    articleId: 'davnoe',
+    authorId: 'asdf',
+    content: '## 안녕하세요 ### 답변입니다.',
+    likes: [{ userId: 'vanoiev' },{ userId: 'asdf' }],
+    isAdopted: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    __v: 123,
+  },
+  {
+    _id: 'adfaseve',
+    commentType: 'wow',
+    author: '엘리시발',
+    articleId: 'davnoe',
+    authorId: 'aveiave',
+    content: '## 안녕하세요 ### 답변입니다.',
+    likes: [{ userId: 'vanoiev' }],
+    isAdopted: false,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    __v: 123,
+  },
+  {
+    _id: 'adfvdaave',
+    commentType: 'wow',
+    author: '엘리시발',
+    articleId: 'davnoe',
+    authorId: 'aveiave',
+    content: '## 안녕하세요 ### 답변입니다.',
+    likes: [{ userId: 'vanoiev' }],
+    isAdopted: false,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    __v: 123,
+  },
+];
 
 export default function BoardDetail() {
+  const auth = useRecoilValue(authAtom);
+  const setAuth = useSetRecoilState(authAtom);
   const [query] = useSearchParams();
   const id = query.get('id');
-  const [article, setArticle] = useState<articleInterface>({});
-  const [comments, setComments] = useState<commentInterface[]>([]);
+  const [article, setArticle] = useState<IArticleProps>({
+    _id: '',
+    articleType: '',
+    author: '',
+    authorId: '',
+    title: '',
+    content: '',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    __v: 0,
+  });
+  const [comments, setComments] = useState<ICommentProps[]>([]);
   useEffect(() => {
-    const articleData = {
-      _id: 'adfasdfs',
-      articleType: 'question',
-      author: '엘리레이서',
-      authorId: '62b3173471aa3d5a99e31468',
-      title: '글제목ㅁㅇㄻㅇㄻㄴㅇㄻㄴㅇㄻㅇㄹ',
-      content: '### Hello',
-      carrots: 100,
-      likes: 10,
-      createdAt: '2020.07.01',
-    };
-    const commentData = [
-      {
-        _id: 'asdfasd',
-        author: 'asdfasf',
-        authorId: 'sdvoane',
-        content: 'wow',
-        likes: 12,
-        isAdopted: false,
-        createdAt: '2020.07.05',
-      },
-      {
-        _id: 'asdfasfasd',
-        author: 'asdfasf',
-        authorId: 'sdvoane',
-        content: 'wow',
-        likes: 12,
-        isAdopted: false,
-        createdAt: '2020.07.05',
-      },
-      {
-        _id: 'asdffdasd',
-        author: 'asdfasf',
-        authorId: 'sdvoane',
-        content: 'wow',
-        likes: 12,
-        isAdopted: false,
-        createdAt: '2020.07.05',
-      },
-      {
-        _id: 'asdfsdsadasd',
-        author: 'asdfasf',
-        authorId: 'sdvoane',
-        content: 'wow',
-        likes: 12,
-        isAdopted: false,
-        createdAt: '2020.07.05',
-      },
-    ];
     // const articleDataa = getArticleById(id);
+    setAuth({
+      userName: '엘리수발',
+      token: 'vaoefjafe',
+      expire: 'exk',
+      userId: 'asdf',
+    });
+    // setAuth({
+    //   userName: '',
+    //   token: '',
+    //   expire: '',
+    //   userId: '',
+    // });
     setArticle(articleData);
     setComments(commentData);
   }, [id]);
   console.log(article);
   console.log(comments);
+  console.log(auth);
+  const handleAnswer = React.useCallback(() => {
+
+  }, []);
   return (
-    <Container>
-      {Object.keys(article).length !== 0 && <Article article={article} />}
-      <AnswerSection>
+    <styles.Container>
+      {article._id !== '' && <Article article={article} />}
+      <styles.AnswerSection>
         {comments.length > 0 ? comments.map((comment) => (
           // eslint-disable-next-line no-underscore-dangle
           <Answer key={comment._id} comment={comment} />
         )) : null}
-        <AnswerBox>
-          <InfoHead>
-            <InfoHeadBox>
-              <ProfileBox>
-                <Profile>엘리쑥갓님 답변해주세요</Profile>
-              </ProfileBox>
-            </InfoHeadBox>
-          </InfoHead>
-          <Main>
+        {auth && (
+        <styles.AnswerBox>
+          <styles.InfoHead>
+            <styles.InfoHeadBox>
+              <styles.ProfileBox>
+                <styles.Profile>{ `${auth?.userName}님 답변해 주세요` }</styles.Profile>
+              </styles.ProfileBox>
+            </styles.InfoHeadBox>
+          </styles.InfoHead>
+          <styles.Main>
             <MarkdownEditor />
-          </Main>
-          <SubInfo>
-            <Button onClick={() => {}}>답변하기</Button>
-          </SubInfo>
-        </AnswerBox>
-      </AnswerSection>
-    </Container>
+          </styles.Main>
+          <styles.SubInfo>
+            <Button onClick={() => { handleAnswer(); }}>답변하기</Button>
+          </styles.SubInfo>
+        </styles.AnswerBox>
+        )}
+      </styles.AnswerSection>
+    </styles.Container>
   );
 }
