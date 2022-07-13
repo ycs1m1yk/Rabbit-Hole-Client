@@ -14,6 +14,7 @@ const Board = lazy(() => import('@pages/board'));
 const Mentoring = lazy(() => import('@pages/mentoring'));
 const Projects = lazy(() => import('@pages/projects'));
 const Mypage = lazy(() => import('@pages/mypage'));
+const BoardDetail = lazy(() => import('@pages/boardDetail/boardDetail'));
 
 function App() {
   const [getModalPage] = useModal();
@@ -23,6 +24,7 @@ function App() {
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
           <Route path="/board" element={<Board />} />
+          <Route path="/board/detail" element={<BoardDetail />} />
           <Route path="/mentoring" element={<Mentoring />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/mypage" element={<Mypage />} />
