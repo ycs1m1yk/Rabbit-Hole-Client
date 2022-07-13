@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable no-nested-ternary */
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
@@ -87,15 +88,15 @@ export default function PostList({ type, posts } : postList) {
       <Posts>
         { posts.length > 0 ? posts.map((post) => (
           <PostItem
-            key={post.articleId}
+            key={post._id}
             profile={post.author}
             title={post.title}
             content={post.content}
-            date={post.createdAt}
-            comment={post.comment}
-            heart={post.likes}
+            date={post.createdAt.toLocaleDateString()}
+            comment={123}
+            heart={34}
             type={type}
-            articleId={post.articleId}
+            articleId={post._id}
             articleType={post.articleType}
           />
         )) : <EmptyField>게시물이 존재하지 않습니다.</EmptyField> }
