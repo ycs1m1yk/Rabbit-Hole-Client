@@ -5,7 +5,12 @@ import { useForm } from 'react-hook-form';
 import { regPhoneNumber, regURL } from '@utils/regex/regex';
 
 import Button from '@components/button';
+
+import { useMutation } from 'react-query';
+import { postRegister, getUserLogin } from '@lib/api';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import SelectBox from '../selectBox';
+import { IRegisterFormProps } from '@/interfaces/interface';
 
 const RegisterFormContainer = styled.div`
   width: 90%;
@@ -63,19 +68,32 @@ interface IForm {
 }
 
 function RegisterForm() {
-  const { register, handleSubmit, formState: errors } = useForm();
-  const [selectedTrack, setSelectedTrack] = useState<string>('');
-  const [selectedTrackNum, setSelectedTrackNum] = useState<number>(0);
-
+  const { isSuccess, isError } = useMutation(postRegister);
+  const [queries] = useSearchParams();
+  const { register, handleSubmit, formState: errors } = useForm<IForm>();
+  const [selectedTrack, setSelectedTrack] = useState<string>('SW 엔지니어 트랙');
+  const [selectedTrackNum, setSelectedTrackNum] = useState<number>(1);
+  const navigate = useNavigate();
   // Form 데이터가 유효한 경우 호출되는 함수
-  const onValid = (data: any) => {
+  const onValid = async (data: any) => {
     // console.log('Valid', data);
-    const formData = {
+    const githubProfileUrl = queries.get('githubProfileUrl');
+    const githubEmail = queries.get('githubEmail');
+    const githubAvatar = queries.get('githubAvatar');
+
+    const formData:IRegisterFormProps = {
       ...data,
       track: selectedTrack,
       trackCardinalNumber: Number(selectedTrackNum),
+      githubProfileUrl,
+      githubEmail,
+      githubAvatar,
     };
-    console.log(formData);
+    formData.authImage = '업로드 준비중....';
+    const newUser = await postRegister(formData);
+    if (newUser) {
+      window.location.href = getUserLogin;
+    }
   };
 
   // Form 데이터가 유효하지 않은 경우 호출되는 함수
@@ -99,7 +117,7 @@ function RegisterForm() {
           })}
           placeholder="ex:설재혁"
         />
-        <ErrorMessage>{errors?.name?.message}</ErrorMessage>
+        <ErrorMessage>{errors?.errors?.name?.message}</ErrorMessage>
         <InputTitle>엘리스 트랙명</InputTitle>
         <SelectBox options={['SW', 'AI']} defaultValue="트랙명" selectedOption={selectedTrack} setSelectedOption={setSelectedTrack} width={200} type="register" />
         <InputTitle>엘리스 기수</InputTitle>
@@ -115,7 +133,7 @@ function RegisterForm() {
           })}
           placeholder="ex:01012345678"
         />
-        <ErrorMessage>{errors?.phoneNumber?.message}</ErrorMessage>
+        <ErrorMessage>{errors?.errors?.phoneNumber?.message}</ErrorMessage>
         <InputTitle>희망 포지션</InputTitle>
         <StyledRegisterInput {...register('position')} placeholder="ex:프론트엔드" />
         <InputTitle>블로그 주소</InputTitle>
@@ -131,8 +149,8 @@ function RegisterForm() {
         <InputTitle>Discord 인증 이미지</InputTitle>
         <DiscordDescription>본인이 속해 있는 트랙의 디스코드 채널을 캡처해서 업로드 해주세요:)</DiscordDescription>
         <DiscordImageInput {...register('authImage', { required: '인증 이미지는 필수 입력사항입니다:)' })} type="file" />
+        <ErrorMessage>{errors?.errors?.authImage?.message}</ErrorMessage>
         <Button onClick={handleSubmit(onValid, onInvalid)}>가입 완료!</Button>
-        <ErrorMessage>{errors?.authImage?.message}</ErrorMessage>
       </StyledRegisterForm>
     </RegisterFormContainer>
   );

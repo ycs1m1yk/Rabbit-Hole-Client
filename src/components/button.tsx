@@ -40,7 +40,8 @@ const sizeStyles = css`
   `}
 `;
 
-const StyledButton = styled.div<ButtonProps>`
+const StyledButton = styled.button<ButtonProps>`
+  border: none;
   width: ${(props) => props.fullSize && '100%'};
   display: inline-flex;
   justify-content: center;

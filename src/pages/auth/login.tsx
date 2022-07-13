@@ -20,7 +20,7 @@ export default function Login() {
   const setModalState = useSetRecoilState(modalAtom);
   const handler = () => {
     const width = 700;
-    const height = 700;
+    const height = 750;
     const left = window.screenX + (window.outerWidth - width) / 2;
     const top = window.screenY + (window.outerHeight - height) / 2.5;
     const title = 'Github Login';
