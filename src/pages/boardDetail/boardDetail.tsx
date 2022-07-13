@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-underscore-dangle
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useSetRecoilState, useRecoilValue } from 'recoil';
@@ -9,6 +10,8 @@ import Button from '@/components/button';
 import Article from '@/pages/boardDetail/components/Article';
 import Answer from '@/pages/boardDetail/components/Answer';
 import { IArticleProps, ICommentProps } from '@/interfaces/interface';
+import { postComment } from '@/lib/api';
+import useToken from '@/hooks/useToken';
 
 const articleData = {
   _id: 'asdfasef',
@@ -17,7 +20,7 @@ const articleData = {
   authorId: 'asdf',
   title: '이것은 타이틀 예시입니다.',
   content: '# 안녕하세요 ### 반갑습니다.',
-  likes: [{ userId: 'vanoiev' },{ userId: 'asdf' }],
+  likes: [{ userId: 'vanoiev' }, { userId: 'asdf' }],
   views: 14,
   carrots: 100,
   tags: [{ name: '테스트' }],
@@ -47,7 +50,7 @@ const commentData = [
     articleId: 'davnoe',
     authorId: 'asdf',
     content: '## 안녕하세요 ### 답변입니다.',
-    likes: [{ userId: 'vanoiev' },{ userId: 'asdf' }],
+    likes: [{ userId: 'vanoiev' }, { userId: 'asdf' }],
     isAdopted: true,
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -84,6 +87,7 @@ const commentData = [
 export default function BoardDetail() {
   const auth = useRecoilValue(authAtom);
   const setAuth = useSetRecoilState(authAtom);
+  const editor = React.useRef(null);
   const [query] = useSearchParams();
   const id = query.get('id');
   const [article, setArticle] = useState<IArticleProps>({
@@ -100,12 +104,6 @@ export default function BoardDetail() {
   const [comments, setComments] = useState<ICommentProps[]>([]);
   useEffect(() => {
     // const articleDataa = getArticleById(id);
-    setAuth({
-      userName: '엘리수발',
-      token: 'vaoefjafe',
-      expire: 'exk',
-      userId: 'asdf',
-    });
     // setAuth({
     //   userName: '',
     //   token: '',
@@ -119,7 +117,14 @@ export default function BoardDetail() {
   console.log(comments);
   console.log(auth);
   const handleAnswer = React.useCallback(() => {
-
+    const content = editor.current.getInstance().getMarkdown();
+    const token = useToken();
+    const data = {
+      commentType: article.articleType,
+      content,
+    };
+    // 댓글 POST API
+    postComment(token,data,article._id);
   }, []);
   return (
     <styles.Container>
@@ -139,7 +144,7 @@ export default function BoardDetail() {
             </styles.InfoHeadBox>
           </styles.InfoHead>
           <styles.Main>
-            <MarkdownEditor />
+            <MarkdownEditor ref={editor} />
           </styles.Main>
           <styles.SubInfo>
             <Button onClick={() => { handleAnswer(); }}>답변하기</Button>
