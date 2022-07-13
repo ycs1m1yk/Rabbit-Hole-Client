@@ -9,7 +9,7 @@ import MentoringImage from '@assets/images/main_mentoring.avif';
 import Card from '@/components/card';
 import PostList from '@/components/postList';
 import { useQueries } from 'react-query';
-import { getAllArticle } from '@/lib/api';
+import { getAllArticle } from '@/lib/articleApi';
 
 const Container = styled.div``;
 

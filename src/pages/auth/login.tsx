@@ -4,13 +4,13 @@ import { useSetRecoilState } from 'recoil';
 import Logo from '@/components/logo';
 import Button from '@/components/button';
 import { AiFillGithub } from 'react-icons/ai';
-import { getUserLogin } from '@/lib/api';
+import { getUserLogin } from '@/lib/userApi';
 
 export default function Login() {
   const setModalState = useSetRecoilState(modalAtom);
   const handler = () => {
     const width = 700;
-    const height = 700;
+    const height = 750;
     const left = window.screenX + (window.outerWidth - width) / 2;
     const top = window.screenY + (window.outerHeight - height) / 2.5;
     const title = 'Github Login';
