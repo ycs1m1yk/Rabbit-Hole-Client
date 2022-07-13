@@ -7,10 +7,10 @@ import { regPhoneNumber, regURL } from '@utils/regex/regex';
 import Button from '@components/button';
 
 import { useMutation } from 'react-query';
-import { postRegister, getUserLogin } from '@lib/api';
-import { useSearchParams, useNavigate } from 'react-router-dom';
-import SelectBox from '../selectBox';
+import { postRegister, getUserLogin } from '@/lib/userApi';
+import { useSearchParams } from 'react-router-dom';
 import { IRegisterFormProps } from '@/interfaces/interface';
+import SelectBox from '../selectBox';
 
 const RegisterFormContainer = styled.div`
   width: 90%;
@@ -73,7 +73,6 @@ function RegisterForm() {
   const { register, handleSubmit, formState: errors } = useForm<IForm>();
   const [selectedTrack, setSelectedTrack] = useState<string>('SW 엔지니어 트랙');
   const [selectedTrackNum, setSelectedTrackNum] = useState<number>(1);
-  const navigate = useNavigate();
   // Form 데이터가 유효한 경우 호출되는 함수
   const onValid = async (data: any) => {
     // console.log('Valid', data);
