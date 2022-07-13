@@ -1,11 +1,13 @@
 /* eslint-disable no-underscore-dangle */
 import React from 'react';
 import styled from 'styled-components';
+import { useSetRecoilState } from 'recoil';
 
 import Button from '@/components/button';
 import Search from '@/components/search';
 import Card from '@/components/card';
 import Pagination from '@/components/pagination';
+import modalAtom from '@/recoil/modal/modalAtom';
 
 const ProjectContainer = styled.div`
   padding: 3rem;
@@ -66,7 +68,7 @@ const projects = [
     description: 'aaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbcccc',
     thumbnail: 'https://via.placeholder.com/200',
     likes: ['1', '2', '3', '4', '5', '56'],
-    tags: ['React', 'Typescript'],
+    tags: ['React'],
     createdAt: new Date(),
     updatedAt: new Date(),
     __v: '21321',
@@ -130,8 +132,14 @@ const projects = [
 ];
 
 export default function Projects() {
+  const setModal = useSetRecoilState(modalAtom);
+
   const handlePagination = (pageNum: string) => {
     console.log(pageNum);
+  };
+
+  const handleProjectEnrollment = (modalType: any) => {
+    setModal(modalType);
   };
   return (
     <ProjectContainer>
@@ -141,7 +149,7 @@ export default function Projects() {
           <Search width={400} height={30} />
         </SearchContainer>
         <ButtonContainer>
-          <Button size="small" onClick={() => {}}>프로젝트 등록</Button>
+          <Button size="small" onClick={() => handleProjectEnrollment('Register')}>프로젝트 등록</Button>
         </ButtonContainer>
       </ProjectHeader>
       <Content>
