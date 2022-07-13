@@ -26,9 +26,11 @@ export interface ITagsProps {
     name: string;
 }
 
+export type IArticleTypes = 'question' | 'free' | 'study' | string
+
 export interface IArticleProps {
     _id: string;
-    articleType: string;
+    articleType: IArticleTypes;
     author: string;
     authorId: string;
     title: string;
@@ -40,6 +42,29 @@ export interface IArticleProps {
     createdAt: Date;
     updatedAt: Date;
     __v: number;
+}
+
+export interface IArticleGetProps {
+    [index: string]: any;
+    articleType: IArticleTypes;
+    filter?: 'date' | 'views';
+    page?: string;
+    perPage?: string;
+}
+
+export interface IArticlePostProps {
+    articleType: string;
+    author: string;
+    title: string;
+    content: string;
+    carrots: number;
+    tags: ITagsProps[] | [];
+}
+
+export interface IArticlePutProps {
+    title: string;
+    content: string;
+    tags?: ITagsProps[] | [];
 }
 
 export interface ICommentProps {
@@ -54,6 +79,12 @@ export interface ICommentProps {
     createdAt: Date;
     updatedAt: Date;
     __v: number;
+}
+
+export interface IPostCommentProps {
+    commentType: string;
+    articleId: string;
+    content: string;
 }
 
 export interface IChatProps {
@@ -115,8 +146,22 @@ export interface IRegisterFormProps {
     name: string;
     track: string;
     trackCardinalNumber: string;
+    position?: string;
+    blogAddress?: string;
     authImage: string;
     githubEmail: string;
     githubProfileUrl: string;
     githubAvatar: string;
+}
+
+export interface ISearchArticleByAuthorProps {
+    [index: string]: string;
+    author: string;
+    type: IArticleTypes;
+}
+
+export interface ISearchArticleByTitleProps {
+    [index: string]: string;
+    title: string;
+    type: IArticleTypes;
 }

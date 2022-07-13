@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import Logo from '@/components/logo';
 import Button from '@/components/button';
 import { AiFillGithub } from 'react-icons/ai';
-import { getUserLogin } from '@/lib/api';
+import { getUserLogin } from '@/lib/userApi';
 
 const Container = styled.div`
   height: 90%;
