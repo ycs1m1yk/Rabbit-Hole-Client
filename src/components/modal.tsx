@@ -2,7 +2,7 @@ import React, { MouseEvent, useCallback } from 'react';
 import styled from 'styled-components';
 import { AiOutlineClose } from 'react-icons/ai';
 
-import modalAtom from '@/recoil/modal/modalAtom';
+import modalAtom from '@recoil/modal/modalAtom';
 import { useSetRecoilState } from 'recoil';
 
 const ModalContainer = styled.div`
@@ -21,17 +21,19 @@ const DialogBox = styled.dialog`
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: fit-content;
   width: fit-content;
+  height: fit-content;
+  max-height: 90vh;
   padding: 2rem 4rem;
-  white-space: nowrap;
   border: none;
   border-radius: 3px;
   box-shadow: 0 0 30px rgba(30, 30, 30, 0.185);
   box-sizing: border-box;
   background-color: white;
-  z-index: 10000;
   font-size: 2rem;
+  white-space: nowrap;
+  overflow: auto;
+  z-index: 10000;
 `;
 
 const CloseButton = styled.button`
