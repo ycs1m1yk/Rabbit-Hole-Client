@@ -19,11 +19,11 @@ export interface IUserProps {
 }
 
 export interface ILikesProps {
-  userId: string;
+    userId: string;
 }
 
 export interface ITagsProps {
-  name: string;
+    name: string;
 }
 
 export interface IArticleProps {
@@ -109,4 +109,14 @@ export interface IMentoringProps {
     createdAt: Date;
     updatedAt: Date;
     __v: number;
+}
+
+export interface IRegisterFormProps {
+    name: string;
+    track: string;
+    trackCardinalNumber: string;
+    authImage: string;
+    githubEmail: string;
+    githubProfileUrl: string;
+    githubAvatar: string;
 }
