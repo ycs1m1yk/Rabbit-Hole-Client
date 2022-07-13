@@ -12,10 +12,6 @@ import { useSearchParams } from 'react-router-dom';
 import { IRegisterFormProps } from '@/interfaces/interface';
 import SelectBox from '../selectBox';
 
-const RegisterFormContainer = styled.div`
-  width: 90%;
-`;
-
 const ErrorMessage = styled.span`
   margin-bottom: 0.5rem;
   font-size: 1rem;
@@ -101,7 +97,7 @@ function RegisterForm() {
   };
 
   return (
-    <RegisterFormContainer>
+    <>
       <ModalTitle>추가 정보 입력</ModalTitle>
       <h2 style={{ marginBottom: '2rem' }}>회원가입을 위해 추가정보가 필요합니다.</h2>
       <StyledRegisterForm>
@@ -151,7 +147,7 @@ function RegisterForm() {
         <ErrorMessage>{errors?.errors?.authImage?.message}</ErrorMessage>
         <Button onClick={handleSubmit(onValid, onInvalid)}>가입 완료!</Button>
       </StyledRegisterForm>
-    </RegisterFormContainer>
+    </>
   );
 }
 
