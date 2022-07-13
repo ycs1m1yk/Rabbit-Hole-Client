@@ -4,35 +4,39 @@ import React, {
 import styled from 'styled-components';
 import useSelect from '@hooks/useSelect';
 
-const Label = styled.label<{ width: number | string }>`
+const Label = styled.label<{ width: number | string, type: string }>`
   position: relative;
   display: inline-block;
   width: ${({ width }) => (typeof width === 'string' ? width : `${width}px`)};
   
-  margin: 100px;
+  margin: ${(props) => (props.type === 'register' ? '10px 0px' : '0')};
 `;
 
-const Select = styled.select`
-  padding: 1rem;
+const Select = styled.select<{type: string}>`
+  padding: ${(props) => (props.type === 'register' ? '0rem' : '1rem')};
   width: 100%;
   outline: none;
   border: none;
   border-bottom: 1px solid black;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 2rem;
+  font-size: ${(props) => (props.type === 'register' ? '1.5rem' : '2rem')};
 `;
 
-const SelectItemContainer = styled.div`
+const SelectItemContainer = styled.div<{type: string}>`
   margin-top: 0.5rem;
   border: 1px solid black;
   border-radius: 5px;
   box-shadow: 0px 4px 13px rgba(0, 0, 0, 0.25);
+  position: ${(props) => (props.type === 'register' ? 'absolute' : null)};
+  width: ${(props) => (props.type === 'register' ? '100%' : null)};
+  background-color: ${(props) => (props.type === 'register' ? 'white' : null)};
+  z-index: 1;
 `;
 
-const SelectItem = styled.option`
-  height: 2.5rem;
-  font-size: 2rem;
+const SelectItem = styled.option<{type:string}>`
+  height: ${(props) => (props.type === 'register' ? '1.5rem' : '2.5rem')};
+  font-size: ${(props) => (props.type === 'register' ? '1.5rem' : '2rem')};
   cursor: pointer;
   border-bottom: 1px solid black;
   padding: 0rem 1rem;
@@ -44,14 +48,20 @@ const SelectItem = styled.option`
   }
 `;
 
-interface ISelectBoxProps {
-  options: string[];
+const defaultProps = {
+  requestFunc: null,
+  type: '',
+};
+
+type ISelectBoxProps = {
+  options: string[] | number[];
   defaultValue: string;
-  selectedOption: string;
-  setSelectedOption: Dispatch<SetStateAction<string>>;
+  selectedOption: string | number;
+  setSelectedOption: Dispatch<SetStateAction<string>> | Dispatch<SetStateAction<number>>;
   width: string | number;
-  requestFunc: any;
-}
+  requestFunc?: any;
+  type?: string;
+} & typeof defaultProps;
 
 function SelectBox({
   options,
@@ -60,10 +70,10 @@ function SelectBox({
   setSelectedOption,
   width,
   requestFunc,
+  type,
 }: ISelectBoxProps) {
   const labelRef = useRef<HTMLLabelElement>(null);
   const [clickSelectedBox, setClickSelectedBox] = useSelect(labelRef); // SelectBox가 클릭됐는지 여부 체크
-  // const selectRef = useRef<HTMLSelectElement>(null);
 
   // SelectBox 클릭 이벤트 핸들러
   const handleOpenSelectBox = (e: MouseEvent) => {
@@ -78,16 +88,19 @@ function SelectBox({
     setSelectedOption(optionValue); // 선택된 Option Value 설정
     setClickSelectedBox(false); // Option 선택하면 Select Box 닫기
 
-    requestFunc(optionValue); // 선택된 Option을 인자로 요청 함수 실행
+    if (requestFunc) {
+      requestFunc(optionValue); // 선택된 Option을 인자로 요청 함수 실행
+    }
   };
 
   return (
     <Label
       width={width}
       ref={labelRef}
+      type={type}
       onMouseDown={handleOpenSelectBox}
     >
-      <Select value={selectedOption} onChange={handleSelectItemClick}>
+      <Select type={type} value={selectedOption} onChange={handleSelectItemClick}>
         <option>{defaultValue}</option>
         {options.map((option, i) => (
           <option key={String(i) + option} value={option}>
@@ -96,11 +109,12 @@ function SelectBox({
         ))}
       </Select>
       {clickSelectedBox && (
-        <SelectItemContainer>
+        <SelectItemContainer type={type}>
           {options.map((option, i) => (
             <SelectItem
               key={String(i) + option}
               onClick={handleSelectItemClick}
+              type={type}
             >
               {option}
             </SelectItem>
@@ -110,4 +124,7 @@ function SelectBox({
     </Label>
   );
 }
+
+SelectBox.defaultProps = defaultProps;
+
 export default SelectBox;

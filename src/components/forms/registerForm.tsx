@@ -1,10 +1,15 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
-import { regNumber, regPhoneNumber, regURL } from '@utils/regex/regex';
+import { regPhoneNumber, regURL } from '@utils/regex/regex';
 
-const RegisterFormContainer = styled.div``;
+import Button from '@components/button';
+import SelectBox from '../selectBox';
+
+const RegisterFormContainer = styled.div`
+  width: 90%;
+`;
 
 const ErrorMessage = styled.span`
   margin-bottom: 0.5rem;
@@ -13,7 +18,7 @@ const ErrorMessage = styled.span`
 `;
 
 const ModalTitle = styled.h1`
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
   text-align: center;
 `;
 
@@ -22,19 +27,18 @@ const StyledRegisterForm = styled.form`
   flex-direction: column;
 `;
 
-const InputTitle = styled.div`
-  font-size: 1.5rem;
+const InputTitle = styled.h3`
   font-weight: bold;
 `;
 
-const DiscordDescription = styled.div`
-  font-size: 1rem;
+const DiscordDescription = styled.p`
+  font-size: 1.6rem;
   margin-top: 1rem;
 `;
 
 const StyledRegisterInput = styled.input`
   width: 100%;
-  height: 2.5rem;
+  height: 3rem;
   margin: 1rem 0rem;
   border-radius: 5px;
   border: 1px solid ${({ theme }) => theme.palette.eliceViolet};
@@ -45,15 +49,6 @@ const DiscordImageInput = styled.input`
   width: 100%;
   height: 2.5rem;
   margin: 1rem 0rem;
-  border-radius: 5px;
-`;
-
-const SubmitButton = styled.button`
-  width: 8rem;
-  margin: 1rem auto;
-  color: white;
-  background-color: ${({ theme }) => theme.palette.eliceViolet};
-  padding: 0.8rem;
   border-radius: 5px;
 `;
 
@@ -68,22 +63,31 @@ interface IForm {
 }
 
 function RegisterForm() {
-  const { register, handleSubmit, formState: { errors } } = useForm<IForm>();
+  const { register, handleSubmit, formState: errors } = useForm();
+  const [selectedTrack, setSelectedTrack] = useState<string>('');
+  const [selectedTrackNum, setSelectedTrackNum] = useState<number>(0);
 
   // Form 데이터가 유효한 경우 호출되는 함수
   const onValid = (data: any) => {
-    console.log('Valid', data);
+    // console.log('Valid', data);
+    const formData = {
+      ...data,
+      track: selectedTrack,
+      trackCardinalNumber: Number(selectedTrackNum),
+    };
+    console.log(formData);
   };
 
   // Form 데이터가 유효하지 않은 경우 호출되는 함수
-  const onInvalid = (data: any) => {
+  const onInvalid = () => {
     console.log(errors);
   };
 
   return (
     <RegisterFormContainer>
       <ModalTitle>추가 정보 입력</ModalTitle>
-      <StyledRegisterForm onSubmit={handleSubmit(onValid, onInvalid)}>
+      <h2 style={{ marginBottom: '2rem' }}>회원가입을 위해 추가정보가 필요합니다.</h2>
+      <StyledRegisterForm>
         <InputTitle>이름</InputTitle>
         <StyledRegisterInput
           {...register('name', {
@@ -97,20 +101,9 @@ function RegisterForm() {
         />
         <ErrorMessage>{errors?.name?.message}</ErrorMessage>
         <InputTitle>엘리스 트랙명</InputTitle>
-        <StyledRegisterInput {...register('track', { required: '트랙명은 필수 입력사항입니다:)' })} placeholder="ex:SW Engineer" />
-        <ErrorMessage>{errors?.track?.message}</ErrorMessage>
+        <SelectBox options={['SW', 'AI']} defaultValue="트랙명" selectedOption={selectedTrack} setSelectedOption={setSelectedTrack} width={200} type="register" />
         <InputTitle>엘리스 기수</InputTitle>
-        <StyledRegisterInput
-          {...register('trackCardinalNumber', {
-            required: '기수는 필수 입력사항입니다:)',
-            pattern: {
-              value: regNumber,
-              message: '숫자만 입력 가능합니다:)',
-            },
-          })}
-          placeholder="ex:2"
-        />
-        <ErrorMessage>{errors?.trackCardinalNumber?.message}</ErrorMessage>
+        <SelectBox options={[1, 2, 3, 4, 5]} defaultValue="기수" selectedOption={selectedTrackNum} setSelectedOption={setSelectedTrackNum} width={200} type="register" />
         <InputTitle>전화번호</InputTitle>
         <StyledRegisterInput
           {...register('phoneNumber', {
@@ -138,8 +131,8 @@ function RegisterForm() {
         <InputTitle>Discord 인증 이미지</InputTitle>
         <DiscordDescription>본인이 속해 있는 트랙의 디스코드 채널을 캡처해서 업로드 해주세요:)</DiscordDescription>
         <DiscordImageInput {...register('authImage', { required: '인증 이미지는 필수 입력사항입니다:)' })} type="file" />
+        <Button onClick={handleSubmit(onValid, onInvalid)}>가입 완료!</Button>
         <ErrorMessage>{errors?.authImage?.message}</ErrorMessage>
-        <SubmitButton>입력 완료</SubmitButton>
       </StyledRegisterForm>
     </RegisterFormContainer>
   );
