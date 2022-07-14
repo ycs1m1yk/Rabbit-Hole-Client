@@ -154,6 +154,12 @@ export interface IRegisterFormProps {
     githubAvatar: string;
 }
 
+export interface IImageUploadProps{
+    body: string;
+    filename: string;
+    type: string;
+}
+
 export interface ISearchArticleByAuthorProps {
     [index: string]: string;
     author: string;
