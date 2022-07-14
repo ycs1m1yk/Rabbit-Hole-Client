@@ -184,15 +184,12 @@ export default function Projects() {
     setFilter('views');
     setPage(0);
     setStart(0);
-    // 이게 맞나..?
-    window.location.reload();
   };
 
   const handleSortByDate = () => {
     setFilter('date');
     setPage(0);
     setStart(0);
-    window.location.reload();
   };
 
   return (
@@ -200,7 +197,7 @@ export default function Projects() {
       <ProjectHeader>
         프로젝트 갤러리
         <SearchContainer>
-          <Search width={400} height={30} />
+          <Search width={400} height={40} />
         </SearchContainer>
         <ButtonContainer>
           <Button size="small" onClick={() => handleProjectEnrollment('Register')}>프로젝트 등록</Button>
@@ -230,7 +227,7 @@ export default function Projects() {
       </Content>
       <PaginationContainer>
         <Pagination
-          // length={Math.ceil(projects.length / perPage)}
+          length={Math.ceil(projects.length / perPage)}
           start={start}
           handler={setPage}
         />
