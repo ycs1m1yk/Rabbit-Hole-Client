@@ -109,6 +109,7 @@ function ArticleForm() {
   /**
    * - [x] 게시판 선택 selextBox 추가
    * - [] 게시글 5000자 제한 처리
+   * - [] postArticle api
    */
   return (
     <>
@@ -129,10 +130,12 @@ function ArticleForm() {
             })}
             placeholder="제목을 입력하세요"
           />
+          {errors?.errors?.title && (
           <ErrorMessageWrapper>
             <AiOutlineWarning className="icon-warning" />
             <ErrorMessage>{errors?.errors?.title?.message}</ErrorMessage>
           </ErrorMessageWrapper>
+          )}
         </InputWrapper>
         <InputWrapper>
           <InputTitle>태그</InputTitle>
