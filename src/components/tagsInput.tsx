@@ -34,15 +34,11 @@ const Tag = styled.div`
 `;
 
 const TagInput = styled.input`
-    display: inline-flex;
     width: 100%;
-    margin-bottom: 0.75rem;
-    border: none;
-    outline: none;
-    background: transparent;
-    font-size: 1.125rem;
-    line-height: 2rem;
-    cursor: text;
+    height: 2.5rem;
+    border-radius: 5px;
+    border: 1px solid ${({ theme }) => theme.palette.eliceViolet};
+    padding-left: 0.5rem;
 `;
 
 // eslint-disable-next-line max-len
