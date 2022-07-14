@@ -78,7 +78,7 @@ function ArticleForm() {
             {...register('title', {
               required: '제목이 비어있습니다:)',
               maxLength: {
-                value: 5,
+                value: 100,
                 message: '제목을 100자 이내로 입력해 주세요:)',
               },
             })}
