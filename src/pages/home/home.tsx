@@ -329,8 +329,8 @@ export default function Home() {
         </Slider>
       </ProjectSliderContainer>
       <ContentContainer>
-        <PostList type="question" posts={posts.slice(0, 5)} />
-        <PostList type="free" posts={posts.slice(0, 5)} />
+        <PostList type="main" title="자유게시판" posts={posts.slice(0, 5)} />
+        <PostList type="main" title="질의응답" posts={posts.slice(0, 5)} />
       </ContentContainer>
     </Container>
   );
