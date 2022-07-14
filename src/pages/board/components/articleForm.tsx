@@ -6,10 +6,14 @@ import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
 import { Editor } from '@toast-ui/react-editor';
 import { AiOutlineWarning } from 'react-icons/ai';
+
 import TagsInput from '@/components/tagsInput';
 import MarkdownEditor from '@/components/markdownEditor';
 import Button from '@/components/button';
 import SelectBox from '@components/selectBox';
+
+import useToken from '@/hooks/useToken';
+import { createArticle } from '@/lib/articleApi';
 
 const ModalHeader = styled.div`
   display: flex;
@@ -76,14 +80,20 @@ interface IArticleForm {
   title: string;
   articleType: string;
   tags: {name: string}[];
-  description: string;
+  content: string;
 }
 
 function ArticleForm() {
+  const boardMap = {
+    질문답변: 'question',
+    자유주제: 'free',
+    스터디: 'study',
+  };
   const editorRef = useRef<Editor>(null);
   const [tags, setTags] = useState<{name: string}[]>([]);
   const [selectedBoard, setSelectedBoard] = useState<string>('게시판 선택');
   const { register, handleSubmit, formState: errors } = useForm<IArticleForm>();
+  const { authInfo } = useToken();
 
   const handleEnterSubmit = useCallback((e: KeyboardEvent) => {
     if (e.code === 'Enter') e.preventDefault();
@@ -93,12 +103,20 @@ function ArticleForm() {
   const onValid = useCallback((data: any) => {
     const formData: IArticleForm = {
       ...data,
-      articleType: selectedBoard,
+      articleType: boardMap[selectedBoard],
       tags,
-      description: editorRef.current?.getInstance().getMarkdown(),
+      content: editorRef.current?.getInstance().getMarkdown(),
     };
-    console.log(formData);
-  }, [selectedBoard]);
+    (async () => {
+      if (authInfo) {
+        const { token, userName, carrots } = authInfo;
+        const bodyData = { ...formData, author: userName, carrots: 10 };
+        const resp = await createArticle(token, bodyData);
+        console.log(bodyData);
+        console.log(resp);
+      }
+    })();
+  }, [selectedBoard, tags]);
 
   // Form 데이터가 유효하지 않은 경우 호출되는 함수
   const onInvalid = useCallback(() => {
@@ -115,7 +133,7 @@ function ArticleForm() {
     <>
       <ModalHeader>
         <ModalTitle>게시글 작성</ModalTitle>
-        <SelectBox options={['질문&답변', '자유주제', '스터디']} defaultValue="게시판 선택" selectedOption={selectedBoard} setSelectedOption={setSelectedBoard} width={200} type="register" />
+        <SelectBox options={['질문답변', '자유주제', '스터디']} defaultValue="게시판 선택" selectedOption={selectedBoard} setSelectedOption={setSelectedBoard} width={200} type="register" />
       </ModalHeader>
       <StyledArticleForm onKeyDown={handleEnterSubmit}>
         <InputWrapper>
@@ -129,6 +147,7 @@ function ArticleForm() {
               },
             })}
             placeholder="제목을 입력하세요"
+            autoComplete="on"
           />
           {errors?.errors?.title && (
           <ErrorMessageWrapper>
