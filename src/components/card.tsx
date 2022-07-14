@@ -125,6 +125,20 @@ const Info = styled.div`
   position: relative;
 `;
 
+const SubInfo = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin: 2rem 1rem;
+`;
+
+const ViewCount = styled.span`
+  font-size: 1.2rem;
+`;
+
+const CreateDate = styled.span`
+  font-size: 1.2rem;
+`;
+
 const LikeContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -159,6 +173,8 @@ interface cardProps {
   thumbnail?: string;
   likes: number;
   tags: string[];
+  date: string;
+  views: string;
   type?: string;
 }
 
@@ -171,6 +187,8 @@ export default function Card({
   thumbnail,
   likes,
   tags,
+  date,
+  views,
   type,
 }: cardProps) {
   const navigate = useNavigate();
@@ -213,6 +231,13 @@ export default function Card({
           {tags.slice(0, 2).map((tag, i) => <Tag key={String(i) + tag}>{tag}</Tag>)}
         </TagContainer>
       </Info>
+      <SubInfo>
+        <ViewCount>
+          {views}
+          회
+        </ViewCount>
+        <CreateDate>{date}</CreateDate>
+      </SubInfo>
     </Container>
   );
 }

@@ -321,8 +321,8 @@ export default function Home() {
         </Slider>
       </ProjectSliderContainer>
       <ContentContainer>
-        <PostList type="qna" posts={posts} />
-        <PostList type="free" posts={posts} />
+        <PostList type="question" posts={posts.slice(0, 5)} />
+        <PostList type="free" posts={posts.slice(0, 5)} />
       </ContentContainer>
     </Container>
   );

@@ -47,7 +47,7 @@ export interface IArticleProps {
 export interface IArticleGetProps {
     [index: string]: any;
     articleType: IArticleTypes;
-    filter?: 'date' | 'views';
+    filter?: string;
     page?: string;
     perPage?: string;
 }
