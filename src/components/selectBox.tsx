@@ -78,7 +78,7 @@ function SelectBox({
   // SelectBox 클릭 이벤트 핸들러
   const handleOpenSelectBox = (e: MouseEvent) => {
     e.preventDefault();
-    setClickSelectedBox(true);
+    if (e.button === 0) { setClickSelectedBox(true); }
   };
 
   // requestFunc로 넘어온 API 요청 등을 여기서 처리
