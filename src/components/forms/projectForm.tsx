@@ -6,7 +6,6 @@ import styled from 'styled-components';
 
 import { useForm } from 'react-hook-form';
 import { Editor } from '@toast-ui/react-editor';
-import { postProject } from '@/lib/projectApi';
 import MarkdownEditor from '../markdownEditor';
 import Button from '../button';
 import TagsInput from '../tagsInput';

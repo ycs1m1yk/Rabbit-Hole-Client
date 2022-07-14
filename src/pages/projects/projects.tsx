@@ -81,9 +81,7 @@ export default function Projects() {
 
   // params로 프로젝트 GET 요청
   const params: IProjectGetParamsProps = { filter, page: page + 1, perPage };
-  const { isLoading, data: { projectList: projects } } = useQuery<IProjectProps[] | any>(['projectList'], () => getAllProjects(params));
-
-  console.log(projects);
+  const { isLoading, data } = useQuery<IProjectProps[] | any>(['projectList'], () => getAllProjects(params));
   const handleProjectEnrollment = (modalType: any) => {
     setModal(modalType);
   };
@@ -117,7 +115,7 @@ export default function Projects() {
           <Alignment onClick={handleSortByView}>인기순</Alignment>
         </Alignments>
         <Content>
-          {projects && projects.map((project: IProjectProps) => (
+          {data?.projectList.map((project: IProjectProps) => (
             <Card
               key={project._id}
               projectId={project._id}
@@ -136,7 +134,7 @@ export default function Projects() {
         </Content>
         <PaginationContainer>
           <Pagination
-            length={Math.ceil(projects.length / perPage)}
+            length={Math.ceil(data?.projectList.length / perPage)}
             start={start}
             handler={setPage}
           />
