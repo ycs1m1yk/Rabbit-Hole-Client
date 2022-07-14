@@ -35,10 +35,10 @@ export interface IArticleProps {
     authorId: string;
     title: string;
     content: string;
-    likes?: ILikesProps[];
-    views?: number;
+    likes: ILikesProps[];
+    views: number;
     carrots?: number;
-    tags?: ITagsProps[];
+    tags: ITagsProps[];
     createdAt: string;
     updatedAt: string;
     __v: number;
