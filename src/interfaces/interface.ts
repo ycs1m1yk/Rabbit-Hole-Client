@@ -101,13 +101,15 @@ export interface IChatProps {
 
 export interface IProjectProps {
     _id: string;
+    title: string;
     author: string;
     authorId: string;
     shortDescription: string;
     description: string;
     thumbnail: string;
-    likes?: ILikesProps[];
+    views: string;
     tags: ITagsProps[];
+    likes: ILikesProps[];
     createdAt: Date;
     updatedAt: Date;
     __v: number;
@@ -164,4 +166,29 @@ export interface ISearchArticleByTitleProps {
     [index: string]: string;
     title: string;
     type: IArticleTypes;
+}
+
+export interface IProjectGetParamsProps {
+    [index: string]: any;
+    filter: string;
+    page: number;
+    perPage: any;
+}
+
+export interface IProjectPostParamsProps {
+    author: string;
+    title: string;
+    shortDescription: string;
+    description: string;
+    thumbnail: string;
+    tags: ITagsProps[];
+}
+
+export interface IProjectPutParamsProps {
+    author: string;
+    title: string;
+    shortDescription: string;
+    description: string;
+    thumbnail: string;
+    tags: ITagsProps[];
 }

@@ -10,7 +10,8 @@ import Pagination from '@/components/pagination';
 import modalAtom from '@/recoil/modal/modalAtom';
 import { useQuery } from 'react-query';
 import { getAllArticle } from '@/lib/articleApi';
-import { IArticleGetProps } from '@/interfaces/interface';
+import { IArticleGetProps, IProjectGetParamsProps, IProjectProps } from '@/interfaces/interface';
+import { getAllProjects } from '@/lib/projectApi';
 
 const ProjectContainer = styled.div`
   padding: 3rem;
@@ -164,11 +165,16 @@ const projects = [
 export default function Projects() {
   const setModal = useSetRecoilState(modalAtom);
   const [filter, setFilter] = useState<string>('date');
-  const [pageNum, setPageNum] = useState<number>(0);
+  const [page, setPage] = useState<number>(0);
   const [perPage, setPerPage] = useState<any>(8);
   const [start, setStart] = useState<number>(0);
 
-  console.log(filter, pageNum, perPage);
+  // params로 프로젝트 GET 요청
+  // const params: IProjectGetParamsProps = { filter, page, perPage };
+  // const { data } = useQuery<IProjectProps[]>(['projectList'], () => getAllProjects(params));
+
+  // console.log(filter, page, perPage);
+  // console.log(data);
 
   const handleProjectEnrollment = (modalType: any) => {
     setModal(modalType);
@@ -176,13 +182,13 @@ export default function Projects() {
 
   const handleSortByView = () => {
     setFilter('views');
-    setPageNum(0);
+    setPage(0);
     setStart(0);
   };
 
   const handleSortByDate = () => {
     setFilter('date');
-    setPageNum(0);
+    setPage(0);
     setStart(0);
   };
 
@@ -223,7 +229,7 @@ export default function Projects() {
         <Pagination
           length={Math.ceil(projects.length / perPage)}
           start={start}
-          handler={setPageNum}
+          handler={setPage}
         />
       </PaginationContainer>
     </ProjectContainer>
