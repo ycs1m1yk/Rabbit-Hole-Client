@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { useQuery } from 'react-query';
+
 import SideBar from '@components/sideBar';
 import Search from '@components/search';
 import SelectBox from '@components/selectBox';
@@ -9,8 +11,6 @@ import Pagination from '@components/pagination';
 
 import modalAtom from '@/recoil/modal/modalAtom';
 import { useSetRecoilState } from 'recoil';
-
-import useToken from '@/hooks/useToken';
 
 import { IArticleGetProps, IArticleProps } from '@/interfaces/interface';
 import { getAllArticle } from '@/lib/articleApi';
@@ -32,7 +32,7 @@ const BoardWrapper = styled.div`
     align-self: flex-end;
     position: absolute;
     top: 8.2rem;
-    right: 10.5rem;
+    right: 11rem;
   }
   & .button-posting {
     align-self: flex-end;
@@ -66,7 +66,7 @@ const posts: IArticleProps[] = [
     __v: 1110,
   },
   {
-    _id: '1111',
+    _id: '1101',
     articleType: 'free',
     author: 'halley',
     authorId: 'satoly4',
@@ -78,7 +78,7 @@ const posts: IArticleProps[] = [
     tags: [{ name: '엘' }, { name: '리' }, { name: '스' }],
     createdAt: new Date(),
     updatedAt: new Date(),
-    __v: 1111,
+    __v: 1101,
   },
   {
     _id: '1111',
@@ -386,7 +386,6 @@ const posts: IArticleProps[] = [
 /**
  * - [x] Modal 연결
  * - [x] articleForm 작성
- * - [x] useToken 훅 사용
  * - [x] perPage selectBox 추가
  * - [] getAllAtricles로 게시글 뿌려주기
  * - [] 최신순 추천순 정렬
@@ -398,41 +397,40 @@ export default function Board() {
   const [articles, setArticles] = useState<IArticleProps[]>([]);
   const [perPage, setPerPage] = useState<number>(10);
   const setModalState = useSetRecoilState(modalAtom);
-  const { authInfo } = useToken();
 
   const handleModalOpen = useCallback(() => {
     setModalState('Posting');
   }, []);
 
-  const getArticles = useCallback(async () => {
-    const params: IArticleGetProps = {
-      articleType: 'question',
-      filter: 'date',
-      page: 1,
-      perPage,
-    };
+  const params: IArticleGetProps = {
+    articleType: 'question',
+    filter: 'date',
+    page: 1,
+    perPage,
+  };
 
-    const { data } = await getAllArticle(params);
-    setArticles(data);
-  }, []);
+  const { isLoading } = useQuery<any>(
+    ['articleList', 'question'],
+    () => getAllArticle(params),
+    {
+      onSuccess: (res) => {
+        setArticles(res.articleList);
+      },
+    },
+  );
 
-  useEffect(() => {
-    getArticles();
-    console.log(authInfo?.userName || 'guest입니다.');
-  }, []);
-
-  return (
-    <BoardContainer>
-      <SideBar type="board" />
-      <BoardWrapper>
-        <Search width={800} />
-        <SelectBoxWrapper className="selectbox-perpage">
-          <SelectBox options={[5, 10, 15, 20]} defaultValue="페이지당 개수" selectedOption={perPage} setSelectedOption={setPerPage} width={70} type="register" />
-        </SelectBoxWrapper>
-        <Button className="button-posting" size="medium" onClick={handleModalOpen}>게시글 등록</Button>
-        <PostList type="default" posts={posts.slice(0, perPage)} />
-        <Pagination handler={(num) => console.log(num)} />
-      </BoardWrapper>
-    </BoardContainer>
+  return !isLoading && (
+  <BoardContainer>
+    <SideBar type="board" />
+    <BoardWrapper>
+      <Search width={800} />
+      <SelectBoxWrapper className="selectbox-perpage">
+        <SelectBox options={[5, 10, 15, 20]} defaultValue="페이지당 개수" selectedOption={perPage} setSelectedOption={setPerPage} width={70} type="register" />
+      </SelectBoxWrapper>
+      <Button className="button-posting" size="medium" onClick={handleModalOpen}>게시글 등록</Button>
+      <PostList type="default" posts={articles.slice(0, perPage)} />
+      <Pagination handler={(num) => console.log(num)} />
+    </BoardWrapper>
+  </BoardContainer>
   );
 }
