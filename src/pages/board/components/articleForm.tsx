@@ -5,6 +5,7 @@ import React, {
 import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
 import { Editor } from '@toast-ui/react-editor';
+import { AiOutlineWarning } from 'react-icons/ai';
 import TagsInput from '@/components/tagsInput';
 import MarkdownEditor from '@/components/markdownEditor';
 import Button from '@/components/button';
@@ -46,6 +47,25 @@ const ArticleInput = styled.input`
   border-radius: 5px;
   border: 1px solid ${({ theme }) => theme.palette.eliceViolet};
   padding-left: 0.5rem;
+`;
+
+const ErrorMessageWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  margin-left: 0.5rem;
+  margin-top: 0.5rem;
+  
+  & .icon-warning {
+    width: 1.3rem;
+    height: 1.3rem;
+    color: ${({ theme }) => theme.status.warningRed};
+  }
+  `;
+
+const ErrorMessage = styled.span`
+  margin-left: 0.3rem;
+  font-size: 1rem;
+  color: ${({ theme }) => theme.status.warningRed};
 `;
 
 const MarkdownEditorWrapper = styled.div`
@@ -101,14 +121,18 @@ function ArticleForm() {
           <InputTitle>제목</InputTitle>
           <ArticleInput
             {...register('title', {
-              required: '제목이 비어있습니다:)',
+              required: '제목을 입력해주세요 :)',
               maxLength: {
                 value: 100,
-                message: '제목을 100자 이내로 입력해 주세요:)',
+                message: '제목을 100자 이내로 입력해 주세요 :)',
               },
             })}
             placeholder="제목을 입력하세요"
           />
+          <ErrorMessageWrapper>
+            <AiOutlineWarning className="icon-warning" />
+            <ErrorMessage>{errors?.errors?.title?.message}</ErrorMessage>
+          </ErrorMessageWrapper>
         </InputWrapper>
         <InputWrapper>
           <InputTitle>태그</InputTitle>
