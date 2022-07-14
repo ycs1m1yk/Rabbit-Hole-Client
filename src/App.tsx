@@ -6,6 +6,7 @@ import {
 import Register from '@pages/auth/register';
 import Layout from '@pages/layout';
 import Token from '@pages/auth/token';
+import Chat from '@pages/chat';
 
 import useModal from '@hooks/useModal';
 import useToken from '@hooks/useToken';
@@ -35,7 +36,7 @@ function App() {
         <Route path="/github/login" element={<Token />} />
       </Routes>
       {getModalPage()}
-      {authInfo && <></>}
+      {authInfo && <Chat />}
     </BrowserRouter>
   );
 }
