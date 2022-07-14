@@ -97,7 +97,7 @@ export default function PostList({ type, title, posts } : postList) {
             profile={post.author}
             title={post.title}
             content={post.content}
-            date={post.createdAt.toLocaleDateString()}
+            date={post.createdAt}
             comment={123}
             heart={34}
             type={type}
