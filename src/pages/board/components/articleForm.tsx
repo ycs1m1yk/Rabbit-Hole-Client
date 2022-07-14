@@ -1,14 +1,26 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { KeyboardEvent, useRef, useState } from 'react';
+import React, {
+  KeyboardEvent, useCallback, useRef, useState,
+} from 'react';
 import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
 import { Editor } from '@toast-ui/react-editor';
 import TagsInput from '@/components/tagsInput';
 import MarkdownEditor from '@/components/markdownEditor';
 import Button from '@/components/button';
+import SelectBox from '@components/selectBox';
 
-const ModalTitle = styled.h1`
-  text-align: center;
+const ModalHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  border-bottom: 2px solid ${(props) => props.theme.palette.borderGray};
+  align-self: flex-start;
+`;
+
+const ModalTitle = styled.div`
+  border: none;
 `;
 
 const StyledArticleForm = styled.form`
@@ -40,38 +52,51 @@ const MarkdownEditorWrapper = styled.div`
   width: 60rem;
 `;
 
+interface IArticleForm {
+  title: string;
+  articleType: string;
+  tags: {name: string}[];
+  description: string;
+}
+
 function ArticleForm() {
   const editorRef = useRef<Editor>(null);
-  const [tags, setTags] = useState<string[]>([]);
-  const { register, handleSubmit, formState: errors } = useForm();
+  const [tags, setTags] = useState<{name: string}[]>([]);
+  const [selectedBoard, setSelectedBoard] = useState<string>('게시판 선택');
+  const { register, handleSubmit, formState: errors } = useForm<IArticleForm>();
 
-  const handleEnterSubmit = (e: KeyboardEvent) => {
+  const handleEnterSubmit = useCallback((e: KeyboardEvent) => {
     if (e.code === 'Enter') e.preventDefault();
-  };
+  }, []);
 
   // Form 데이터가 유효한 경우 호출되는 함수
-  const onValid = (data: any) => {
-    const formData = {
+  const onValid = useCallback((data: any) => {
+    const formData: IArticleForm = {
       ...data,
+      articleType: selectedBoard,
       tags,
       description: editorRef.current?.getInstance().getMarkdown(),
     };
     console.log(formData);
-  };
+  }, [selectedBoard]);
 
   // Form 데이터가 유효하지 않은 경우 호출되는 함수
-  const onInvalid = () => {
+  const onInvalid = useCallback(() => {
     console.log(errors);
-  };
+  }, [errors]);
 
   // TODO:
   /**
+   * - [x] 게시판 선택 selextBox 추가
    * - [] 게시글 5000자 제한 처리
    */
   return (
     <>
-      <ModalTitle>게시글 작성</ModalTitle>
-      <StyledArticleForm onSubmit={handleSubmit(onValid, onInvalid)} onKeyDown={handleEnterSubmit}>
+      <ModalHeader>
+        <ModalTitle>게시글 작성</ModalTitle>
+        <SelectBox options={['질문&답변', '자유주제', '스터디']} defaultValue="게시판 선택" selectedOption={selectedBoard} setSelectedOption={setSelectedBoard} width={200} type="register" />
+      </ModalHeader>
+      <StyledArticleForm onKeyDown={handleEnterSubmit}>
         <InputWrapper>
           <InputTitle>제목</InputTitle>
           <ArticleInput
