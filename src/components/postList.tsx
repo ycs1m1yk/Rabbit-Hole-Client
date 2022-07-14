@@ -91,7 +91,7 @@ export default function PostList({ type, title, posts } : postList) {
           </Alignments>
         ) : null}
       <Posts>
-        { posts.length > 0 ? posts.map((post) => (
+        { posts.map((post) => (
           <PostItem
             key={post._id}
             profile={post.author}
@@ -99,12 +99,12 @@ export default function PostList({ type, title, posts } : postList) {
             content={post.content}
             date={post.createdAt}
             comment={123}
-            heart={34}
+            heart={post.likes.length}
             type={type}
             articleId={post._id}
             articleType={post.articleType}
           />
-        )) : <EmptyField>게시물이 존재하지 않습니다.</EmptyField> }
+        ))}
       </Posts>
     </Container>
   );

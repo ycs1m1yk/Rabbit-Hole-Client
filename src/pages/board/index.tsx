@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import styled from 'styled-components';
 import { useQuery } from 'react-query';
 
@@ -96,7 +96,7 @@ export default function Board() {
         <SelectBox options={[5, 10, 15, 20]} defaultValue="페이지당 개수" selectedOption={perPage} setSelectedOption={setPerPage} width={70} type="register" />
       </SelectBoxWrapper>
       <Button className="button-posting" size="medium" onClick={handleModalOpen}>게시글 등록</Button>
-      <PostList type="default" posts={articles.slice(0, perPage)} />
+      <PostList posts={articles.slice(0, perPage)} />
       <Pagination
         length={Math.ceil(articles.length / perPage)}
         handler={setPage}
