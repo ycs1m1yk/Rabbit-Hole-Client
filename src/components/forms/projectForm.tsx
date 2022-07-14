@@ -1,21 +1,24 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React from 'react';
+import React, {
+  useCallback, useState, KeyboardEvent, useRef,
+} from 'react';
 import styled from 'styled-components';
 
 import { useMutation, useQueryClient } from 'react-query';
 import { useForm } from 'react-hook-form';
 import { IProjectProps } from '@/interfaces/interface';
 import { postRegister } from '@/lib/userApi';
+import { Editor } from '@toast-ui/react-editor';
 import MarkdownEditor from '../markdownEditor';
 import Button from '../button';
+import TagsInput from '../tagsInput';
 
 const ModalTitle = styled.h1`
-  font-size: 2rem;
   text-align: center;
 `;
 
 const ErrorMessage = styled.span`
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
   font-size: 1rem;
   color: ${({ theme }) => theme.status.warningRed};
 `;
@@ -23,6 +26,10 @@ const ErrorMessage = styled.span`
 const ProjectInfomationForm = styled.form`
   display: flex;
   flex-direction: column;
+`;
+
+const TagContainer = styled.div`
+  margin: 1rem 0;
 `;
 
 const InputTitle = styled.h3`
@@ -39,7 +46,7 @@ const ProjectInput = styled.input`
 `;
 
 const EditorContainer = styled.div`
-  width: 500px;
+  width: 60rem;
 `;
 
 const ProjectImageInput = styled.input`
@@ -60,6 +67,12 @@ interface IForm {
 
 function ProjectForm() {
   const { register, handleSubmit, formState: { errors } } = useForm<IForm>();
+  const [tags, setTags] = useState<{name: string}[]>([]);
+  const editorRef = useRef<Editor>(null);
+
+  const handleEnterSubmit = useCallback((e: KeyboardEvent) => {
+    if (e.code === 'Enter') e.preventDefault();
+  }, []);
 
   // mutate 함수를 onSubmit 내에서 formdata를 담아 호출
   // TODO: project post API로 교체
@@ -83,14 +96,19 @@ function ProjectForm() {
 
   // Form Data가 유효하다면 이 곳에서 POST 요청
   const onValid = (data: IForm) => {
-    console.log(data);
+    const formData = {
+      ...data,
+      description: editorRef.current?.getInstance().getMarkdown(),
+      tags,
+    };
+    console.log(formData);
     // mutate(data);
   };
 
   return (
     <>
       <ModalTitle>프로젝트 등록 및 수정</ModalTitle>
-      <ProjectInfomationForm>
+      <ProjectInfomationForm onKeyDown={handleEnterSubmit}>
         <InputTitle>Title</InputTitle>
         <ProjectInput {...register('title', {
           required: '제목은 필수 입력사항입니다:)',
@@ -109,17 +127,16 @@ function ProjectForm() {
         })}
         />
         <ErrorMessage>{errors?.shortDescription?.message}</ErrorMessage>
-        <InputTitle>Tags</InputTitle>
-        <ProjectInput {...register('tags', {
-          required: '태그는 필수 입력사항입니다:)',
-        })}
-        />
-        <ErrorMessage>{errors?.tags?.message}</ErrorMessage>
+        <InputTitle>태그</InputTitle>
+        <TagContainer>
+          <TagsInput tags={tags} setTags={setTags} />
+        </TagContainer>
+        {tags.length === 0 ? <ErrorMessage>태그는 필수 입력사항입니다:)</ErrorMessage> : null}
         <EditorContainer style={{ marginBottom: '1rem' }}>
-          <InputTitle style={{ marginBottom: '1rem' }}>Description</InputTitle>
-          <MarkdownEditor />
+          <InputTitle style={{ marginBottom: '1rem' }}>본문</InputTitle>
+          <MarkdownEditor ref={editorRef} />
         </EditorContainer>
-        <InputTitle>Thumbnail</InputTitle>
+        <InputTitle style={{ margin: '1rem 0' }}>프로젝트 이미지</InputTitle>
         <ProjectImageInput
           {...register('thumbnail', {
             required: '프로젝트 사진은 필수 입력사항입니다:)',
@@ -127,7 +144,7 @@ function ProjectForm() {
           type="file"
         />
         <ErrorMessage>{errors?.thumbnail?.message}</ErrorMessage>
-        <Button onClick={handleSubmit(onValid)}>등록하기</Button>
+        <Button fullSize onClick={handleSubmit(onValid)}>등록하기</Button>
       </ProjectInfomationForm>
     </>
   );

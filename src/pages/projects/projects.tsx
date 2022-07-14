@@ -165,7 +165,7 @@ export default function Projects() {
   const setModal = useSetRecoilState(modalAtom);
   const [filter, setFilter] = useState<string>('date');
   const [pageNum, setPageNum] = useState<number>(0);
-  const [perPage, setPerPage] = useState<string>('8');
+  const [perPage, setPerPage] = useState<any>(8);
   const [start, setStart] = useState<number>(0);
 
   console.log(filter, pageNum, perPage);
@@ -220,7 +220,11 @@ export default function Projects() {
         ))}
       </Content>
       <PaginationContainer>
-        <Pagination start={start} handler={setPageNum} />
+        <Pagination
+          length={Math.ceil(projects.length / perPage)}
+          start={start}
+          handler={setPageNum}
+        />
       </PaginationContainer>
     </ProjectContainer>
   );
