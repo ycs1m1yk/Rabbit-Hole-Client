@@ -80,7 +80,7 @@ export default function PostList({ type, posts } : postList) {
 
   return (
     <Container>
-      {type === 'qna' ? <Title>질의응답</Title> : type === 'free' ? <Title>자유게시판</Title> : null}
+      {type === 'question' ? <Title>질의응답</Title> : type === 'free' ? <Title>자유게시판</Title> : null}
       <Alignments>
         <Alignment onClick={() => handleSort('new')}>최신순</Alignment>
         <Alignment onClick={() => handleSort('popular')}>인기순</Alignment>

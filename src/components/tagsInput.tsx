@@ -34,25 +34,21 @@ const Tag = styled.div`
 `;
 
 const TagInput = styled.input`
-    display: inline-flex;
     width: 100%;
-    margin-bottom: 0.75rem;
-    border: none;
-    outline: none;
-    background: transparent;
-    font-size: 1.125rem;
-    line-height: 2rem;
-    cursor: text;
+    height: 2.5rem;
+    border-radius: 5px;
+    border: 1px solid ${({ theme }) => theme.palette.eliceViolet};
+    padding-left: 0.5rem;
 `;
 
 // eslint-disable-next-line max-len
-export default function TagsInput({ tags, setTags }: {tags: string[], setTags: Dispatch<SetStateAction<string[]>>}) {
+export default function TagsInput({ tags, setTags }: {tags: {name: string}[], setTags: Dispatch<SetStateAction<{name: string}[]>>}) {
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.key !== 'Enter') return;
     const target = e.target as HTMLInputElement;
     const { value } = target;
     if (!value.trim()) return;
-    setTags((curr) => (curr.includes(value) ? curr : [...curr, value]));
+    setTags((curr) => (curr.find((el) => el.name === value) ? curr : [...curr, { name: value }]));
     target.value = '';
   }, []);
 
@@ -64,8 +60,8 @@ export default function TagsInput({ tags, setTags }: {tags: string[], setTags: D
     <TagInputContainer>
       <Tags>
         { tags.map((tag, index) => (
-          <Tag key={tag}>
-            <span>{tag}</span>
+          <Tag key={tag.name}>
+            <span>{tag.name}</span>
             <AiOutlineClose onClick={() => removeTag(index)} />
           </Tag>
         )) }

@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
@@ -10,6 +11,7 @@ import Card from '@/components/card';
 import PostList from '@/components/postList';
 import { useQueries } from 'react-query';
 import { getAllArticle } from '@/lib/articleApi';
+import { IArticleProps } from '@/interfaces/interface';
 
 const Container = styled.div``;
 
@@ -44,108 +46,217 @@ const ContentContainer = styled.div`
 
 const projects = [
   {
-    projectId: '1234324',
-    title: 'Main Project',
+    _id: '1322345',
+    title: '설재혁의 프로젝트',
     author: '설재혁',
-    authorId: '123432432',
-    content: 'abcdefghijklmnop abcdefghijklmnop',
+    authorId: '326823',
+    shortDescription: '개인 프로젝트입니다.',
+    description: 'aaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbcccc',
     thumbnail: 'https://via.placeholder.com/200',
-    likes: 12,
+    likes: ['1', '2', '3', '4', '5', '56'],
+    tags: ['React', 'Typescript', 'React', 'Typescript'],
+    views: 1278,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    __v: '21321',
   },
   {
-    projectId: '123432432',
-    title: 'Main Project',
+    _id: '123445',
+    title: '설재혁의 프로젝트',
     author: '설재혁',
-    authorId: '123432432',
-    content: 'abcdefghijklmnop abcdefghijklmnop',
+    authorId: '326823',
+    shortDescription: '개인 프로젝트입니다.',
+    description: 'aaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbcccc',
     thumbnail: 'https://via.placeholder.com/200',
-    likes: 9,
+    likes: ['1', '2', '3', '4', '5', '56'],
+    tags: ['React'],
+    views: 1278,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    __v: '21321',
   },
   {
-    projectId: '123893048239',
-    title: 'Main Project',
+    _id: '123425',
+    title: '설재혁의 프로젝트',
     author: '설재혁',
-    authorId: '123432432',
-    content: 'abcdefghijklmnop abcdefghijklmnop',
+    authorId: '326823',
+    shortDescription: '개인 프로젝트입니다.',
+    description: 'aaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbcccc',
     thumbnail: 'https://via.placeholder.com/200',
-    likes: 1023,
+    likes: ['1', '2', '3', '4', '5', '56'],
+    tags: ['React', 'Typescript'],
+    views: 12728,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    __v: '21321',
   },
   {
-    projectId: '1233821903809',
-    title: 'Main Project',
+    _id: '1233245',
+    title: '설재혁의 프로젝트',
     author: '설재혁',
-    authorId: '123432432',
-    content: 'abcdefghijklmnop abcdefghijklmnop',
+    authorId: '326823',
+    shortDescription: '개인 프로젝트입니다.',
+    description: 'aaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbcccc',
     thumbnail: 'https://via.placeholder.com/200',
-    likes: 65,
+    likes: ['1', '2', '3', '4', '5', '56'],
+    tags: ['React', 'Typescript'],
+    views: 124378,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    __v: '21321',
+  },
+  {
+    _id: '1233432432245',
+    title: '설재혁의 프로젝트',
+    author: '설재혁',
+    authorId: '326823',
+    shortDescription: '개인 프로젝트입니다.',
+    description: 'aaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbcccc',
+    thumbnail: 'https://via.placeholder.com/200',
+    likes: ['1', '2', '3', '4', '5', '56'],
+    tags: ['React', 'Typescript'],
+    views: 123478,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    __v: '21321',
+  },
+  {
+    _id: '1233232345',
+    title: '설재혁의 프로젝트',
+    author: '설재혁',
+    authorId: '326823',
+    shortDescription: '개인 프로젝트입니다.',
+    description: 'aaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbcccc',
+    thumbnail: 'https://via.placeholder.com/200',
+    likes: ['1', '2', '3', '4', '5', '56'],
+    tags: ['React', 'Typescript'],
+    views: 12728,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    __v: '21321',
   },
 ];
 
-const posts = [
+const posts: IArticleProps[] = [
   {
-    articleType: 'qna',
-    articleId: '12343423324',
-    author: '설재혁',
-    title: '설재혁의 게시글',
-    content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet doloribus aut, nemo nulla dicta molestias veniam voluptas culpa pariatur vero explicabo, accusantium dolores? Ullam, vero mollitia placeat animi aut eum.',
-    createdAt: '2022.07.07',
-    comment: 10,
-    likes: 10,
-    views: 1801,
-    carrots: 50,
-    tags: ['aaa', 'bbb', 'ccc'],
-  },
-  {
+    _id: '1111',
     articleType: 'free',
-    articleId: '12343442342234',
-    author: '설재혁',
-    title: '설재혁의 게시글',
-    content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet doloribus aut, nemo nulla dicta molestias veniam voluptas culpa pariatur vero explicabo, accusantium dolores? Ullam, vero mollitia placeat animi aut eum.',
-    createdAt: '2022.07.07',
-    comment: 10,
-    likes: 10,
-    views: 1801,
-    carrots: 50,
-    tags: ['aaa', 'bbb', 'ccc'],
+    author: 'halley',
+    authorId: 'satoly4',
+    title: '안녕하세요',
+    content: '반갑습니다',
+    likes: [{ userId: '1234' }],
+    views: 123,
+    carrots: 100,
+    tags: [{ name: '엘' }, { name: '리' }, { name: '스' }],
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    __v: 1111,
   },
   {
-    articleType: 'qna',
-    articleId: '12343543534234',
-    author: '설재혁',
-    title: '설재혁의 게시글',
-    content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet doloribus aut, nemo nulla dicta molestias veniam voluptas culpa pariatur vero explicabo, accusantium dolores? Ullam, vero mollitia placeat animi aut eum.',
-    createdAt: '2022.07.07',
-    comment: 10,
-    likes: 10,
-    views: 1801,
-    carrots: 50,
-    tags: ['aaa', 'bbb', 'ccc'],
-  },
-  {
-    articleType: 'study',
-    articleId: '123434524513523234',
-    author: '설재혁',
-    title: '설재혁의 게시글',
-    content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet doloribus aut, nemo nulla dicta molestias veniam voluptas culpa pariatur vero explicabo, accusantium dolores? Ullam, vero mollitia placeat animi aut eum.',
-    createdAt: '2022.07.07',
-    comment: 10,
-    likes: 10,
-    views: 1801,
-    carrots: 50,
-    tags: ['aaa', 'bbb', 'ccc'],
-  },
-  {
+    _id: '2222',
     articleType: 'free',
-    articleId: '1234332131231314234',
-    author: '설재혁',
-    title: '설재혁의 게시글',
-    content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet doloribus aut, nemo nulla dicta molestias veniam voluptas culpa pariatur vero explicabo, accusantium dolores? Ullam, vero mollitia placeat animi aut eum.',
-    createdAt: '2022.07.07',
-    comment: 10,
-    likes: 10,
-    views: 1801,
-    carrots: 50,
-    tags: ['aaa', 'bbb', 'ccc'],
+    author: 'halley',
+    authorId: 'satoly4',
+    title: '안녕하세요',
+    content: '반갑습니다',
+    likes: [{ userId: '1234' }],
+    views: 123,
+    carrots: 100,
+    tags: [{ name: '엘' }, { name: '리' }, { name: '스' }],
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    __v: 2222,
+  },
+  {
+    _id: '7777',
+    articleType: 'free',
+    author: 'halley',
+    authorId: 'satoly4',
+    title: '안녕하세요',
+    content: '반갑습니다',
+    likes: [{ userId: '1234' }],
+    views: 123,
+    carrots: 100,
+    tags: [{ name: '엘' }, { name: '리' }, { name: '스' }],
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    __v: 7777,
+  },
+  {
+    _id: '8888',
+    articleType: 'free',
+    author: 'halley',
+    authorId: 'satoly4',
+    title: '안녕하세요',
+    content: '반갑습니다',
+    likes: [{ userId: '1234' }],
+    views: 123,
+    carrots: 100,
+    tags: [{ name: '엘' }, { name: '리' }, { name: '스' }],
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    __v: 8888,
+  },
+  {
+    _id: '3333',
+    articleType: 'free',
+    author: 'halley',
+    authorId: 'satoly4',
+    title: '안녕하세요',
+    content: '반갑습니다',
+    likes: [{ userId: '1234' }],
+    views: 123,
+    carrots: 100,
+    tags: [{ name: '엘' }, { name: '리' }, { name: '스' }],
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    __v: 3333,
+  },
+  {
+    _id: '4444',
+    articleType: 'free',
+    author: 'halley',
+    authorId: 'satoly4',
+    title: '안녕하세요',
+    content: '반갑습니다',
+    likes: [{ userId: '1234' }],
+    views: 123,
+    carrots: 100,
+    tags: [{ name: '엘' }, { name: '리' }, { name: '스' }],
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    __v: 4444,
+  },
+  {
+    _id: '5555',
+    articleType: 'free',
+    author: 'halley',
+    authorId: 'satoly4',
+    title: '안녕하세요',
+    content: '반갑습니다',
+    likes: [{ userId: '1234' }],
+    views: 123,
+    carrots: 100,
+    tags: [{ name: '엘' }, { name: '리' }, { name: '스' }],
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    __v: 5555,
+  },
+  {
+    _id: '6666',
+    articleType: 'free',
+    author: 'halley',
+    authorId: 'satoly4',
+    title: '안녕하세요',
+    content: '반갑습니다',
+    likes: [{ userId: '1234' }],
+    views: 123,
+    carrots: 100,
+    tags: [{ name: '엘' }, { name: '리' }, { name: '스' }],
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    __v: 6666,
   },
 ];
 
@@ -201,21 +312,25 @@ export default function Home() {
         <Slider settings={projectSettings}>
           {projects.map((project) => (
             <Card
-              key={project.projectId}
+              key={project._id}
+              projectId={project._id}
               title={project.title}
               author={project.author}
-              content={project.content}
+              shortDescription={project.shortDescription}
+              description={project.description}
               thumbnail={project.thumbnail}
-              likes={project.likes}
-              projectId={project.projectId}
+              likes={project.likes.length}
+              tags={project.tags}
+              date={project.createdAt.toLocaleDateString()}
+              views={project.views.toLocaleString()}
               type="project"
             />
           ))}
         </Slider>
       </ProjectSliderContainer>
       <ContentContainer>
-        <PostList type="qna" posts={posts} />
-        <PostList type="free" posts={posts} />
+        <PostList type="question" posts={posts.slice(0, 5)} />
+        <PostList type="free" posts={posts.slice(0, 5)} />
       </ContentContainer>
     </Container>
   );

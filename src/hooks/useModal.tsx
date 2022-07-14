@@ -5,6 +5,7 @@ import { useRecoilValue } from 'recoil';
 
 import Modal from '@/components/modal';
 import Login from '@/pages/auth/login';
+import ProjectForm from '@/components/forms/projectForm';
 import ArticleForm from '@/pages/board/components/articleForm';
 
 export default function useModal() {
@@ -17,6 +18,12 @@ export default function useModal() {
         return (
           <Modal>
             <Login />
+          </Modal>
+        );
+      case 'Register':
+        return (
+          <Modal>
+            <ProjectForm />
           </Modal>
         );
       case 'Posting':
