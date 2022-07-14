@@ -54,7 +54,8 @@ const projects = [
     description: 'aaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbcccc',
     thumbnail: 'https://via.placeholder.com/200',
     likes: ['1', '2', '3', '4', '5', '56'],
-    tags: ['React', 'Typescript'],
+    tags: ['React', 'Typescript', 'React', 'Typescript'],
+    views: 1278,
     createdAt: new Date(),
     updatedAt: new Date(),
     __v: '21321',
@@ -68,7 +69,8 @@ const projects = [
     description: 'aaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbcccc',
     thumbnail: 'https://via.placeholder.com/200',
     likes: ['1', '2', '3', '4', '5', '56'],
-    tags: ['React', 'Typescript'],
+    tags: ['React'],
+    views: 1278,
     createdAt: new Date(),
     updatedAt: new Date(),
     __v: '21321',
@@ -83,6 +85,7 @@ const projects = [
     thumbnail: 'https://via.placeholder.com/200',
     likes: ['1', '2', '3', '4', '5', '56'],
     tags: ['React', 'Typescript'],
+    views: 12728,
     createdAt: new Date(),
     updatedAt: new Date(),
     __v: '21321',
@@ -97,6 +100,7 @@ const projects = [
     thumbnail: 'https://via.placeholder.com/200',
     likes: ['1', '2', '3', '4', '5', '56'],
     tags: ['React', 'Typescript'],
+    views: 124378,
     createdAt: new Date(),
     updatedAt: new Date(),
     __v: '21321',
@@ -111,6 +115,7 @@ const projects = [
     thumbnail: 'https://via.placeholder.com/200',
     likes: ['1', '2', '3', '4', '5', '56'],
     tags: ['React', 'Typescript'],
+    views: 123478,
     createdAt: new Date(),
     updatedAt: new Date(),
     __v: '21321',
@@ -125,6 +130,7 @@ const projects = [
     thumbnail: 'https://via.placeholder.com/200',
     likes: ['1', '2', '3', '4', '5', '56'],
     tags: ['React', 'Typescript'],
+    views: 12728,
     createdAt: new Date(),
     updatedAt: new Date(),
     __v: '21321',
@@ -315,6 +321,8 @@ export default function Home() {
               thumbnail={project.thumbnail}
               likes={project.likes.length}
               tags={project.tags}
+              date={project.createdAt.toLocaleDateString()}
+              views={project.views.toLocaleString()}
               type="project"
             />
           ))}
