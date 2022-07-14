@@ -9,18 +9,18 @@ const Label = styled.label<{ width: number | string, type: string }>`
   display: inline-block;
   width: ${({ width }) => (typeof width === 'string' ? width : `${width}px`)};
   
-  margin: ${(props) => (props.type === 'register' ? '10px 0px' : '0')};
+  margin: ${({ type }) => (type === 'register' ? '10px 0px' : '0')};
 `;
 
 const Select = styled.select<{type: string}>`
-  padding: ${(props) => (props.type === 'register' ? '0rem' : '1rem')};
+  padding: ${({ type }) => (type === 'register' ? '0rem' : '1rem')};
   width: 100%;
   outline: none;
   border: none;
   border-bottom: 1px solid black;
   border-radius: 4px;
   cursor: pointer;
-  font-size: ${(props) => (props.type === 'register' ? '1.5rem' : '2rem')};
+  font-size: ${({ type }) => (type === 'register' ? '1.5rem' : '2rem')};
 `;
 
 const SelectItemContainer = styled.div<{type: string}>`
@@ -28,15 +28,27 @@ const SelectItemContainer = styled.div<{type: string}>`
   border: 1px solid black;
   border-radius: 5px;
   box-shadow: 0px 4px 13px rgba(0, 0, 0, 0.25);
-  position: ${(props) => (props.type === 'register' ? 'absolute' : null)};
-  width: ${(props) => (props.type === 'register' ? '100%' : null)};
-  background-color: ${(props) => (props.type === 'register' ? 'white' : null)};
+  position: ${({ type }) => (type === 'register' ? 'absolute' : null)};
+  width: ${({ type }) => (type === 'register' ? '100%' : null)};
+  background-color: ${({ type }) => (type === 'register' ? 'white' : null)};
   z-index: 1;
+
+  -webkit-animation: 0.3s linear normal slide_down;
+          animation: 0.3s linear normal slide_down;
+
+  @keyframes slide_down {
+    0% {
+      opacity: 0.1;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
 `;
 
 const SelectItem = styled.option<{type:string}>`
-  height: ${(props) => (props.type === 'register' ? '1.5rem' : '2.5rem')};
-  font-size: ${(props) => (props.type === 'register' ? '1.5rem' : '2rem')};
+  height: ${({ type }) => (type === 'register' ? '1.5rem' : '2.5rem')};
+  font-size: ${({ type }) => (type === 'register' ? '1.5rem' : '2rem')};
   cursor: pointer;
   border-bottom: 1px solid black;
   padding: 0rem 1rem;
@@ -44,7 +56,7 @@ const SelectItem = styled.option<{type:string}>`
     margin: 1rem 0rem;
   }
   :hover {
-    color: ${(props) => props.theme.palette.eliceViolet}
+    color: ${({ theme }) => theme.palette.eliceViolet}
   }
 `;
 
@@ -78,7 +90,7 @@ function SelectBox({
   // SelectBox 클릭 이벤트 핸들러
   const handleOpenSelectBox = (e: MouseEvent) => {
     e.preventDefault();
-    setClickSelectedBox(true);
+    if (e.button === 0) { setClickSelectedBox(true); }
   };
 
   // requestFunc로 넘어온 API 요청 등을 여기서 처리

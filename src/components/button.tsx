@@ -49,7 +49,7 @@ const StyledButton = styled.button<ButtonProps>`
   cursor: pointer;
   padding-left: 1rem;
   padding-right: 1rem;
-  font-family: 'EliceBold';
+  font-weight: bold;
   border-radius: 4px;
   white-space: nowrap;
   ${(props) => (props.outline

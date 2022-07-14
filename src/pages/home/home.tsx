@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+/* eslint-disable no-underscore-dangle */
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
@@ -10,6 +11,8 @@ import Card from '@/components/card';
 import PostList from '@/components/postList';
 import { useQueries } from 'react-query';
 import { getAllArticle } from '@/lib/articleApi';
+import { IProjectProps } from '@/interfaces/interface';
+import { getAllProjects } from '@/lib/projectApi';
 
 const Container = styled.div``;
 
@@ -42,167 +45,14 @@ const ContentContainer = styled.div`
   margin: 10rem auto; 
 `;
 
-const projects = [
-  {
-    projectId: '1234324',
-    title: 'Main Project',
-    author: '설재혁',
-    authorId: '123432432',
-    content: 'abcdefghijklmnop abcdefghijklmnop',
-    thumbnail: 'https://via.placeholder.com/200',
-    likes: 12,
-  },
-  {
-    projectId: '123432432',
-    title: 'Main Project',
-    author: '설재혁',
-    authorId: '123432432',
-    content: 'abcdefghijklmnop abcdefghijklmnop',
-    thumbnail: 'https://via.placeholder.com/200',
-    likes: 9,
-  },
-  {
-    projectId: '123893048239',
-    title: 'Main Project',
-    author: '설재혁',
-    authorId: '123432432',
-    content: 'abcdefghijklmnop abcdefghijklmnop',
-    thumbnail: 'https://via.placeholder.com/200',
-    likes: 1023,
-  },
-  {
-    projectId: '1233821903809',
-    title: 'Main Project',
-    author: '설재혁',
-    authorId: '123432432',
-    content: 'abcdefghijklmnop abcdefghijklmnop',
-    thumbnail: 'https://via.placeholder.com/200',
-    likes: 65,
-  },
-];
-
-const posts: IArticleProps[] = [
-  {
-    _id: '1111',
-    articleType: 'free',
-    author: 'halley',
-    authorId: 'satoly4',
-    title: '안녕하세요',
-    content: '반갑습니다',
-    likes: [{ userId: '1234' }],
-    views: 123,
-    carrots: 100,
-    tags: [{ name: '엘' }, { name: '리' }, { name: '스' }],
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    __v: 1111,
-  },
-  {
-    _id: '2222',
-    articleType: 'free',
-    author: 'halley',
-    authorId: 'satoly4',
-    title: '안녕하세요',
-    content: '반갑습니다',
-    likes: [{ userId: '1234' }],
-    views: 123,
-    carrots: 100,
-    tags: [{ name: '엘' }, { name: '리' }, { name: '스' }],
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    __v: 2222,
-  },
-  {
-    _id: '7777',
-    articleType: 'free',
-    author: 'halley',
-    authorId: 'satoly4',
-    title: '안녕하세요',
-    content: '반갑습니다',
-    likes: [{ userId: '1234' }],
-    views: 123,
-    carrots: 100,
-    tags: [{ name: '엘' }, { name: '리' }, { name: '스' }],
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    __v: 7777,
-  },
-  {
-    _id: '8888',
-    articleType: 'free',
-    author: 'halley',
-    authorId: 'satoly4',
-    title: '안녕하세요',
-    content: '반갑습니다',
-    likes: [{ userId: '1234' }],
-    views: 123,
-    carrots: 100,
-    tags: [{ name: '엘' }, { name: '리' }, { name: '스' }],
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    __v: 8888,
-  },
-  {
-    _id: '3333',
-    articleType: 'free',
-    author: 'halley',
-    authorId: 'satoly4',
-    title: '안녕하세요',
-    content: '반갑습니다',
-    likes: [{ userId: '1234' }],
-    views: 123,
-    carrots: 100,
-    tags: [{ name: '엘' }, { name: '리' }, { name: '스' }],
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    __v: 3333,
-  },
-  {
-    _id: '4444',
-    articleType: 'free',
-    author: 'halley',
-    authorId: 'satoly4',
-    title: '안녕하세요',
-    content: '반갑습니다',
-    likes: [{ userId: '1234' }],
-    views: 123,
-    carrots: 100,
-    tags: [{ name: '엘' }, { name: '리' }, { name: '스' }],
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    __v: 4444,
-  },
-  {
-    _id: '5555',
-    articleType: 'free',
-    author: 'halley',
-    authorId: 'satoly4',
-    title: '안녕하세요',
-    content: '반갑습니다',
-    likes: [{ userId: '1234' }],
-    views: 123,
-    carrots: 100,
-    tags: [{ name: '엘' }, { name: '리' }, { name: '스' }],
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    __v: 5555,
-  },
-  {
-    _id: '6666',
-    articleType: 'free',
-    author: 'halley',
-    authorId: 'satoly4',
-    title: '안녕하세요',
-    content: '반갑습니다',
-    likes: [{ userId: '1234' }],
-    views: 123,
-    carrots: 100,
-    tags: [{ name: '엘' }, { name: '리' }, { name: '스' }],
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    __v: 6666,
-  },
-];
+const EmptyField = styled.p`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 40px;
+  font-weight: 700;
+  color: ${({ theme }) => theme.palette.black};
+`;
 
 export default function Home() {
   const projectSettings = {
@@ -221,18 +71,34 @@ export default function Home() {
   // Data fetching and set data
   const questionParams = { articleType: 'question' };
   const freeParams = { articleType: 'free' };
+  const projectParams = { filter: 'views', page: 1, perPage: 8 };
+
+  const [freePosts, setFreePosts] = useState([]);
+  const [questionPosts, setQuestionPosts] = useState([]);
+  const [projects, setProjects] = useState<IProjectProps[]>([]);
   const results = useQueries([
     {
-      queryKey: ['question'],
+      queryKey: ['question', 'main'],
       queryFn: () => getAllArticle(questionParams),
+      onSuccess({ articleList }: any) {
+        setQuestionPosts(articleList);
+      },
     },
     {
-      queryKey: ['free'],
+      queryKey: ['free', 'main'],
       queryFn: () => getAllArticle(freeParams),
+      onSuccess({ articleList }: any) {
+        setFreePosts(articleList);
+      },
+    },
+    {
+      queryKey: ['project', 'main'],
+      queryFn: () => getAllProjects(projectParams),
+      onSuccess({ projectList }: any) {
+        setProjects(projectList);
+      },
     },
   ]);
-
-  console.log(results);
 
   // 이미지 preloading
   useEffect(() => {
@@ -241,6 +107,11 @@ export default function Home() {
       img.src = image;
     });
   }, []);
+
+  // console.log(results);
+  // console.log('Free', freePosts);
+  // console.log('Question', questionPosts);
+  // console.log('Projects', projects);
 
   return (
     <Container>
@@ -254,23 +125,28 @@ export default function Home() {
       <Title>프로젝트</Title>
       <ProjectSliderContainer>
         <Slider settings={projectSettings}>
-          {projects.map((project) => (
+          {projects && projects.slice(0, 8).map((project) => (
             <Card
-              key={project.projectId}
+              key={project._id}
+              projectId={project._id}
               title={project.title}
               author={project.author}
-              content={project.content}
+              shortDescription={project.shortDescription}
+              description={project.description}
               thumbnail={project.thumbnail}
-              likes={project.likes}
-              projectId={project.projectId}
+              likes={project.likes.length}
+              tags={project.tags}
+              date={project.createdAt.toLocaleDateString()}
+              views={project.views.toLocaleString()}
               type="project"
             />
           ))}
         </Slider>
+        {projects.length === 0 && <EmptyField>프로젝트가 존재하지 않습니다.</EmptyField>}
       </ProjectSliderContainer>
       <ContentContainer>
-        <PostList type="qna" posts={posts} />
-        <PostList type="free" posts={posts} />
+        <PostList type="main" title="자유게시판" posts={freePosts} />
+        <PostList type="main" title="질의응답" posts={questionPosts} />
       </ContentContainer>
     </Container>
   );

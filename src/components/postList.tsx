@@ -60,15 +60,17 @@ const EmptyField = styled.p`
 `;
 
 const defaultProps = {
-  type: '',
+  type: 'default',
+  title: '',
 };
 
 type postList = {
   type?: string;
+  title?: string;
   posts: IArticleProps[];
 } & typeof defaultProps
 
-export default function PostList({ type, posts } : postList) {
+export default function PostList({ type, title, posts } : postList) {
   // 기준에 맞춰 정렬된 데이터 불러오기
   const handleSort = async (sortBy: string): Promise<any> => {
     console.log(type, sortBy);
@@ -80,26 +82,29 @@ export default function PostList({ type, posts } : postList) {
 
   return (
     <Container>
-      {type === 'qna' ? <Title>질의응답</Title> : type === 'free' ? <Title>자유게시판</Title> : null}
-      <Alignments>
-        <Alignment onClick={() => handleSort('new')}>최신순</Alignment>
-        <Alignment onClick={() => handleSort('popular')}>인기순</Alignment>
-      </Alignments>
+      {type === 'main' ? <Title>{title}</Title> : null}
+      {type !== 'main'
+        ? (
+          <Alignments>
+            <Alignment onClick={() => handleSort('new')}>최신순</Alignment>
+            <Alignment onClick={() => handleSort('popular')}>인기순</Alignment>
+          </Alignments>
+        ) : null}
       <Posts>
-        { posts.length > 0 ? posts.map((post) => (
+        { posts.map((post) => (
           <PostItem
             key={post._id}
             profile={post.author}
             title={post.title}
             content={post.content}
-            date={post.createdAt.toLocaleDateString()}
+            date={post.createdAt}
             comment={123}
-            heart={34}
+            heart={post.likes.length}
             type={type}
             articleId={post._id}
             articleType={post.articleType}
           />
-        )) : <EmptyField>게시물이 존재하지 않습니다.</EmptyField> }
+        ))}
       </Posts>
     </Container>
   );

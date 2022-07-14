@@ -107,7 +107,7 @@ const MyPageItem = styled.li<{selected: boolean}>`
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: 'EliceBold';
+    font-weight: bold;
     color: ${(props) => (!props.selected ? props.theme.palette.black : 'white')};
     background-color: ${(props) => (props.selected ? props.theme.palette.eliceViolet : 'white')};
     &:hover{

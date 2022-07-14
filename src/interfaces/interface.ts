@@ -35,21 +35,21 @@ export interface IArticleProps {
     authorId: string;
     title: string;
     content: string;
-    likes?: ILikesProps[];
-    views?: number;
+    likes: ILikesProps[];
+    views: number;
     carrots?: number;
-    tags?: ITagsProps[];
-    createdAt: Date;
-    updatedAt: Date;
+    tags: ITagsProps[];
+    createdAt: string;
+    updatedAt: string;
     __v: number;
 }
 
 export interface IArticleGetProps {
     [index: string]: any;
     articleType: IArticleTypes;
-    filter?: 'date' | 'views';
-    page?: string;
-    perPage?: string;
+    filter?: string;
+    page?: number;
+    perPage?: number;
 }
 
 export interface IArticlePostProps {
@@ -101,13 +101,15 @@ export interface IChatProps {
 
 export interface IProjectProps {
     _id: string;
+    title: string;
     author: string;
     authorId: string;
+    shortDescription: string;
     description: string;
-    content: string;
     thumbnail: string;
-    likes?: ILikesProps[];
+    views: string;
     tags: ITagsProps[];
+    likes: ILikesProps[];
     createdAt: Date;
     updatedAt: Date;
     __v: number;
@@ -170,4 +172,29 @@ export interface ISearchArticleByTitleProps {
     [index: string]: string;
     title: string;
     type: IArticleTypes;
+}
+
+export interface IProjectGetParamsProps {
+    [index: string]: any;
+    filter: string;
+    page: number;
+    perPage: any;
+}
+
+export interface IProjectPostParamsProps {
+    author: string;
+    title: string;
+    shortDescription: string;
+    description: string | undefined;
+    thumbnail: string;
+    tags: ITagsProps[];
+}
+
+export interface IProjectPutParamsProps {
+    author: string;
+    title: string;
+    shortDescription: string;
+    description: string;
+    thumbnail: string;
+    tags: ITagsProps[];
 }
