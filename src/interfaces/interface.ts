@@ -74,7 +74,7 @@ export interface ICommentProps {
     articleId: string;
     authorId: string;
     content: string;
-    likes: string[];
+    likes: ILikesProps[];
     isAdopted: boolean;
     createdAt: Date;
     updatedAt: Date;

@@ -173,7 +173,7 @@ export default function Projects() {
   // const params: IProjectGetParamsProps = { filter, page, perPage };
   // const { data } = useQuery<IProjectProps[]>(['projectList'], () => getAllProjects(params));
 
-  // console.log(filter, page, perPage);
+  console.log(filter, page, perPage);
   // console.log(data);
 
   const handleProjectEnrollment = (modalType: any) => {
@@ -184,12 +184,15 @@ export default function Projects() {
     setFilter('views');
     setPage(0);
     setStart(0);
+    // 이게 맞나..?
+    window.location.reload();
   };
 
   const handleSortByDate = () => {
     setFilter('date');
     setPage(0);
     setStart(0);
+    window.location.reload();
   };
 
   return (
@@ -227,7 +230,7 @@ export default function Projects() {
       </Content>
       <PaginationContainer>
         <Pagination
-          length={Math.ceil(projects.length / perPage)}
+          // length={Math.ceil(projects.length / perPage)}
           start={start}
           handler={setPage}
         />

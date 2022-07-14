@@ -131,7 +131,6 @@ function ProjectForm() {
         <TagContainer>
           <TagsInput tags={tags} setTags={setTags} />
         </TagContainer>
-        {tags.length === 0 ? <ErrorMessage>태그는 필수 입력사항입니다:)</ErrorMessage> : null}
         <EditorContainer style={{ marginBottom: '1rem' }}>
           <InputTitle style={{ marginBottom: '1rem' }}>본문</InputTitle>
           <MarkdownEditor ref={editorRef} />
