@@ -2,6 +2,7 @@ import React from 'react';
 import { AiOutlineLike } from 'react-icons/ai';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import { ITagsProps } from '@/interfaces/interface';
 
 const Container = styled.div`
   width: 300px;
@@ -27,12 +28,6 @@ const Header = styled.div`
   margin: 0 0 4px;
   padding: 14px 16px 12px;
 `;
-
-// const ProfileImg = styled.img`
-//   width: 40px;
-//   height: 40px;
-//   border-radius: 50px;
-// `;
 
 const HeaderText = styled.div`
   display:flex;
@@ -151,9 +146,7 @@ const LikeCount = styled.span`
   padding-top: 5px;
 `;
 
-const TagContainer = styled.div`
-
-`;
+const TagContainer = styled.div``;
 
 const Tag = styled.span`
   background-color: ${({ theme }) => theme.palette.gray};
@@ -172,7 +165,7 @@ interface cardProps {
   description: string;
   thumbnail?: string;
   likes: number;
-  tags: string[];
+  tags: ITagsProps[];
   date: string;
   views: string;
   type?: string;
@@ -228,7 +221,7 @@ export default function Card({
           <LikeCount>{likes}</LikeCount>
         </LikeContainer>
         <TagContainer>
-          {tags.slice(0, 2).map((tag, i) => <Tag key={String(i) + tag}>{tag}</Tag>)}
+          {tags.slice(0, 2).map((tag, i) => <Tag key={String(i) + tag.name}>{tag.name}</Tag>)}
         </TagContainer>
       </Info>
       <SubInfo>

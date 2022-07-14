@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 const defaultProps = {
-  type: 'default',
+  type: '',
 };
 
 type IPostItemProps = {
@@ -19,7 +19,7 @@ type IPostItemProps = {
 
 const Post = styled.div<{type: string}>`
   cursor: pointer;
-  width: ${(props) => (props.type === 'default' ? '800px' : '500px')};
+  width: ${(props) => (props.type === 'main' ? '400px' : '800px')};
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -38,7 +38,7 @@ const Post = styled.div<{type: string}>`
 `;
 
 const Main = styled.div<{type: string}>`
-  height: ${(props) => (props.type === 'default' ? '170px' : '100px')};
+  height: ${(props) => (props.type === 'main' ? '100px' : '170px')};
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -48,7 +48,7 @@ const Main = styled.div<{type: string}>`
 `;
 
 const Content = styled.div<{type: string}>`
-  height: ${(props) => (props.type === 'default' ? '100px' : '50px')};
+  height: ${(props) => (props.type === 'main' ? '50px' : '100px')};
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -56,7 +56,7 @@ const Content = styled.div<{type: string}>`
 `;
 
 const Profile = styled.p<{type: string}>`
-  font-size: ${(props) => (props.type === 'default' ? '15px' : '10px')};
+  font-size: ${(props) => (props.type === 'main' ? '10px' : '15px')};
   line-height: 16px;
   letter-spacing: 1.5px;
   font-weight: 500;
@@ -64,8 +64,8 @@ const Profile = styled.p<{type: string}>`
 `;
 
 const Title = styled.h3<{type: string}>`
-  max-width: ${(props) => (props.type === 'default' ? '700px' : '400px')};
-  font-size:  ${(props) => (props.type === 'default' ? '40px' : '20px')};
+  max-width:  ${(props) => (props.type === 'main' ? '400px' : '700px')};
+  font-size: ${(props) => (props.type === 'main' ? '12px' : '20px')};
   font-weight: 700;
   letter-spacing: 0.15px;
   color : ${({ theme }):string => theme.palette.black};
@@ -78,8 +78,8 @@ const Title = styled.h3<{type: string}>`
 `;
 
 const Body = styled.p<{type: string}>`
-  max-width:  ${(props) => (props.type === 'default' ? '700px' : '400px')};
-  font-size: ${(props) => (props.type === 'default' ? '20px' : '12px')};
+  max-width:  ${(props) => (props.type === 'main' ? '400px' : '700px')};
+  font-size: ${(props) => (props.type === 'main' ? '12px' : '20px')};
   font-weight: 300;
   letter-spacing: 0.25px;
   line-height: 20px;
@@ -105,9 +105,9 @@ const Info = styled.div`
 `;
 
 const CommentBox = styled.div<{type: string}>`
-  width: 60px;
-  height: 60px;
-  display: ${(props) => (props.type === 'default' ? 'flex' : 'none')};
+  width: ${(props) => (props.type === 'main' ? '40px' : '60px')};
+  height: ${(props) => (props.type === 'main' ? '40px' : '60px')};
+  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -116,8 +116,8 @@ const CommentBox = styled.div<{type: string}>`
   border: 1px solid ${({ theme }):string => theme.palette.borderGray};
 `;
 
-const CommentCount = styled.p`
-  font-size:  14px;
+const CommentCount = styled.p<{type:string}>`
+  font-size:  ${(props) => (props.type === 'main' ? '1rem' : '1.4rem')};
   font-weight: 400;
   letter-spacing: 1.25px;
   text-align: center;
@@ -125,15 +125,15 @@ const CommentCount = styled.p`
   color: ${({ theme }):string => theme.palette.gray};
 `;
 
-const CommentText = styled.p`
-  font-size: 12px;
+const CommentText = styled.p<{type:string}>`
+  font-size: ${(props) => (props.type === 'main' ? '1rem' : '1.2rem')};
   font-weight: 400;
   letter-spacing: -0.75px;
   color: ${({ theme }):string => theme.palette.gray};
 `;
 
 const HeartBox = styled.div<{type: string}>`
-  display: ${(props) => (props.type === 'default' ? 'flex' : 'none')};
+  display: flex;
   flex-direction: row;
   align-items: center;
   gap: 5px;
@@ -181,8 +181,8 @@ export default function PostItem({
       </Main>
       <Info>
         <CommentBox type={type}>
-          <CommentCount>{comment}</CommentCount>
-          <CommentText>댓글</CommentText>
+          <CommentCount type={type}>{comment}</CommentCount>
+          <CommentText type={type}>댓글</CommentText>
         </CommentBox>
         <HeartBox type={type}>
           <HeartIcon xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 26 26"><path fill="currentColor" d="M17.869 3.889c-2.096 0-3.887 1.494-4.871 2.524c-.984-1.03-2.771-2.524-4.866-2.524C4.521 3.889 2 6.406 2 10.009c0 3.97 3.131 6.536 6.16 9.018c1.43 1.173 2.91 2.385 4.045 3.729c.191.225.471.355.765.355h.058c.295 0 .574-.131.764-.355c1.137-1.344 2.616-2.557 4.047-3.729C20.867 16.546 24 13.98 24 10.009c0-3.603-2.521-6.12-6.131-6.12z" /></HeartIcon>
