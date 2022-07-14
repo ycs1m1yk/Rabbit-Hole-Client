@@ -48,8 +48,8 @@ export interface IArticleGetProps {
     [index: string]: any;
     articleType: IArticleTypes;
     filter?: string;
-    page?: string;
-    perPage?: string;
+    page?: number;
+    perPage?: number;
 }
 
 export interface IArticlePostProps {

@@ -6,6 +6,7 @@ interface AuthProps {
   token: string,
   expire: string,
   userId: string,
+  carrots: number,
 }
 
 const { persistAtom } = recoilPersist({
