@@ -39,8 +39,8 @@ export interface IArticleProps {
     views?: number;
     carrots?: number;
     tags?: ITagsProps[];
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt: string;
+    updatedAt: string;
     __v: number;
 }
 
@@ -48,8 +48,8 @@ export interface IArticleGetProps {
     [index: string]: any;
     articleType: IArticleTypes;
     filter?: string;
-    page?: string;
-    perPage?: string;
+    page?: number;
+    perPage?: number;
 }
 
 export interface IArticlePostProps {
