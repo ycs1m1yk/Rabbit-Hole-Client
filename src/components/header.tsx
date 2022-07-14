@@ -84,13 +84,13 @@ export default function Header() {
     e.preventDefault();
 
     const target = e.target as HTMLElement;
-    const anchorTarget = target.closest('a') as HTMLAnchorElement;
+    const anchorTarget = target.closest('a') || undefined;
 
     if (anchorRef.current) {
       anchorRef.current.classList.remove('active');
     }
     anchorRef.current = anchorTarget;
-    anchorRef.current.classList.add('active');
+    anchorRef.current?.classList.add('active');
   }, []);
 
   const handleModal = useCallback((type:any) => {

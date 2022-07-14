@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useSetRecoilState } from 'recoil';
 
@@ -8,9 +8,34 @@ import Search from '@/components/search';
 import Card from '@/components/card';
 import Pagination from '@/components/pagination';
 import modalAtom from '@/recoil/modal/modalAtom';
+import { useQuery } from 'react-query';
+import { getAllArticle } from '@/lib/articleApi';
+import { IArticleGetProps, IProjectGetParamsProps, IProjectProps } from '@/interfaces/interface';
+import { getAllProjects } from '@/lib/projectApi';
 
 const ProjectContainer = styled.div`
   padding: 3rem;
+`;
+
+const Alignments = styled.ul`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 4rem;
+  & :hover{
+    font-weight: 700;
+    color: ${({ theme }) => theme.palette.eliceViolet};
+  }
+`;
+
+const Alignment = styled.li`
+  cursor: pointer;
+  list-style-type: disc;
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 26px;
+  vertical-align: middle;
+  margin-left: 2rem;
 `;
 
 const ProjectHeader = styled.div`
@@ -55,6 +80,7 @@ const projects = [
     thumbnail: 'https://via.placeholder.com/200',
     likes: ['1', '2', '3', '4', '5', '56'],
     tags: ['React', 'Typescript', 'React', 'Typescript'],
+    views: 1278,
     createdAt: new Date(),
     updatedAt: new Date(),
     __v: '21321',
@@ -69,6 +95,7 @@ const projects = [
     thumbnail: 'https://via.placeholder.com/200',
     likes: ['1', '2', '3', '4', '5', '56'],
     tags: ['React'],
+    views: 1278,
     createdAt: new Date(),
     updatedAt: new Date(),
     __v: '21321',
@@ -83,6 +110,7 @@ const projects = [
     thumbnail: 'https://via.placeholder.com/200',
     likes: ['1', '2', '3', '4', '5', '56'],
     tags: ['React', 'Typescript'],
+    views: 12728,
     createdAt: new Date(),
     updatedAt: new Date(),
     __v: '21321',
@@ -97,6 +125,7 @@ const projects = [
     thumbnail: 'https://via.placeholder.com/200',
     likes: ['1', '2', '3', '4', '5', '56'],
     tags: ['React', 'Typescript'],
+    views: 124378,
     createdAt: new Date(),
     updatedAt: new Date(),
     __v: '21321',
@@ -111,6 +140,7 @@ const projects = [
     thumbnail: 'https://via.placeholder.com/200',
     likes: ['1', '2', '3', '4', '5', '56'],
     tags: ['React', 'Typescript'],
+    views: 123478,
     createdAt: new Date(),
     updatedAt: new Date(),
     __v: '21321',
@@ -125,6 +155,7 @@ const projects = [
     thumbnail: 'https://via.placeholder.com/200',
     likes: ['1', '2', '3', '4', '5', '56'],
     tags: ['React', 'Typescript'],
+    views: 12728,
     createdAt: new Date(),
     updatedAt: new Date(),
     __v: '21321',
@@ -133,14 +164,37 @@ const projects = [
 
 export default function Projects() {
   const setModal = useSetRecoilState(modalAtom);
+  const [filter, setFilter] = useState<string>('date');
+  const [page, setPage] = useState<number>(0);
+  const [perPage, setPerPage] = useState<any>(8);
+  const [start, setStart] = useState<number>(0);
 
-  const handlePagination = (pageNum: string) => {
-    console.log(pageNum);
-  };
+  // params로 프로젝트 GET 요청
+  // const params: IProjectGetParamsProps = { filter, page, perPage };
+  // const { data } = useQuery<IProjectProps[]>(['projectList'], () => getAllProjects(params));
+
+  console.log(filter, page, perPage);
+  // console.log(data);
 
   const handleProjectEnrollment = (modalType: any) => {
     setModal(modalType);
   };
+
+  const handleSortByView = () => {
+    setFilter('views');
+    setPage(0);
+    setStart(0);
+    // 이게 맞나..?
+    window.location.reload();
+  };
+
+  const handleSortByDate = () => {
+    setFilter('date');
+    setPage(0);
+    setStart(0);
+    window.location.reload();
+  };
+
   return (
     <ProjectContainer>
       <ProjectHeader>
@@ -152,6 +206,10 @@ export default function Projects() {
           <Button size="small" onClick={() => handleProjectEnrollment('Register')}>프로젝트 등록</Button>
         </ButtonContainer>
       </ProjectHeader>
+      <Alignments>
+        <Alignment onClick={handleSortByDate}>최신순</Alignment>
+        <Alignment onClick={handleSortByView}>인기순</Alignment>
+      </Alignments>
       <Content>
         {projects.map((project) => (
           <Card
@@ -164,12 +222,18 @@ export default function Projects() {
             thumbnail={project.thumbnail}
             likes={project.likes.length}
             tags={project.tags}
+            date={project.createdAt.toLocaleDateString()}
+            views={project.views.toLocaleString()}
             type="project"
           />
         ))}
       </Content>
       <PaginationContainer>
-        <Pagination handler={handlePagination} />
+        <Pagination
+          // length={Math.ceil(projects.length / perPage)}
+          start={start}
+          handler={setPage}
+        />
       </PaginationContainer>
     </ProjectContainer>
   );

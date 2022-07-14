@@ -1,7 +1,7 @@
-import { ILikesProps, ITagsProps } from '@/interfaces/interface';
 import React from 'react';
 import { AiOutlineLike } from 'react-icons/ai';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
   width: 300px;
@@ -125,6 +125,20 @@ const Info = styled.div`
   position: relative;
 `;
 
+const SubInfo = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin: 2rem 1rem;
+`;
+
+const ViewCount = styled.span`
+  font-size: 1.2rem;
+`;
+
+const CreateDate = styled.span`
+  font-size: 1.2rem;
+`;
+
 const LikeContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -159,6 +173,8 @@ interface cardProps {
   thumbnail?: string;
   likes: number;
   tags: string[];
+  date: string;
+  views: string;
   type?: string;
 }
 
@@ -171,11 +187,16 @@ export default function Card({
   thumbnail,
   likes,
   tags,
+  date,
+  views,
   type,
 }: cardProps) {
+  const navigate = useNavigate();
+
   const handleClick = ():void => {
     if (type === 'project') {
       console.log('프로젝트 디테일 페이지 이동', `/project?projectId=${projectId}`);
+      navigate(`/projects?projectId=${projectId}`);
     } else if (type === 'mentoring') {
       console.log('멘토링 디테일 모달 띄우기');
     }
@@ -210,6 +231,13 @@ export default function Card({
           {tags.slice(0, 2).map((tag, i) => <Tag key={String(i) + tag}>{tag}</Tag>)}
         </TagContainer>
       </Info>
+      <SubInfo>
+        <ViewCount>
+          {views}
+          회
+        </ViewCount>
+        <CreateDate>{date}</CreateDate>
+      </SubInfo>
     </Container>
   );
 }
