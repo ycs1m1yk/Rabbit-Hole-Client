@@ -48,7 +48,7 @@ const StyledButton = styled.div<ButtonProps>`
   cursor: pointer;
   padding-left: 1rem;
   padding-right: 1rem;
-  font-family: 'EliceBold';
+  font-weight: blod;
   border-radius: 4px;
   white-space: nowrap;
   ${(props) => (props.outline
