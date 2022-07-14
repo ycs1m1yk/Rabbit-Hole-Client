@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useSetRecoilState } from 'recoil';
 
@@ -9,9 +9,9 @@ import Card from '@/components/card';
 import Pagination from '@/components/pagination';
 import modalAtom from '@/recoil/modal/modalAtom';
 import { useQuery } from 'react-query';
-import { getAllArticle } from '@/lib/articleApi';
-import { IArticleGetProps, IProjectGetParamsProps, IProjectProps } from '@/interfaces/interface';
+import { IProjectGetParamsProps, IProjectProps } from '@/interfaces/interface';
 import { getAllProjects } from '@/lib/projectApi';
+import Loading from '@/components/loading';
 
 const ProjectContainer = styled.div`
   padding: 3rem;
@@ -72,99 +72,6 @@ const PaginationContainer = styled.div`
   margin-top: 1rem;
 `;
 
-const projects = [
-  {
-    _id: '1322345',
-    title: '설재혁의 프로젝트',
-    author: '설재혁',
-    authorId: '326823',
-    shortDescription: '개인 프로젝트입니다.',
-    description: 'aaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbcccc',
-    thumbnail: 'https://via.placeholder.com/200',
-    likes: ['1', '2', '3', '4', '5', '56'],
-    tags: ['React', 'Typescript', 'React', 'Typescript'],
-    views: 1278,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    __v: '21321',
-  },
-  {
-    _id: '123445',
-    title: '설재혁의 프로젝트',
-    author: '설재혁',
-    authorId: '326823',
-    shortDescription: '개인 프로젝트입니다.',
-    description: 'aaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbcccc',
-    thumbnail: 'https://via.placeholder.com/200',
-    likes: ['1', '2', '3', '4', '5', '56'],
-    tags: ['React'],
-    views: 1278,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    __v: '21321',
-  },
-  {
-    _id: '123425',
-    title: '설재혁의 프로젝트',
-    author: '설재혁',
-    authorId: '326823',
-    shortDescription: '개인 프로젝트입니다.',
-    description: 'aaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbcccc',
-    thumbnail: 'https://via.placeholder.com/200',
-    likes: ['1', '2', '3', '4', '5', '56'],
-    tags: ['React', 'Typescript'],
-    views: 12728,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    __v: '21321',
-  },
-  {
-    _id: '1233245',
-    title: '설재혁의 프로젝트',
-    author: '설재혁',
-    authorId: '326823',
-    shortDescription: '개인 프로젝트입니다.',
-    description: 'aaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbcccc',
-    thumbnail: 'https://via.placeholder.com/200',
-    likes: ['1', '2', '3', '4', '5', '56'],
-    tags: ['React', 'Typescript'],
-    views: 124378,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    __v: '21321',
-  },
-  {
-    _id: '1233432432245',
-    title: '설재혁의 프로젝트',
-    author: '설재혁',
-    authorId: '326823',
-    shortDescription: '개인 프로젝트입니다.',
-    description: 'aaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbcccc',
-    thumbnail: 'https://via.placeholder.com/200',
-    likes: ['1', '2', '3', '4', '5', '56'],
-    tags: ['React', 'Typescript'],
-    views: 123478,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    __v: '21321',
-  },
-  {
-    _id: '1233232345',
-    title: '설재혁의 프로젝트',
-    author: '설재혁',
-    authorId: '326823',
-    shortDescription: '개인 프로젝트입니다.',
-    description: 'aaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbcccc',
-    thumbnail: 'https://via.placeholder.com/200',
-    likes: ['1', '2', '3', '4', '5', '56'],
-    tags: ['React', 'Typescript'],
-    views: 12728,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    __v: '21321',
-  },
-];
-
 export default function Projects() {
   const setModal = useSetRecoilState(modalAtom);
   const [filter, setFilter] = useState<string>('date');
@@ -173,12 +80,10 @@ export default function Projects() {
   const [start, setStart] = useState<number>(0);
 
   // params로 프로젝트 GET 요청
-  // const params: IProjectGetParamsProps = { filter, page, perPage };
-  // const { data } = useQuery<IProjectProps[]>(['projectList'], () => getAllProjects(params));
+  const params: IProjectGetParamsProps = { filter, page: page + 1, perPage };
+  const { isLoading, data: { projectList: projects } } = useQuery<IProjectProps[] | any>(['projectList'], () => getAllProjects(params));
 
-  console.log(filter, page, perPage);
-  // console.log(data);
-
+  console.log(projects);
   const handleProjectEnrollment = (modalType: any) => {
     setModal(modalType);
   };
@@ -195,46 +100,47 @@ export default function Projects() {
     setStart(0);
   };
 
-  return (
-    <ProjectContainer>
-      <ProjectHeader>
-        프로젝트 갤러리
-        <SearchContainer>
-          <Search width={400} height={35} />
-        </SearchContainer>
-        <ButtonContainer>
-          <Button size="small" onClick={() => handleProjectEnrollment('Register')}>프로젝트 등록</Button>
-        </ButtonContainer>
-      </ProjectHeader>
-      <Alignments>
-        <Alignment onClick={handleSortByDate}>최신순</Alignment>
-        <Alignment onClick={handleSortByView}>인기순</Alignment>
-      </Alignments>
-      <Content>
-        {projects.map((project) => (
-          <Card
-            key={project._id}
-            projectId={project._id}
-            title={project.title}
-            author={project.author}
-            shortDescription={project.shortDescription}
-            description={project.description}
-            thumbnail={project.thumbnail}
-            likes={project.likes.length}
-            tags={project.tags}
-            date={project.createdAt.toLocaleDateString()}
-            views={project.views.toLocaleString()}
-            type="project"
+  return isLoading ? <Loading />
+    : (
+      <ProjectContainer>
+        <ProjectHeader>
+          프로젝트 갤러리
+          <SearchContainer>
+            <Search width={400} height={35} />
+          </SearchContainer>
+          <ButtonContainer>
+            <Button size="small" onClick={() => handleProjectEnrollment('Register')}>프로젝트 등록</Button>
+          </ButtonContainer>
+        </ProjectHeader>
+        <Alignments>
+          <Alignment onClick={handleSortByDate}>최신순</Alignment>
+          <Alignment onClick={handleSortByView}>인기순</Alignment>
+        </Alignments>
+        <Content>
+          {projects && projects.map((project: IProjectProps) => (
+            <Card
+              key={project._id}
+              projectId={project._id}
+              title={project.title}
+              author={project.author}
+              shortDescription={project.shortDescription}
+              description={project.description}
+              thumbnail={project.thumbnail}
+              likes={project.likes.length}
+              tags={project.tags}
+              date={project.createdAt.toLocaleDateString()}
+              views={project.views.toLocaleString()}
+              type="project"
+            />
+          ))}
+        </Content>
+        <PaginationContainer>
+          <Pagination
+            length={Math.ceil(projects.length / perPage)}
+            start={start}
+            handler={setPage}
           />
-        ))}
-      </Content>
-      <PaginationContainer>
-        <Pagination
-          length={Math.ceil(projects.length / perPage)}
-          start={start}
-          handler={setPage}
-        />
-      </PaginationContainer>
-    </ProjectContainer>
-  );
+        </PaginationContainer>
+      </ProjectContainer>
+    );
 }
