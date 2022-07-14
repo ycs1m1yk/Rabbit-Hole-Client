@@ -51,11 +51,14 @@ const ProjectHeader = styled.div`
 const SearchContainer = styled.div`
   position: absolute;
   right: 20%;
+  top: -10%;
 `;
 
 const ButtonContainer = styled.div`
   position: absolute;
   right: 0%;
+  top: -10%;
+  min-height: 45px;
 `;
 
 const Content = styled.div`
@@ -197,7 +200,7 @@ export default function Projects() {
       <ProjectHeader>
         프로젝트 갤러리
         <SearchContainer>
-          <Search width={400} height={40} />
+          <Search width={400} height={35} />
         </SearchContainer>
         <ButtonContainer>
           <Button size="small" onClick={() => handleProjectEnrollment('Register')}>프로젝트 등록</Button>

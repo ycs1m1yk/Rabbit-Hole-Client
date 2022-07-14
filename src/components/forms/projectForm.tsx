@@ -4,11 +4,9 @@ import React, {
 } from 'react';
 import styled from 'styled-components';
 
-import { useMutation, useQueryClient } from 'react-query';
 import { useForm } from 'react-hook-form';
-import { IProjectProps } from '@/interfaces/interface';
-import { postRegister } from '@/lib/userApi';
 import { Editor } from '@toast-ui/react-editor';
+import { postProject } from '@/lib/projectApi';
 import MarkdownEditor from '../markdownEditor';
 import Button from '../button';
 import TagsInput from '../tagsInput';
@@ -74,35 +72,18 @@ function ProjectForm() {
     if (e.code === 'Enter') e.preventDefault();
   }, []);
 
-  // mutate 함수를 onSubmit 내에서 formdata를 담아 호출
-  // TODO: project post API로 교체
-
-  // const queryClient = useQueryClient();
-  // const { mutate } = useMutation(postRegister, {
-  //   onSuccess: (data) => {
-  //     queryClient.setQueryData<IProjectProps[]>('projects', (oldData) => {
-  //       if (!oldData) {
-  //         return [];
-  //       }
-  //       console.log(data);
-  //       console.log(oldData);
-  //       return [...oldData, ...data];
-  //     });
-  //   },
-  //   onError: (data) => {
-  //     console.log('Error', data);
-  //   },
-  // });
-
   // Form Data가 유효하다면 이 곳에서 POST 요청
-  const onValid = (data: IForm) => {
+  const onValid = async (data: IForm) => {
+    // Token 가져오기
+
+    // bodyData
     const formData = {
       ...data,
       description: editorRef.current?.getInstance().getMarkdown(),
       tags,
     };
     console.log(formData);
-    // mutate(data);
+    // const response = await postProject(token, formData);
   };
 
   return (

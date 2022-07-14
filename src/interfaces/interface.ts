@@ -179,7 +179,7 @@ export interface IProjectPostParamsProps {
     author: string;
     title: string;
     shortDescription: string;
-    description: string;
+    description: string | undefined;
     thumbnail: string;
     tags: ITagsProps[];
 }
