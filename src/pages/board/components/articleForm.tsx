@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useRef, useState } from 'react';
+import React, { KeyboardEvent, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
 import { Editor } from '@toast-ui/react-editor';
@@ -45,16 +45,16 @@ function ArticleForm() {
   const [tags, setTags] = useState<string[]>([]);
   const { register, handleSubmit, formState: errors } = useForm();
 
+  const handleEnterSubmit = (e: KeyboardEvent) => {
+    if (e.code === 'Enter') e.preventDefault();
+  };
+
   // Form 데이터가 유효한 경우 호출되는 함수
   const onValid = (data: any) => {
-    // console.log('Valid', data);
-
     const formData = {
       ...data,
       tags,
       description: editorRef.current?.getInstance().getMarkdown(),
-    //   track: selectedTrack,
-    //   trackCardinalNumber: Number(selectedTrackNum),
     };
     console.log(formData);
   };
@@ -66,15 +66,12 @@ function ArticleForm() {
 
   // TODO:
   /**
-   * - [] state관리: react-hook-form
-   * - [] validation 에러처리: react-hook-form
-   * - [x] 태그입력 방식 변경: Search => velog 따라하기
-   * - [x] InputWrapper 추가 및 스타일링
+   * - [] 게시글 5000자 제한 처리
    */
   return (
     <>
       <ModalTitle>게시글 작성</ModalTitle>
-      <StyledArticleForm onSubmit={handleSubmit(onValid, onInvalid)}>
+      <StyledArticleForm onSubmit={handleSubmit(onValid, onInvalid)} onKeyDown={handleEnterSubmit}>
         <InputWrapper>
           <InputTitle>제목</InputTitle>
           <ArticleInput
