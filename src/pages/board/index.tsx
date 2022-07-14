@@ -155,8 +155,13 @@ const posts: IArticleProps[] = [
 
 // TODO:
 /**
- * - [X] Modal 연결
- * - [ ] articleForm 작성
+ * - [x] Modal 연결
+ * - [x] articleForm 작성
+ * - [] getAllAtricles로 게시글 뿌려주기
+ * - [] 최신순 추천순 정렬
+ * - [] 페이지네이션 이동
+ * - [] 게시글 post 테스트
+ * - [] 자신이 좋아요한 게시글 빨강하트
  */
 export default function Board() {
   const setModalState = useSetRecoilState(modalAtom);
