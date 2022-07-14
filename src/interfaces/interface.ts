@@ -39,8 +39,8 @@ export interface IArticleProps {
     views?: number;
     carrots?: number;
     tags?: ITagsProps[];
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt: string;
+    updatedAt: string;
     __v: number;
 }
 
