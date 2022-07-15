@@ -8,12 +8,11 @@ import SelectBox from '@components/selectBox';
 import Button from '@components/button';
 import PostList from '@components/postList';
 import Pagination from '@components/pagination';
-import Loading from '@components/loading';
 
 import modalAtom from '@/recoil/modal/modalAtom';
 import { useSetRecoilState } from 'recoil';
 
-import { IArticleGetProps, IArticleProps } from '@/interfaces/interface';
+import { IArticleGetProps } from '@/interfaces/interface';
 import { getAllArticle } from '@/lib/articleApi';
 import useToken from '@/hooks/useToken';
 import { useSearchParams } from 'react-router-dom';
@@ -62,8 +61,8 @@ const SelectBoxWrapper = styled.div`
  * - [x] articleForm 작성
  * - [x] perPage selectBox 추가
  * - [x] getAllAtricles로 게시글 뿌려주기
- * - [] 최신순 추천순 정렬
- * - [] 자신이 좋아요한 게시글 빨강하트
+ * - [x] 최신순 추천순 정렬
+ * - [x] 자신이 좋아요한 게시글 빨강하트
  * - [x] 페이지네이션 이동
  * - [] 페이지네이션 캐싱: react-query
  * - [x] 로그인 상태 조건부 랜더링
@@ -75,11 +74,16 @@ export default function Board() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [perPage, setPerPage] = useState<number>(10);
   const [query, setQuery] = useState<IArticleGetProps>({ articleType: 'question' });
-  const [articles, setArticles] = useState<IArticleProps[]>([]);
 
   const handleModalOpen = useCallback(() => {
     setModalState('Posting');
   }, []);
+
+  const handleSort = (sortType: string) => {
+    searchParams.set('filter', sortType);
+    searchParams.set('page', '1');
+    setSearchParams(searchParams);
+  };
 
   const handlePage = useCallback((idx: number) => {
     searchParams.set('page', `${idx + 1}`);
@@ -93,15 +97,12 @@ export default function Board() {
   }, []);
 
   const {
-    isLoading, isError, data, error,
+    isSuccess, isError, data, error,
   } = useQuery<any, Error>(
     ['articleList', query],
     () => getAllArticle(query),
     {
-      onSuccess: (resp) => {
-        console.log(resp);
-        setArticles(resp.articleList);
-      },
+      staleTime: 180000,
     },
   );
 
@@ -110,6 +111,7 @@ export default function Board() {
       searchParams.forEach((v, k) => setQuery((q) => ({ ...q, [k]: v })));
     } else {
       searchParams.set('articleType', 'question');
+      searchParams.set('filter', 'date');
       searchParams.set('page', '1');
       searchParams.set('perPage', '10');
       setSearchParams(searchParams);
@@ -117,24 +119,20 @@ export default function Board() {
     }
   }, [searchParams]);
 
-  if (isLoading) {
-    return <Loading />;
-  }
-
   if (isError) {
     return (
       <span>{`Error: ${error.message}`}</span>
     );
   }
 
-  return isReady && (
+  return isReady && isSuccess && (
     <BoardContainer>
       <SideBar type="board" />
       <BoardWrapper>
         <Search width={800} />
         <SelectBoxWrapper className="selectbox-perpage" data-user-loged-in={!!authInfo}>
           <SelectBox
-            options={[1, 10, 15, 20]}
+            options={[5, 10, 15, 20]}
             defaultValue="페이지당 개수"
             selectedOption={perPage}
             setSelectedOption={setPerPage}
@@ -145,7 +143,7 @@ export default function Board() {
         </SelectBoxWrapper>
         {authInfo
       && <Button className="button-posting" size="medium" onClick={handleModalOpen}>게시글 등록</Button>}
-        <PostList posts={articles} />
+        <PostList posts={data.articleList} sortHandler={handleSort} />
         <Pagination
           length={data.totalPage}
           start={query.page ? +(query.page) - 1 : 0}
