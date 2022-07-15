@@ -61,19 +61,17 @@ type postList = {
   title?: string;
   posts: IArticleProps[];
   userId?: string;
+  // eslint-disable-next-line no-unused-vars
+  sortHandler: Function | undefined;
 } & typeof defaultProps
 
 export default function PostList({
-  type, title, posts, userId,
+  type, title, posts, userId, sortHandler,
 } : postList) {
   // 기준에 맞춰 정렬된 데이터 불러오기
-  const handleSort = async (sortBy: string): Promise<any> => {
-    console.log(type, sortBy);
+  const handleClick = (sortType: string) => {
+    if (typeof sortHandler === 'function') { sortHandler(sortType); }
   };
-
-  useEffect(() => {
-
-  }, [handleSort]);
 
   return (
     <Container>
@@ -81,8 +79,8 @@ export default function PostList({
       {type !== 'main'
         ? (
           <Alignments>
-            <Alignment onClick={() => handleSort('new')}>최신순</Alignment>
-            <Alignment onClick={() => handleSort('popular')}>인기순</Alignment>
+            <Alignment onClick={() => handleClick('date')}>최신순</Alignment>
+            <Alignment onClick={() => handleClick('views')}>인기순</Alignment>
           </Alignments>
         ) : null}
       <Posts>
