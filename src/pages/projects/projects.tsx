@@ -13,6 +13,7 @@ import { IProjectGetParamsProps, IProjectProps } from '@/interfaces/interface';
 import { getAllProjects } from '@/lib/projectApi';
 import useToken from '@/hooks/useToken';
 import SelectBox from '@/components/selectBox';
+import { useQuery } from 'react-query';
 
 const ProjectContainer = styled.div`
   padding: 3rem;
@@ -85,9 +86,7 @@ const SelectBoxWrapper = styled.div`
 export default function Projects() {
   const setModal = useSetRecoilState(modalAtom);
 
-  const [totalPage, setTotalPage] = useState<number>(0);
   const { authInfo } = useToken();
-  const [projects, setProjects] = useState([]);
   const [perPage, setPerPage] = useState<number>(8);
 
   /*
@@ -100,6 +99,10 @@ export default function Projects() {
   const page = Number(searchParams.get('page'));
   const filter = searchParams.get('filter');
 
+  const params: IProjectGetParamsProps = { filter, page, perPage };
+
+  const { data: projects, refetch } = useQuery(['project', params], () => getAllProjects(params));
+
   // Modal Control
   const handleProjectEnrollment = (modalType: any) => {
     setModal(modalType);
@@ -107,7 +110,7 @@ export default function Projects() {
 
   // 인기순 정렬
   const handleSortByView = () => {
-    searchParams.set('filter', 'view');
+    searchParams.set('filter', 'views');
     searchParams.set('page', '1');
     setSearchParams(searchParams);
   };
@@ -132,18 +135,9 @@ export default function Projects() {
     setSearchParams(searchParams);
   };
 
-  // Data Fetching
-  const getProjectFromAPI = async () => {
-    const params: IProjectGetParamsProps = { filter, page, perPage };
-    const response = await getAllProjects(params);
-
-    setTotalPage(response.totalPage);
-    setProjects(response.projectList);
-  };
-
   useEffect(() => {
-    getProjectFromAPI();
-  }, [page, perPage, filter]);
+    refetch();
+  }, [filter, page, perPage]);
 
   return (
     <ProjectContainer>
@@ -168,7 +162,7 @@ export default function Projects() {
         <SelectBox options={[4, 8, 12, 16]} defaultValue="페이지당 개수" selectedOption={perPage} setSelectedOption={setPerPage} requestFunc={handlePerPage} width={70} type="register" />
       </SelectBoxWrapper>
       <Content>
-        {projects.map((project: IProjectProps) => (
+        {projects?.projectList.map((project: IProjectProps) => (
           <Card
             key={project._id}
             projectId={project._id}
@@ -187,7 +181,7 @@ export default function Projects() {
       </Content>
       <PaginationContainer>
         <Pagination
-          length={totalPage}
+          length={projects?.totalPage}
           handler={(pageNumber) => handleNavigate(pageNumber)}
         />
       </PaginationContainer>
