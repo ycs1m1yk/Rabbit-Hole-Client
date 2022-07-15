@@ -18,7 +18,6 @@ type IPostItemProps = {
 } & typeof defaultProps;
 
 const Post = styled.div<{type: string}>`
-  cursor: pointer;
   width: ${(props) => (props.type === 'main' ? '400px' : '800px')};
   display: flex;
   flex-direction: row;
@@ -32,8 +31,9 @@ const Post = styled.div<{type: string}>`
   }
   border-bottom: 1px solid ${({ theme }):string => theme.palette.borderGray};
 
-  & :hover {
+  & * > * > *:hover {
     opacity: 80%;
+    cursor: pointer;
   }
 `;
 
