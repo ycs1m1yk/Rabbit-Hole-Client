@@ -12,7 +12,6 @@ const GlobalStyle = createGlobalStyle`
     width: 100%;
   }
   #root {
-    min-width: 144rem;
     min-height: 100vh;
     position: relative;
     padding-bottom: 13.5rem;
