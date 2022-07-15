@@ -76,7 +76,7 @@ export interface ICommentProps {
     content: string;
     likes: ILikesProps[];
     isAdopted: boolean;
-    createdAt: Date;
+    createdAt: string;
     updatedAt: Date;
     __v: number;
 }

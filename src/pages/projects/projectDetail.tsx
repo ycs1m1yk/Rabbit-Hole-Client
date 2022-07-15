@@ -7,6 +7,10 @@ import LogoImage from '@assets/images/rabbit-hole-logo-300.jpg';
 import checkEmptyArray from '@utils/func';
 import MarkdownViewer from '@/components/markdownViewer';
 import { getProjectById } from '@/lib/projectApi';
+import { ICommentProps } from '@/interfaces/interface';
+import useToken from '@/hooks/useToken';
+import MarkdownEditor from '@/components/markdownEditor';
+import Button from '@/components/button';
 
 const IMAGE_CHECK = 'https://rabbit-hole-image.s3.ap-northeast-2.amazonaws.com/';
 
@@ -65,26 +69,59 @@ const ProjectDescription = styled.div`
   margin-left: 1rem;
 `;
 
-const ReplyContainer = styled.div`
-  background-color: green;
+const ReplyWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const ReplyContainer = styled.div<{isMyComment: boolean}>`
+  background-color: ${({ theme }) => theme.palette.borderGray};
+  padding: 2rem;
+  margin: 2rem 0;
+  border-radius: 20px;
+  width: 50%;
+  align-self: ${(props) => (props.isMyComment ? 'flex-end' : 'flex-start')};
+  background-color: ${(props) => (props.isMyComment ? props.theme.palette.lightViolet : props.theme.palette.borderGray)};
+`;
+
+const ReplyHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+const ReplyAuthor = styled.span`
+  font-size: 1.5rem;
+  font-weight: bold;
+`;
+
+const ReplyDate = styled.span`
+  font-size: 1.5rem;
+  font-weight: bold;
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
 `;
 
 function ProjectDetail() {
   const [searchParams] = useSearchParams();
+  // const { authInfo: { userId } } = useToken();
 
   const projectId = searchParams.get('projectId');
   const params = { page: 1, perPage: 5 };
   let project;
+  let comments;
 
   if (projectId) {
-    const { data } = useQuery<any>(['projectDetail', projectId], () => getProjectById(projectId, params), {
-      staleTime: 180000,
-    });
+    const { data } = useQuery<any>(['projectDetail', projectId], () => getProjectById(projectId, params));
     if (data) {
       project = data.projectInfo;
+      comments = data.commentList;
     }
   }
   console.log(project);
+  console.log(comments);
 
   return project && (
     <ProjectDetailContainer>
@@ -114,7 +151,28 @@ function ProjectDetail() {
           </ProjectDescription>
         </ProjectInfo>
       </ProjectContentContainer>
-      <ReplyContainer>답글</ReplyContainer>
+      <ProjectDetailHeader>답글</ProjectDetailHeader>
+      <ReplyWrapper>
+        {comments.map((comment: ICommentProps) => (
+          <ReplyContainer isMyComment={Math.random() > 0.5} key={comment._id}>
+            <ReplyHeader>
+              <ReplyAuthor>
+                작성자:
+                {' '}
+                {comment.author}
+              </ReplyAuthor>
+              <ReplyDate>
+                {comment.createdAt.slice(0, 10)}
+              </ReplyDate>
+            </ReplyHeader>
+            <MarkdownViewer text={comment.content} />
+          </ReplyContainer>
+        ))}
+      </ReplyWrapper>
+      <MarkdownEditor />
+      <ButtonContainer>
+        <Button onClick={() => console.log('답글 POST')}>답변하기</Button>
+      </ButtonContainer>
     </ProjectDetailContainer>
   );
 }
