@@ -166,7 +166,7 @@ interface cardProps {
   thumbnail?: string;
   likes: number;
   tags: ITagsProps[];
-  date: string;
+  date: Date;
   views: string;
   type?: string;
 }
