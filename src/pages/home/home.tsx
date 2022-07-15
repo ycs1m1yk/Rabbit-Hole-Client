@@ -108,11 +108,6 @@ export default function Home() {
     });
   }, []);
 
-  // console.log(results);
-  // console.log('Free', freePosts);
-  // console.log('Question', questionPosts);
-  // console.log('Projects', projects);
-
   return (
     <Container>
       <MainSliderContainer>
@@ -125,7 +120,7 @@ export default function Home() {
       <Title>프로젝트</Title>
       <ProjectSliderContainer>
         <Slider settings={projectSettings}>
-          {projects && projects.slice(0, 8).map((project) => (
+          {projects && projects.map((project) => (
             <Card
               key={project._id}
               projectId={project._id}
@@ -136,13 +131,12 @@ export default function Home() {
               thumbnail={project.thumbnail}
               likes={project.likes.length}
               tags={project.tags}
-              date={project.createdAt.toLocaleDateString()}
-              views={project.views.toLocaleString()}
+              date={project.createdAt}
+              views={project.views}
               type="project"
             />
           ))}
         </Slider>
-        {projects.length === 0 && <EmptyField>프로젝트가 존재하지 않습니다.</EmptyField>}
       </ProjectSliderContainer>
       <ContentContainer>
         <PostList type="main" title="자유게시판" posts={freePosts} />
