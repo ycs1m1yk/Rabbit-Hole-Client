@@ -1,17 +1,18 @@
 /* eslint-disable no-underscore-dangle */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useSetRecoilState } from 'recoil';
+import { useSearchParams } from 'react-router-dom';
 
 import Button from '@/components/button';
 import Search from '@/components/search';
 import Card from '@/components/card';
 import Pagination from '@/components/pagination';
 import modalAtom from '@/recoil/modal/modalAtom';
-import { useQuery } from 'react-query';
 import { IProjectGetParamsProps, IProjectProps } from '@/interfaces/interface';
 import { getAllProjects } from '@/lib/projectApi';
-import Loading from '@/components/loading';
+import useToken from '@/hooks/useToken';
+import SelectBox from '@/components/selectBox';
 
 const ProjectContainer = styled.div`
   padding: 3rem;
@@ -72,73 +73,124 @@ const PaginationContainer = styled.div`
   margin-top: 1rem;
 `;
 
+const SelectBoxWrapper = styled.div`
+
+  & select {
+    text-align: center;
+    height: 3.5rem;
+    border: 1.5px solid ${({ theme }) => theme.palette.borderGray}
+  }
+`;
+
 export default function Projects() {
   const setModal = useSetRecoilState(modalAtom);
-  const [filter, setFilter] = useState<string>('date');
-  const [page, setPage] = useState<number>(0);
-  const [perPage, setPerPage] = useState<any>(8);
-  const [start, setStart] = useState<number>(0);
 
-  // params로 프로젝트 GET 요청
-  const params: IProjectGetParamsProps = { filter, page: page + 1, perPage };
-  const { isLoading, data } = useQuery<IProjectProps[] | any>(['projectList'], () => getAllProjects(params));
+  const [totalPage, setTotalPage] = useState<number>(0);
+  const { authInfo } = useToken();
+  const [projects, setProjects] = useState([]);
+  const [perPage, setPerPage] = useState<number>(8);
+
+  /*
+    초기 진입 시 정렬 기본값
+      filter = 'date'
+      page = 1
+      perPage = 8
+  */
+  const [searchParams, setSearchParams] = useSearchParams();
+  const page = Number(searchParams.get('page'));
+  const filter = searchParams.get('filter');
+
+  // Modal Control
   const handleProjectEnrollment = (modalType: any) => {
     setModal(modalType);
   };
 
+  // 인기순 정렬
   const handleSortByView = () => {
-    setFilter('views');
-    setPage(0);
-    setStart(0);
+    searchParams.set('filter', 'view');
+    searchParams.set('page', '1');
+    setSearchParams(searchParams);
   };
 
+  // 최신순 정렬
   const handleSortByDate = () => {
-    setFilter('date');
-    setPage(0);
-    setStart(0);
+    searchParams.set('filter', 'date');
+    searchParams.set('page', '1');
+    setSearchParams(searchParams);
   };
 
-  return isLoading ? <Loading />
-    : (
-      <ProjectContainer>
-        <ProjectHeader>
-          프로젝트 갤러리
-          <SearchContainer>
-            <Search width={400} height={35} />
-          </SearchContainer>
-          <ButtonContainer>
-            <Button size="small" onClick={() => handleProjectEnrollment('Register')}>프로젝트 등록</Button>
-          </ButtonContainer>
-        </ProjectHeader>
-        <Alignments>
-          <Alignment onClick={handleSortByDate}>최신순</Alignment>
-          <Alignment onClick={handleSortByView}>인기순</Alignment>
-        </Alignments>
-        <Content>
-          {data?.projectList.map((project: IProjectProps) => (
-            <Card
-              key={project._id}
-              projectId={project._id}
-              title={project.title}
-              author={project.author}
-              shortDescription={project.shortDescription}
-              description={project.description}
-              thumbnail={project.thumbnail}
-              likes={project.likes.length}
-              tags={project.tags}
-              date={project.createdAt}
-              views={project.views}
-              type="project"
-            />
-          ))}
-        </Content>
-        <PaginationContainer>
-          <Pagination
-            length={Math.ceil(data?.projectList.length / perPage)}
-            start={start}
-            handler={setPage}
+  // 페이지당 프로젝트 수 설정
+  const handlePerPage = (perP: string) => {
+    searchParams.set('perPage', perP);
+    searchParams.set('page', '1');
+    setSearchParams(searchParams);
+  };
+
+  // 페이지 변화에 따른 URL 변경
+  const handleNavigate = (pageNumber: number) => {
+    searchParams.set('page', `${pageNumber + 1}`);
+    setSearchParams(searchParams);
+  };
+
+  // Data Fetching
+  const getProjectFromAPI = async () => {
+    const params: IProjectGetParamsProps = { filter, page, perPage };
+    const response = await getAllProjects(params);
+
+    setTotalPage(response.totalPage);
+    setProjects(response.projectList);
+  };
+
+  useEffect(() => {
+    getProjectFromAPI();
+  }, [page, perPage, filter]);
+
+  return (
+    <ProjectContainer>
+      <ProjectHeader>
+        프로젝트 갤러리
+        <SearchContainer>
+          <Search width={400} height={35} />
+        </SearchContainer>
+        {
+            authInfo?.token && (
+            <ButtonContainer>
+              <Button size="small" onClick={() => handleProjectEnrollment('Register')}>프로젝트 등록</Button>
+            </ButtonContainer>
+            )
+          }
+      </ProjectHeader>
+      <Alignments>
+        <Alignment onClick={handleSortByDate}>최신순</Alignment>
+        <Alignment onClick={handleSortByView}>인기순</Alignment>
+      </Alignments>
+      <SelectBoxWrapper className="selectbox-perpage">
+        <SelectBox options={[4, 8, 12, 16]} defaultValue="페이지당 개수" selectedOption={perPage} setSelectedOption={setPerPage} requestFunc={handlePerPage} width={70} type="register" />
+      </SelectBoxWrapper>
+      <Content>
+        {projects.map((project: IProjectProps) => (
+          <Card
+            key={project._id}
+            projectId={project._id}
+            title={project.title}
+            author={project.author}
+            shortDescription={project.shortDescription}
+            description={project.description}
+            thumbnail={project.thumbnail}
+            likes={project.likes.length}
+            tags={project.tags}
+            date={project.createdAt}
+            views={project.views}
+            type="project"
           />
-        </PaginationContainer>
-      </ProjectContainer>
-    );
+        ))}
+      </Content>
+      <PaginationContainer>
+        <Pagination
+          length={totalPage}
+          handler={(pageNumber) => handleNavigate(pageNumber)}
+        />
+      </PaginationContainer>
+    </ProjectContainer>
+  );
 }
