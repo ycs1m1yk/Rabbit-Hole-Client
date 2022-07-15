@@ -55,14 +55,6 @@ interface articleObj{
   createdAt: Date;
 }
 
-// interface mentoringObj{
-//   type: 'mentoring';
-//   username: string;
-//   phone: string;
-//   email: string;
-//   content: string;
-//   createdAt: Date;
-// }
 interface projectObj{
   type: 'project';
   _id: string;
