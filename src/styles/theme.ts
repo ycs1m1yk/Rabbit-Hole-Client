@@ -10,6 +10,7 @@ const theme: DefaultTheme = {
     eliceViolet: '#6700E6',
     lightViolet: '#6F52D9',
     eliceBlue: '#524FA1',
+    carrotOrange: '#EB9A29',
     borderGray: '#DEE2E6',
     gray: '#747474',
     black: '#151618',

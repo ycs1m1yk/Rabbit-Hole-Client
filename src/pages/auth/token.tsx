@@ -20,7 +20,7 @@ export default function Token() {
       if (token && userName && expireTime && userId) {
         const expire = date.getTime() + parseInt(expireTime, 10) * 1000;
         setAuthState({
-          token, userName, expire: expire.toString(), userId, carrots: 100,
+          token, userName, expire: expire.toString(), userId, carrots,
         });
       }
     } catch (error) {
