@@ -53,15 +53,19 @@ const Posts = styled.div`
 const defaultProps = {
   type: 'default',
   title: '',
+  userId: '',
 };
 
 type postList = {
   type?: string;
   title?: string;
   posts: IArticleProps[];
+  userId?: string;
 } & typeof defaultProps
 
-export default function PostList({ type, title, posts } : postList) {
+export default function PostList({
+  type, title, posts, userId,
+} : postList) {
   // 기준에 맞춰 정렬된 데이터 불러오기
   const handleSort = async (sortBy: string): Promise<any> => {
     console.log(type, sortBy);
@@ -94,6 +98,7 @@ export default function PostList({ type, title, posts } : postList) {
             type={type}
             articleId={post._id}
             articleType={post.articleType}
+            likeThis={!!post.likes.find((el) => el.userId === userId)}
           />
         ))}
       </Posts>
