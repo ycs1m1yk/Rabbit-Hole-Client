@@ -1,10 +1,14 @@
+/* eslint-disable import/no-unresolved */
 import React from 'react';
 import { useQuery } from 'react-query';
 import { useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
-
+import LogoImage from '@assets/images/rabbit-hole-logo-300.jpg';
+import checkEmptyArray from '@utils/func';
 import MarkdownViewer from '@/components/markdownViewer';
 import { getProjectById } from '@/lib/projectApi';
+
+const IMAGE_CHECK = 'https://rabbit-hole-image.s3.ap-northeast-2.amazonaws.com/';
 
 const ProjectDetailContainer = styled.div`
   padding: 3rem;
@@ -36,16 +40,29 @@ const ProjectInfoTitle = styled.h2`
 
 const ProjectTitle = styled.div`
   font-size: 1.5rem;
+  margin-left: 1rem;
 `;
 
 const ProjectAuthor = styled.div`
   font-size: 1.5rem;
+  margin-left: 1rem;
 `;
 
-const ProjectTag = styled.span``;
+const ProjectTagConatiner = styled.div`
+`;
+
+const ProjectTag = styled.span`
+  background-color: ${({ theme }) => theme.palette.lightViolet};
+  padding: 0.5rem;
+  border-radius: 5px;
+  color: white;
+  margin-left: 1rem;
+
+`;
 
 const ProjectDescription = styled.div`
   font-size: 1.5rem;
+  margin-left: 1rem;
 `;
 
 const ReplyContainer = styled.div`
@@ -54,6 +71,7 @@ const ReplyContainer = styled.div`
 
 function ProjectDetail() {
   const [searchParams] = useSearchParams();
+
   const projectId = searchParams.get('projectId');
   const params = { page: 1, perPage: 5 };
   let project;
@@ -72,15 +90,22 @@ function ProjectDetail() {
     <ProjectDetailContainer>
       <ProjectDetailHeader>프로젝트 상세</ProjectDetailHeader>
       <ProjectContentContainer>
-        {project && <ProjectImage src={project.thumbnail} />}
+        {project.thumbnail.includes(IMAGE_CHECK)
+          ? <ProjectImage src={project.thumbnail} />
+          : <ProjectImage width={300} height={300} src={LogoImage} />}
         <ProjectInfo>
           <ProjectInfoTitle>제목</ProjectInfoTitle>
           <ProjectTitle>{project.title}</ProjectTitle>
           <ProjectInfoTitle>작성자</ProjectInfoTitle>
           <ProjectAuthor>{project.author}</ProjectAuthor>
-          {project.tags.length > 0 ? <ProjectInfoTitle>태그</ProjectInfoTitle> : null}
-          {project.tags.length > 0
-            ? project.tags.map((tag: string) => <ProjectTag>{tag}</ProjectTag>) : null}
+          {
+            checkEmptyArray(project.tags) ? null : (
+              <ProjectTagConatiner>
+                <ProjectInfoTitle>태그</ProjectInfoTitle>
+                {project.tags.map((tag, i) => <ProjectTag key={String(i) + tag.name}>{tag.name}</ProjectTag>)}
+              </ProjectTagConatiner>
+            )
+          }
           <ProjectInfoTitle>프로젝트 한 줄 소개</ProjectInfoTitle>
           <ProjectAuthor>{project.shortDescription}</ProjectAuthor>
           <ProjectInfoTitle>프로젝트 상세</ProjectInfoTitle>
