@@ -101,7 +101,9 @@ export default function Projects() {
 
   const params: IProjectGetParamsProps = { filter, page, perPage };
 
-  const { data: projects, refetch } = useQuery(['project', params], () => getAllProjects(params));
+  const { data: projects, refetch } = useQuery(['project', 'gallery'], () => getAllProjects(params), {
+    staleTime: 180000,
+  });
 
   // Modal Control
   const handleProjectEnrollment = (modalType: any) => {
