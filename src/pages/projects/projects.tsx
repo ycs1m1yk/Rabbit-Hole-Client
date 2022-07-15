@@ -2,16 +2,18 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useSetRecoilState } from 'recoil';
+import { useSearchParams } from 'react-router-dom';
 
 import Button from '@/components/button';
 import Search from '@/components/search';
 import Card from '@/components/card';
 import Pagination from '@/components/pagination';
 import modalAtom from '@/recoil/modal/modalAtom';
-import { useQuery } from 'react-query';
-import { getAllArticle } from '@/lib/articleApi';
-import { IArticleGetProps, IProjectGetParamsProps, IProjectProps } from '@/interfaces/interface';
+import { IProjectGetParamsProps, IProjectProps } from '@/interfaces/interface';
 import { getAllProjects } from '@/lib/projectApi';
+import useToken from '@/hooks/useToken';
+import SelectBox from '@/components/selectBox';
+import { useQuery } from 'react-query';
 
 const ProjectContainer = styled.div`
   padding: 3rem;
@@ -26,6 +28,8 @@ const Alignments = styled.ul`
     font-weight: 700;
     color: ${({ theme }) => theme.palette.eliceViolet};
   }
+  position: relative;
+  margin: 1rem 0;
 `;
 
 const Alignment = styled.li`
@@ -72,128 +76,73 @@ const PaginationContainer = styled.div`
   margin-top: 1rem;
 `;
 
-const projects = [
-  {
-    _id: '1322345',
-    title: '설재혁의 프로젝트',
-    author: '설재혁',
-    authorId: '326823',
-    shortDescription: '개인 프로젝트입니다.',
-    description: 'aaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbcccc',
-    thumbnail: 'https://via.placeholder.com/200',
-    likes: ['1', '2', '3', '4', '5', '56'],
-    tags: ['React', 'Typescript', 'React', 'Typescript'],
-    views: 1278,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    __v: '21321',
-  },
-  {
-    _id: '123445',
-    title: '설재혁의 프로젝트',
-    author: '설재혁',
-    authorId: '326823',
-    shortDescription: '개인 프로젝트입니다.',
-    description: 'aaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbcccc',
-    thumbnail: 'https://via.placeholder.com/200',
-    likes: ['1', '2', '3', '4', '5', '56'],
-    tags: ['React'],
-    views: 1278,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    __v: '21321',
-  },
-  {
-    _id: '123425',
-    title: '설재혁의 프로젝트',
-    author: '설재혁',
-    authorId: '326823',
-    shortDescription: '개인 프로젝트입니다.',
-    description: 'aaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbcccc',
-    thumbnail: 'https://via.placeholder.com/200',
-    likes: ['1', '2', '3', '4', '5', '56'],
-    tags: ['React', 'Typescript'],
-    views: 12728,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    __v: '21321',
-  },
-  {
-    _id: '1233245',
-    title: '설재혁의 프로젝트',
-    author: '설재혁',
-    authorId: '326823',
-    shortDescription: '개인 프로젝트입니다.',
-    description: 'aaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbcccc',
-    thumbnail: 'https://via.placeholder.com/200',
-    likes: ['1', '2', '3', '4', '5', '56'],
-    tags: ['React', 'Typescript'],
-    views: 124378,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    __v: '21321',
-  },
-  {
-    _id: '1233432432245',
-    title: '설재혁의 프로젝트',
-    author: '설재혁',
-    authorId: '326823',
-    shortDescription: '개인 프로젝트입니다.',
-    description: 'aaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbcccc',
-    thumbnail: 'https://via.placeholder.com/200',
-    likes: ['1', '2', '3', '4', '5', '56'],
-    tags: ['React', 'Typescript'],
-    views: 123478,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    __v: '21321',
-  },
-  {
-    _id: '1233232345',
-    title: '설재혁의 프로젝트',
-    author: '설재혁',
-    authorId: '326823',
-    shortDescription: '개인 프로젝트입니다.',
-    description: 'aaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbccccaaabbbbcccc',
-    thumbnail: 'https://via.placeholder.com/200',
-    likes: ['1', '2', '3', '4', '5', '56'],
-    tags: ['React', 'Typescript'],
-    views: 12728,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    __v: '21321',
-  },
-];
+const SelectBoxWrapper = styled.div`
+  position: absolute;
+  right: 0;
+  & select {
+    text-align: center;
+    height: 3.5rem;
+    border: 1.5px solid ${({ theme }) => theme.palette.borderGray}
+  }
+`;
 
 export default function Projects() {
   const setModal = useSetRecoilState(modalAtom);
-  const [filter, setFilter] = useState<string>('date');
-  const [page, setPage] = useState<number>(0);
-  const [perPage, setPerPage] = useState<any>(8);
-  const [start, setStart] = useState<number>(0);
 
-  // params로 프로젝트 GET 요청
-  // const params: IProjectGetParamsProps = { filter, page, perPage };
-  // const { data } = useQuery<IProjectProps[]>(['projectList'], () => getAllProjects(params));
+  const { authInfo } = useToken();
+  const [perPage, setPerPage] = useState<number>(8);
 
-  console.log(filter, page, perPage);
-  // console.log(data);
+  /*
+    초기 진입 시 정렬 기본값
+      filter = 'date'
+      page = 1
+      perPage = 8
+  */
+  const [searchParams, setSearchParams] = useSearchParams();
+  const page = Number(searchParams.get('page'));
+  const filter = searchParams.get('filter');
 
+  const params: IProjectGetParamsProps = { filter, page, perPage };
+
+  const { data: projects, refetch } = useQuery(['project', 'gallery'], () => getAllProjects(params), {
+    staleTime: 180000,
+  });
+
+  // Modal Control
   const handleProjectEnrollment = (modalType: any) => {
     setModal(modalType);
   };
 
+  // 인기순 정렬
   const handleSortByView = () => {
-    setFilter('views');
-    setPage(0);
-    setStart(0);
+    searchParams.set('filter', 'views');
+    searchParams.set('page', '1');
+    setSearchParams(searchParams);
   };
 
+  // 최신순 정렬
   const handleSortByDate = () => {
-    setFilter('date');
-    setPage(0);
-    setStart(0);
+    searchParams.set('filter', 'date');
+    searchParams.set('page', '1');
+    setSearchParams(searchParams);
   };
+
+  // 페이지당 프로젝트 수 설정
+  const handlePerPage = (perP: string) => {
+    searchParams.set('perPage', perP);
+    searchParams.set('page', '1');
+    setSearchParams(searchParams);
+  };
+
+  // 페이지 변화에 따른 URL 변경
+  const handleNavigate = (pageNumber: number) => {
+    searchParams.set('page', `${pageNumber + 1}`);
+    setSearchParams(searchParams);
+  };
+
+  useEffect(() => {
+    refetch();
+  }, [filter, page, perPage]);
 
   return (
     <ProjectContainer>
@@ -202,16 +151,23 @@ export default function Projects() {
         <SearchContainer>
           <Search width={400} height={35} />
         </SearchContainer>
-        <ButtonContainer>
-          <Button size="small" onClick={() => handleProjectEnrollment('Register')}>프로젝트 등록</Button>
-        </ButtonContainer>
+        {
+            authInfo?.token && (
+            <ButtonContainer>
+              <Button size="small" onClick={() => handleProjectEnrollment('Register')}>프로젝트 등록</Button>
+            </ButtonContainer>
+            )
+          }
       </ProjectHeader>
       <Alignments>
         <Alignment onClick={handleSortByDate}>최신순</Alignment>
         <Alignment onClick={handleSortByView}>인기순</Alignment>
+        <SelectBoxWrapper className="selectbox-perpage">
+          <SelectBox options={[4, 8, 12, 16]} defaultValue="페이지당 개수" selectedOption={perPage} setSelectedOption={setPerPage} requestFunc={handlePerPage} width={70} type="register" />
+        </SelectBoxWrapper>
       </Alignments>
       <Content>
-        {projects.map((project) => (
+        {projects?.projectList.map((project: IProjectProps) => (
           <Card
             key={project._id}
             projectId={project._id}
@@ -222,17 +178,16 @@ export default function Projects() {
             thumbnail={project.thumbnail}
             likes={project.likes.length}
             tags={project.tags}
-            date={project.createdAt.toLocaleDateString()}
-            views={project.views.toLocaleString()}
+            date={project.createdAt}
+            views={project.views}
             type="project"
           />
         ))}
       </Content>
       <PaginationContainer>
         <Pagination
-          length={Math.ceil(projects.length / perPage)}
-          start={start}
-          handler={setPage}
+          length={projects?.totalPage}
+          handler={(pageNumber) => handleNavigate(pageNumber)}
         />
       </PaginationContainer>
     </ProjectContainer>

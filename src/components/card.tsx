@@ -3,6 +3,8 @@ import { AiOutlineLike } from 'react-icons/ai';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { ITagsProps } from '@/interfaces/interface';
+import LogoImage from '@assets/images/rabbit-hole-logo-300.jpg';
+import { S3URL } from '@utils/regex';
 
 const Container = styled.div`
   width: 300px;
@@ -189,7 +191,7 @@ export default function Card({
   const handleClick = ():void => {
     if (type === 'project') {
       console.log('프로젝트 디테일 페이지 이동', `/project?projectId=${projectId}`);
-      navigate(`/projects?projectId=${projectId}`);
+      navigate(`/projects/detail?projectId=${projectId}`);
     } else if (type === 'mentoring') {
       console.log('멘토링 디테일 모달 띄우기');
     }
@@ -204,9 +206,13 @@ export default function Card({
         </HeaderText>
       </Header>
       {
-        thumbnail && (
+        thumbnail?.includes(S3URL) ? (
           <ImgBox>
             <ThumbnailImg src={thumbnail} />
+          </ImgBox>
+        ) : (
+          <ImgBox>
+            <ThumbnailImg src={LogoImage} />
           </ImgBox>
         )
       }
@@ -229,7 +235,7 @@ export default function Card({
           {views}
           회
         </ViewCount>
-        <CreateDate>{date}</CreateDate>
+        <CreateDate>{date.slice(0, 10)}</CreateDate>
       </SubInfo>
     </Container>
   );

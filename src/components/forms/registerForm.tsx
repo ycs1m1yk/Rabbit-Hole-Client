@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
-import { regPhoneNumber, regURL } from '@utils/regex/regex';
+import { regPhoneNumber, regURL } from '@/utils/regex';
 
 import Button from '@components/button';
 

@@ -14,14 +14,21 @@ export const getAllProjects = (params: interfaces.IProjectGetParamsProps) => {
     .then((res) => res.json());
 };
 
+export const getProjectById = (projectId: string, params: interfaces.IProjectGetParamsProps) => {
+  const param = new URLSearchParams(params);
+  const par = param.toString();
+
+  return fetch(`${BASE_URL}/projects/${projectId}?${par}`)
+    .then((res) => res.json());
+};
+
 // 프로젝트 작성
-export const postProject = (token: string, bodyData: interfaces.IProjectPostParamsProps) => fetch(`${BASE_URL}/projects`, {
+export const postProject = (token: string, bodyData: FormData) => fetch(`${BASE_URL}/projects`, {
   method: 'POST',
   headers: {
     Authorization: `Bearer ${token}`,
-    'Content-Type': 'multipart/form-data',
   },
-  body: JSON.stringify(bodyData),
+  body: bodyData,
 }).then((res) => res.json());
 
 // 프로젝트 수정
@@ -29,7 +36,6 @@ export const updateProjectById = (token: string, projectId: string, bodyData: in
   method: 'PUT',
   headers: {
     Authorization: `Bearer ${token}`,
-    'Content-Type': 'multipart/form-data',
   },
   body: JSON.stringify(bodyData),
 }).then((res) => res.json());

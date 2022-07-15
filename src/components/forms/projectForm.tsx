@@ -7,6 +7,10 @@ import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
 import { Editor } from '@toast-ui/react-editor';
 import { postProject } from '@/lib/projectApi';
+
+import useToken from '@/hooks/useToken';
+import modalAtom from '@/recoil/modal/modalAtom';
+import { useSetRecoilState } from 'recoil';
 import MarkdownEditor from '../markdownEditor';
 import Button from '../button';
 import TagsInput from '../tagsInput';
@@ -58,7 +62,6 @@ interface IForm {
   title: string;
   author: string;
   shortDescription: string;
-  tags: string;
   description: string;
   thumbnail: string;
 }
@@ -66,30 +69,40 @@ interface IForm {
 function ProjectForm() {
   const { register, handleSubmit, formState: { errors } } = useForm<IForm>();
   const [tags, setTags] = useState<{name: string}[]>([]);
+  const setModal = useSetRecoilState(modalAtom);
   const editorRef = useRef<Editor>(null);
+  const { authInfo } = useToken();
 
+  // Tag 입력하고 Enter 시 Form Submit 방지
   const handleEnterSubmit = useCallback((e: KeyboardEvent) => {
     if (e.code === 'Enter') e.preventDefault();
   }, []);
 
   // Form Data가 유효하다면 이 곳에서 POST 요청
   const onValid = async (data: IForm) => {
-    // Token 가져오기
-
-    // bodyData
     const formData = {
       ...data,
+      thumbnail: data.thumbnail[0],
       description: editorRef.current?.getInstance().getMarkdown(),
-      tags,
+      tags: JSON.stringify(tags),
     };
-    console.log(formData);
-    // const response = await postProject(token, formData);
+
+    const fd: any = new FormData();
+
+    for (const key in formData) {
+      fd.append(key, formData[key]);
+    }
+
+    if (authInfo?.token) {
+      await postProject(authInfo.token, fd);
+      setModal(null);
+    }
   };
 
   return (
     <>
       <ModalTitle>프로젝트 등록 및 수정</ModalTitle>
-      <ProjectInfomationForm onKeyDown={handleEnterSubmit}>
+      <ProjectInfomationForm encType="multipart/form-data" onKeyDown={handleEnterSubmit}>
         <InputTitle>Title</InputTitle>
         <ProjectInput {...register('title', {
           required: '제목은 필수 입력사항입니다:)',

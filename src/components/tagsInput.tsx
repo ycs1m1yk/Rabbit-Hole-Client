@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, {
-  Dispatch, KeyboardEvent, SetStateAction, useCallback,
+  Dispatch, KeyboardEvent, SetStateAction, useCallback, useState,
 } from 'react';
 import styled from 'styled-components';
 import { AiOutlineClose } from 'react-icons/ai';
@@ -43,14 +43,18 @@ const TagInput = styled.input`
 
 // eslint-disable-next-line max-len
 export default function TagsInput({ tags, setTags }: {tags: {name: string}[], setTags: Dispatch<SetStateAction<{name: string}[]>>}) {
+  const [isComposing, setIsComposing] = useState(false);
+
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
+    if (isComposing) return;
+
     if (e.key !== 'Enter') return;
     const target = e.target as HTMLInputElement;
     const { value } = target;
     if (!value.trim()) return;
     setTags((curr) => (curr.find((el) => el.name === value) ? curr : [...curr, { name: value }]));
     target.value = '';
-  }, []);
+  }, [isComposing]);
 
   const removeTag = useCallback((index: number) => {
     setTags((curr) => curr.filter((el, i) => i !== index));
@@ -66,7 +70,13 @@ export default function TagsInput({ tags, setTags }: {tags: {name: string}[], se
           </Tag>
         )) }
       </Tags>
-      <TagInput onKeyDown={handleKeyDown} type="text" placeholder="태그를 입력하세요" />
+      <TagInput
+        onCompositionStart={() => setIsComposing(true)}
+        onCompositionEnd={() => setIsComposing(false)}
+        onKeyDown={handleKeyDown}
+        type="text"
+        placeholder="태그를 입력하세요"
+      />
     </TagInputContainer>
   );
 }

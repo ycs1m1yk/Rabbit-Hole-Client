@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
@@ -9,7 +9,7 @@ import ProjectImage from '@assets/images/main_project.avif';
 import MentoringImage from '@assets/images/main_mentoring.avif';
 import Card from '@/components/card';
 import PostList from '@/components/postList';
-import { useQueries } from 'react-query';
+import { useQuery } from 'react-query';
 import { getAllArticle } from '@/lib/articleApi';
 import { IProjectProps } from '@/interfaces/interface';
 import { getAllProjects } from '@/lib/projectApi';
@@ -45,15 +45,6 @@ const ContentContainer = styled.div`
   margin: 10rem auto; 
 `;
 
-const EmptyField = styled.p`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 40px;
-  font-weight: 700;
-  color: ${({ theme }) => theme.palette.black};
-`;
-
 export default function Home() {
   const projectSettings = {
     dots: true,
@@ -73,32 +64,17 @@ export default function Home() {
   const freeParams = { articleType: 'free' };
   const projectParams = { filter: 'views', page: 1, perPage: 8 };
 
-  const [freePosts, setFreePosts] = useState([]);
-  const [questionPosts, setQuestionPosts] = useState([]);
-  const [projects, setProjects] = useState<IProjectProps[]>([]);
-  const results = useQueries([
-    {
-      queryKey: ['question', 'main'],
-      queryFn: () => getAllArticle(questionParams),
-      onSuccess({ articleList }: any) {
-        setQuestionPosts(articleList);
-      },
-    },
-    {
-      queryKey: ['free', 'main'],
-      queryFn: () => getAllArticle(freeParams),
-      onSuccess({ articleList }: any) {
-        setFreePosts(articleList);
-      },
-    },
-    {
-      queryKey: ['project', 'main'],
-      queryFn: () => getAllProjects(projectParams),
-      onSuccess({ projectList }: any) {
-        setProjects(projectList);
-      },
-    },
-  ]);
+  const { data: freePosts } = useQuery(['free', 'main'], () => getAllArticle(freeParams), {
+    staleTime: 180000,
+  });
+
+  const { data: questionPosts } = useQuery(['question', 'main'], () => getAllArticle(questionParams), {
+    staleTime: 180000,
+  });
+
+  const { data: projects } = useQuery(['project', 'main'], () => getAllProjects(projectParams), {
+    staleTime: 180000,
+  });
 
   // 이미지 preloading
   useEffect(() => {
@@ -107,11 +83,6 @@ export default function Home() {
       img.src = image;
     });
   }, []);
-
-  // console.log(results);
-  // console.log('Free', freePosts);
-  // console.log('Question', questionPosts);
-  // console.log('Projects', projects);
 
   return (
     <Container>
@@ -125,7 +96,7 @@ export default function Home() {
       <Title>프로젝트</Title>
       <ProjectSliderContainer>
         <Slider settings={projectSettings}>
-          {projects && projects.slice(0, 8).map((project) => (
+          {projects?.projectList.map((project: IProjectProps) => (
             <Card
               key={project._id}
               projectId={project._id}
@@ -136,17 +107,16 @@ export default function Home() {
               thumbnail={project.thumbnail}
               likes={project.likes.length}
               tags={project.tags}
-              date={project.createdAt.toLocaleDateString()}
-              views={project.views.toLocaleString()}
+              date={project.createdAt}
+              views={project.views}
               type="project"
             />
           ))}
         </Slider>
-        {projects.length === 0 && <EmptyField>프로젝트가 존재하지 않습니다.</EmptyField>}
       </ProjectSliderContainer>
       <ContentContainer>
-        <PostList type="main" title="자유게시판" posts={freePosts} />
-        <PostList type="main" title="질의응답" posts={questionPosts} />
+        {freePosts && <PostList type="main" title="자유게시판" posts={freePosts.articleList.slice(0, 5)} />}
+        {questionPosts && <PostList type="main" title="질의응답" posts={questionPosts.articleList.slice(0, 5)} />}
       </ContentContainer>
     </Container>
   );
