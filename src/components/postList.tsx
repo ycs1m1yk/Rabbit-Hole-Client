@@ -50,15 +50,6 @@ const Posts = styled.div`
   align-items: flex-start;
 `;
 
-const EmptyField = styled.p`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 40px;
-  font-weight: 700;
-  color: ${({ theme }) => theme.palette.black};
-`;
-
 const defaultProps = {
   type: 'default',
   title: '',
