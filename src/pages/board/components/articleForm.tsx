@@ -84,14 +84,14 @@ interface IArticleForm {
 }
 
 function ArticleForm() {
-  const boardMap = {
+  const boardMap: any = {
     질문답변: 'question',
     자유주제: 'free',
     스터디: 'study',
   };
   const editorRef = useRef<Editor>(null);
   const [tags, setTags] = useState<{name: string}[]>([]);
-  const [selectedBoard, setSelectedBoard] = useState<string>('게시판 선택');
+  const [board, setBoard] = useState<string>('게시판 선택');
   const { register, handleSubmit, formState: errors } = useForm<IArticleForm>();
   const { authInfo } = useToken();
 
@@ -103,20 +103,19 @@ function ArticleForm() {
   const onValid = useCallback((data: any) => {
     const formData: IArticleForm = {
       ...data,
-      articleType: boardMap[selectedBoard],
+      articleType: boardMap[board],
       tags,
       content: editorRef.current?.getInstance().getMarkdown(),
     };
     (async () => {
       if (authInfo) {
         const { token, userName, carrots } = authInfo;
-        const bodyData = { ...formData, author: userName, carrots: 10 };
-        const resp = await createArticle(token, bodyData);
-        console.log(bodyData);
-        console.log(resp);
+        console.log('당근: ', carrots);
+        const bodyData = { ...formData, author: userName, carrots };
+        await createArticle(token, bodyData);
       }
     })();
-  }, [selectedBoard, tags]);
+  }, [board, tags]);
 
   // Form 데이터가 유효하지 않은 경우 호출되는 함수
   const onInvalid = useCallback(() => {
@@ -127,13 +126,14 @@ function ArticleForm() {
   /**
    * - [x] 게시판 선택 selextBox 추가
    * - [] 게시글 5000자 제한 처리
-   * - [] postArticle api
+   * - [x] postArticle api
+   * - [] 질문답변 선택하면 당근걸기
    */
   return (
     <>
       <ModalHeader>
         <ModalTitle>게시글 작성</ModalTitle>
-        <SelectBox options={['질문답변', '자유주제', '스터디']} defaultValue="게시판 선택" selectedOption={selectedBoard} setSelectedOption={setSelectedBoard} width={200} type="register" />
+        <SelectBox options={['질문답변', '자유주제', '스터디']} defaultValue="게시판 선택" selectedOption={board} setSelectedOption={setBoard} width={200} type="register" />
       </ModalHeader>
       <StyledArticleForm onKeyDown={handleEnterSubmit}>
         <InputWrapper>
