@@ -61,7 +61,7 @@ const CarrotsInfo = styled.span`
   & svg {
     width: 1.3rem;
     height: 1.3rem;
-    color: #EB9A29;
+    color: ${({ theme }) => theme.palette.carrotOrange};
   }
 `;
 
