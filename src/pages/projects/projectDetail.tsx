@@ -1,5 +1,6 @@
-/* eslint-disable import/no-unresolved */
-import React from 'react';
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable max-len */
+import React, { MouseEvent, useEffect } from 'react';
 import { useQuery } from 'react-query';
 import { useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
@@ -7,12 +8,10 @@ import LogoImage from '@assets/images/rabbit-hole-logo-300.jpg';
 import checkEmptyArray from '@utils/func';
 import MarkdownViewer from '@/components/markdownViewer';
 import { getProjectById } from '@/lib/projectApi';
-import { ICommentProps } from '@/interfaces/interface';
-import useToken from '@/hooks/useToken';
+import { ICommentProps, ITagsProps } from '@/interfaces/interface';
 import MarkdownEditor from '@/components/markdownEditor';
 import Button from '@/components/button';
-
-const IMAGE_CHECK = 'https://rabbit-hole-image.s3.ap-northeast-2.amazonaws.com/';
+import { S3URL } from '@utils/regex';
 
 const ProjectDetailContainer = styled.div`
   padding: 3rem;
@@ -104,6 +103,22 @@ const ButtonContainer = styled.div`
   margin-top: 1rem;
 `;
 
+const GoToAnswer = styled.div`
+  background-color: ${({ theme }) => theme.palette.lightViolet};
+  border-radius: 50%;
+  position: fixed;
+  width: 5rem;
+  height: 5rem;
+  bottom: 50%;
+  right: 3%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  cursor: pointer;
+  font-size: 1.5rem;
+`;
+
 function ProjectDetail() {
   const [searchParams] = useSearchParams();
   // const { authInfo: { userId } } = useToken();
@@ -120,14 +135,26 @@ function ProjectDetail() {
       comments = data.commentList;
     }
   }
-  console.log(project);
-  console.log(comments);
+  // console.log(project);
+  // console.log(comments);
+
+  const handleBottomClick = (e: MouseEvent) => {
+    if (e.pageY > 1000) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      window.scrollTo({ top: 2500, left: 0, behavior: 'smooth' });
+    }
+  };
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
 
   return project && (
     <ProjectDetailContainer>
       <ProjectDetailHeader>프로젝트 상세</ProjectDetailHeader>
       <ProjectContentContainer>
-        {project.thumbnail.includes(IMAGE_CHECK)
+        {project.thumbnail.includes(S3URL)
           ? <ProjectImage src={project.thumbnail} />
           : <ProjectImage width={300} height={300} src={LogoImage} />}
         <ProjectInfo>
@@ -139,7 +166,7 @@ function ProjectDetail() {
             checkEmptyArray(project.tags) ? null : (
               <ProjectTagConatiner>
                 <ProjectInfoTitle>태그</ProjectInfoTitle>
-                {project.tags.map((tag, i) => <ProjectTag key={String(i) + tag.name}>{tag.name}</ProjectTag>)}
+                {project.tags.map((tag: ITagsProps, i: number) => <ProjectTag key={String(i) + tag.name}>{tag.name}</ProjectTag>)}
               </ProjectTagConatiner>
             )
           }
@@ -173,6 +200,7 @@ function ProjectDetail() {
       <ButtonContainer>
         <Button onClick={() => console.log('답글 POST')}>답변하기</Button>
       </ButtonContainer>
+      <GoToAnswer onClick={handleBottomClick}>Move</GoToAnswer>
     </ProjectDetailContainer>
   );
 }

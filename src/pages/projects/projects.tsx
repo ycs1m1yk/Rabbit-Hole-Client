@@ -28,6 +28,8 @@ const Alignments = styled.ul`
     font-weight: 700;
     color: ${({ theme }) => theme.palette.eliceViolet};
   }
+  position: relative;
+  margin: 1rem 0;
 `;
 
 const Alignment = styled.li`
@@ -75,7 +77,8 @@ const PaginationContainer = styled.div`
 `;
 
 const SelectBoxWrapper = styled.div`
-
+  position: absolute;
+  right: 0;
   & select {
     text-align: center;
     height: 3.5rem;
@@ -159,10 +162,10 @@ export default function Projects() {
       <Alignments>
         <Alignment onClick={handleSortByDate}>최신순</Alignment>
         <Alignment onClick={handleSortByView}>인기순</Alignment>
+        <SelectBoxWrapper className="selectbox-perpage">
+          <SelectBox options={[4, 8, 12, 16]} defaultValue="페이지당 개수" selectedOption={perPage} setSelectedOption={setPerPage} requestFunc={handlePerPage} width={70} type="register" />
+        </SelectBoxWrapper>
       </Alignments>
-      <SelectBoxWrapper className="selectbox-perpage">
-        <SelectBox options={[4, 8, 12, 16]} defaultValue="페이지당 개수" selectedOption={perPage} setSelectedOption={setPerPage} requestFunc={handlePerPage} width={70} type="register" />
-      </SelectBoxWrapper>
       <Content>
         {projects?.projectList.map((project: IProjectProps) => (
           <Card

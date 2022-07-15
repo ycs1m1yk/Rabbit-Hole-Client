@@ -3,6 +3,8 @@ import { AiOutlineLike } from 'react-icons/ai';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { ITagsProps } from '@/interfaces/interface';
+import LogoImage from '@assets/images/rabbit-hole-logo-300.jpg';
+import { S3URL } from '@utils/regex';
 
 const Container = styled.div`
   width: 300px;
@@ -204,9 +206,13 @@ export default function Card({
         </HeaderText>
       </Header>
       {
-        thumbnail && (
+        thumbnail?.includes(S3URL) ? (
           <ImgBox>
             <ThumbnailImg src={thumbnail} />
+          </ImgBox>
+        ) : (
+          <ImgBox>
+            <ThumbnailImg src={LogoImage} />
           </ImgBox>
         )
       }
