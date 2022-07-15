@@ -110,7 +110,7 @@ export interface IProjectProps {
     views: string;
     tags: ITagsProps[];
     likes: ILikesProps[];
-    createdAt: Date;
+    createdAt: string;
     updatedAt: Date;
     __v: number;
 }
