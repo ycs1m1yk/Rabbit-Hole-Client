@@ -56,8 +56,6 @@ const CarrotsInfo = styled.span`
   position: absolute;
   top: -0.5rem;
   left: 9rem;
-  z-index: 1;
-
   & svg {
     width: 1.3rem;
     height: 1.3rem;
@@ -96,7 +94,6 @@ const ToolTipText = styled.span`
     display: block;
     top: 2.2rem;
     right: -1rem;
-    z-index: 1;
 
     -webkit-animation: 0.3s linear normal slide_down;
           animation: 0.3s linear normal slide_down;
