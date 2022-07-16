@@ -136,8 +136,8 @@ export default function Home() {
               thumbnail={project.thumbnail}
               likes={project.likes.length}
               tags={project.tags}
-              date={project.createdAt.toLocaleDateString()}
-              views={project.views.toLocaleString()}
+              date={project.createdAt}
+              views={project.views}
               type="project"
             />
           ))}

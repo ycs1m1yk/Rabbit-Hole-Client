@@ -198,3 +198,21 @@ export interface IProjectPutParamsProps {
     thumbnail: string;
     tags: ITagsProps[];
 }
+
+export interface IMyPageResponse {
+    _id: string;
+    name: string;
+    track: string;
+    trackCardinalNumber: number;
+    position?: string;
+    authImage: string;
+    blogAddress?: string;
+    githubEmail: string;
+    githubProfileUrl: string;
+    githubAvatar: string;
+    carrots: number;
+    role: string;
+    createdAt: string;
+    updatedAt: string;
+    __v: number
+}

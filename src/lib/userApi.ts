@@ -11,7 +11,7 @@ export const postRegister = (bodyData: interfaces.IRegisterFormProps) => fetch(`
 }).then((res) => res.json());
 
 // User - POST 이미지 업로드
-export const postImage = (bodyData:any) => fetch(`${BASE_URL}/users/image`, {
+export const postImage = (bodyData: any) => fetch(`${BASE_URL}/users/image`, {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify(bodyData),
@@ -34,7 +34,9 @@ export const updateUserProfile = (token: string, bodyData: interfaces.IRegisterF
 }).then((res) => res.json());
 
 // User - GET 마이페이지
-export const getMyPage = () => fetch(`${BASE_URL}/users/mypage`).then((res) => res.json());
+export const getMyPage = (token: string):Promise<interfaces.IMyPageResponse> => fetch(`${BASE_URL}/users/mypage`, {
+  headers: { Authorization: `Bearer ${token}` },
+}).then((res) => res.json());
 
 // User - GET 다른 사람 정보 보기
 export const getOtherPage = (token: string, githubEmail: string) => fetch(`${BASE_URL}/users/${githubEmail}`, {
