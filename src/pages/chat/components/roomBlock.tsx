@@ -5,6 +5,7 @@ import { lighten } from 'polished';
 const Block = styled.div`
   width: 100%;
   padding: 0 1rem;
+  margin: 1rem 0;
   border-radius: 5px;
   height: 4rem;
   cursor: pointer;
@@ -20,7 +21,7 @@ margin: 0 1rem;
 `;
 export default function RoomBlock(
   { roomName, participant, onClick }
-  :{roomName:string, participant:number, onClick:(e:MouseEvent<HTMLDivElement>)=>void},
+  :{roomName:string, participant:number, onClick:()=>void},
 ) {
   return (
     <Block onClick={onClick}>

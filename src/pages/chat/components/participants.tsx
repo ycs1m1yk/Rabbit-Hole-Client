@@ -10,20 +10,20 @@ const sideSlide = keyframes`
     width:0%;
   }
   to{
-    width: 50%;
+    width: 100%;
   }
 `;
 
 const Container = styled.div`
-  position: absolute;
-  height: 100%;
-  width: 70%;
-  top:0;
+  position: sticky;
+  bottom:0;
   right:0;
+  height: 100%;
+  width: 100%;
   padding: 0 2rem;
   animation:${sideSlide} 0.1s linear 1;
   background-color: ${({ theme }) => lighten(0.35, theme.palette.lightViolet)};
-  overflow-x: auto;
+  overflow-y: auto;
     &::-webkit-scrollbar {
       width: 5px;
       background-color: silver;

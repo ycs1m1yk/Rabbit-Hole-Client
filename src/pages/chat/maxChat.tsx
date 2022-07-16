@@ -1,4 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react';
+/* eslint-disable no-underscore-dangle */
+import React, {
+  ChangeEvent, useContext, useEffect, useState, useCallback, KeyboardEvent,
+} from 'react';
 import styled, { keyframes } from 'styled-components';
 import { AiOutlineMinus, AiOutlineArrowLeft, AiOutlineSend } from 'react-icons/ai';
 import { lighten } from 'polished';
@@ -8,12 +11,13 @@ import useToken from '@hooks/useToken';
 import { SocketDispatch } from '@/App';
 import Button from '@/components/button';
 
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import chatAtom, { ChatProps } from '@/recoil/chat/chatAtom';
 import roomAtom, { RoomProps, ParticipantProps } from '@/recoil/chat/roomAtom';
 
-import myRoomAtom from '@/recoil/chat/myRoomAtom';
 import participantAtom from '@/recoil/chat/participantAtom';
+import { newUserMessage } from '@/hooks/useSocket';
+import chatRoomAtom from '@/recoil/chat/chatRoomAtom';
 import Profile from './components/profileBlock';
 import RoomBlock from './components/roomBlock';
 import ChatBlock from './components/chatBlock';
@@ -64,7 +68,8 @@ const Content = styled.div`
   position:relative;
   width: 100%;
   height: 45rem;
-  padding: 2rem 3rem;
+  padding: 1rem 3rem;
+  overflow-y: auto;
   &::-webkit-scrollbar {
     width: 5px;
     background-color: silver;
@@ -117,7 +122,15 @@ const Chat = styled.textarea`
 
 const AlertBlock = styled.p`
   text-align: center;
+  margin: 1rem 0;
 `;
+
+// type guards
+const isChat = (chat:ChatProps|newUserMessage)
+:chat is ChatProps => (chat as ChatProps).profile !== undefined;
+
+const isAlert = (chat:ChatProps|newUserMessage)
+:chat is newUserMessage => (chat as newUserMessage).message !== undefined;
 
 export default function MaxChat({ minimizeHandler }:{minimizeHandler:()=>void}) {
   const { authInfo } = useToken(); // 인증 토큰
@@ -126,43 +139,91 @@ export default function MaxChat({ minimizeHandler }:{minimizeHandler:()=>void}) 
   const { data } = useQuery(['profile', authInfo], () => authInfo && getMyPage(authInfo.token), {
     onSuccess(successdata) {
       const newUser = {
+        id: successdata?._id,
         name: successdata?.name,
         track: successdata?.track,
         trackCardinalNumber: successdata?.trackCardinalNumber,
         avatar: successdata?.githubAvatar,
       };
+      // 유저 데이터 fetch 후 소켓에 등록
       if (chatSocket) {
         console.log(newUser);
         chatSocket.emit('newUser', chatSocket.id, newUser);
       }
     },
   }); // 내 프로필
-  const [room, setRoom] = useRecoilState(myRoomAtom); // 내가 선택한 채팅방
+  const [room, setRoom] = useRecoilState(chatRoomAtom); // 내가 선택한 채팅방
   const [chatState, setChatState] = useRecoilState(chatAtom); // 채팅 목록
-  const [roomState, setRoomState] = useRecoilState(roomAtom); // 채팅방 목록
+  const roomState = useRecoilValue(roomAtom); // 채팅방 목록
   const [participant, setParticipant] = useRecoilState(participantAtom);// 참가자 목록
+  const [textValue, setTextValue] = useState('');
 
-  const backLobbyHandler = () => {
+  const backLobbyHandler = useCallback(() => {
+    if (chatSocket) {
+      chatSocket.emit('leaveRoom', chatSocket.id, room?.roomName);
+      setChatState([]);
+      setParticipant(null);
+      chatSocket?.emit('fetchRoom');
+    }
     setRoom(null);
-  };
+  }, [room]);
 
-  const handleRoomClick = (participantData:ParticipantProps[]|null, roomName:string) => {
+  // eslint-disable-next-line max-len
+  const handleRoomClick = useCallback((participantData:ParticipantProps[]|null, roomName:string) => {
     if (participantData) {
       setParticipant({ participantData, roomName });
     } else {
       setParticipant(null);
     }
-  };
+  }, []);
 
-  const handleRoomEnter = (roomName:string) => {
+  const handleRoomEnter = useCallback((roomName:string) => {
     setRoom(roomState.filter((roomInfo) => roomInfo.roomName === roomName)[0]);
     chatSocket?.emit('joinRoom', chatSocket?.id, roomName);
+    chatSocket?.emit('fetchRoom');
     setParticipant(null);
+  }, [roomState]);
+
+  const chatSendHandler = () => {
+    if (data) {
+      const newChat:ChatProps = {
+        senderId: data._id,
+        profile: data.githubAvatar,
+        name: data.name,
+        track: data.track,
+        trackCardinalNumber: data.trackCardinalNumber,
+        chat: textValue,
+      };
+      console.log(room?.roomName, newChat);
+      chatSocket?.emit('chatMessage', room?.roomName, newChat);
+    }
   };
+
+  const chatValueHandler = useCallback((e:ChangeEvent<HTMLTextAreaElement>) => {
+    console.log(e.target.value);
+    setTextValue(() => e.target.value);
+  }, []);
+
+  const chatKeyHandler = useCallback((e:KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter') {
+      if (!e.shiftKey) {
+        chatSendHandler();
+        setTextValue('');
+      } else {
+        setTextValue(textValue.replaceAll(/(\n|\r\n)/g, '<br>'));
+      }
+    }
+  }, [textValue]);
 
   useEffect(() => {
     if (chatSocket) { chatSocket.emit('fetchRoom'); }
-  }, [room]);
+  }, []);
+
+  useEffect(() => {
+    if (room) {
+      setRoom(roomState.filter((roomInfo) => roomInfo.roomName === room.roomName)[0]);
+    }
+  }, [roomState]);
 
   return (
     <ChatContaier>
@@ -190,25 +251,30 @@ export default function MaxChat({ minimizeHandler }:{minimizeHandler:()=>void}) 
         {room
           ? (
             <>
-              <RoomBlock
-                roomName={room.roomName}
-                participant={room.participants.length}
-                onClick={() => { handleRoomClick(room.participants, room.roomName); }}
-              />
-              {chatState.map((chat:any) => {
-                if (chat.profile) {
+              <div style={{ position: 'sticky', top: '0' }}>
+                <RoomBlock
+                  roomName={room.roomName.split('-')[1]}
+                  participant={room.participants.length}
+                  onClick={() => { handleRoomClick(room.participants, room.roomName); }}
+                />
+              </div>
+              {chatState.map((chat:ChatProps|newUserMessage) => {
+                if (isChat(chat) && data) {
                   return (
                     <ChatBlock
-                      profile="fdf"
-                      name="fdf"
-                      track="fdf"
-                      trackCardinalNumber={1}
-                      chat="fdf"
-                      mychat
+                      profile={chat.profile}
+                      name={chat.name}
+                      track={chat.track}
+                      trackCardinalNumber={chat.trackCardinalNumber}
+                      chat={chat.chat}
+                      mychat={chat.senderId === data._id}
                     />
                   );
                 }
-                return <AlertBlock>{chat.chat}</AlertBlock>;
+                if (isAlert(chat)) {
+                  return <AlertBlock>{chat.message}</AlertBlock>;
+                }
+                return null;
               })}
             </>
           )
@@ -217,7 +283,7 @@ export default function MaxChat({ minimizeHandler }:{minimizeHandler:()=>void}) 
               <h2 style={{ marginBottom: '2rem' }}>개설 된 채팅</h2>
               {roomState.map(({ roomName, participants }) => (
                 <RoomBlock
-                  roomName={roomName}
+                  roomName={roomName.split('-')[1]}
                   participant={participants.length}
                   onClick={() => handleRoomClick(participants, roomName)}
                 />
@@ -235,11 +301,11 @@ export default function MaxChat({ minimizeHandler }:{minimizeHandler:()=>void}) 
         )}
       </Content>
       <Sender>
-        {room
+        {(room && data)
         && (
         <>
-          <Chat rows={2} />
-          <Button>
+          <Chat rows={2} value={textValue} onChange={chatValueHandler} onKeyUp={chatKeyHandler} />
+          <Button onClick={chatSendHandler}>
             <AiOutlineSend />
           </Button>
         </>

@@ -1,12 +1,16 @@
-import { atom } from 'recoil';
+import { atom, selector } from 'recoil';
+import { newUserMessage } from '@/hooks/useSocket';
 
 export interface ChatProps {
-  profile?: string, name?: string, track?: string,
-  trackCardinalNumber?: number,
+  senderId: string,
+  profile: string,
+  name: string,
+  track: string,
+  trackCardinalNumber: number,
   chat: string
 }
 
-const chatAtom = atom<ChatProps[]>({
+const chatAtom = atom<Array<ChatProps | newUserMessage>>({
   key: 'chatAtom', // 해당 atom의 고유 key
   default: [], // 기본값
 });

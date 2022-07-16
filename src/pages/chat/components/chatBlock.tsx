@@ -1,16 +1,27 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { withTheme } from 'styled-components';
 import Profile from './profileBlock';
 
-const Block = styled.div<{mychat:boolean}>`
+const Block = styled.div<{mychat:boolean, content:boolean}>`
   width: 100%;
-  height: 4rem;
+  height: ${({ content }) => (content ? 'auto' : '4rem')};
   display:flex;
   justify-content: ${({ mychat }) => (mychat ? 'flex-end' : 'flex-start')};
 `;
 
-const Content = styled.p`
-    background-color: ${({ theme }) => theme.palette.lightViolet};
+const Content = styled.div<{mychat:boolean}>`
+    display: flex;
+    margin: 1rem 0;
+    padding: 1rem;
+    border-radius: 5px;
+    justify-content: center;
+    align-items: center;
+    border: ${({ theme, mychat }) => (mychat ? 'none' : `1px solid${theme.palette.lightViolet}`)};
+    color: ${({ theme, mychat }) => (mychat ? 'white' : theme.palette.gray)};
+    overflow: hidden;
+    word-break:break-all;
+    max-width: 28rem;
+    background-color: ${({ theme, mychat }) => (mychat ? theme.palette.lightViolet : 'white')};
 `;
 
 const Alert = styled.p`
@@ -28,14 +39,18 @@ export default function ChatBlock(
     mychat:boolean},
 ) {
   return (
-    <Block mychat={mychat}>
-      <Profile
-        avatar={profile}
-        name={name}
-        track={track}
-        trackCardinalNumber={trackCardinalNumber}
-      />
-      <Content>{chat}</Content>
-    </Block>
+    <>
+      <Block content={false} mychat={mychat}>
+        <Profile
+          avatar={profile}
+          name={name}
+          track={track}
+          trackCardinalNumber={trackCardinalNumber}
+        />
+      </Block>
+      <Block mychat={mychat} content>
+        <Content mychat={mychat}>{chat}</Content>
+      </Block>
+    </>
   );
 }

@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import roomAtom, { ParticipantProps, RoomProps } from '@/recoil/chat/roomAtom';
-import chatAtom from '@/recoil/chat/chatAtom';
+import chatAtom, { ChatProps } from '@/recoil/chat/chatAtom';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import myRoomAtom from '@/recoil/chat/myRoomAtom';
 
-interface newUserMessage{
+export interface newUserMessage{
   message:string,
   clientList:ParticipantProps[],
   time: string,
@@ -16,7 +15,11 @@ export default function useSocket() {
   const [siteSocket, setSiteSocket] = useState<Socket|null>(null);
   const [chat, setChat] = useRecoilState(chatAtom); // 접속중인 방의 채팅
   const setRoom = useSetRecoilState(roomAtom); // 전체 채팅방
-  const [room, setRoomState] = useRecoilState(myRoomAtom); // 현재 접속 중인 채팅방
+  const [newChat, setNewChat] = useState<(newUserMessage | ChatProps)>();
+
+  useEffect(() => {
+    if (newChat)setChat([...chat, newChat]);
+  }, [newChat]);
 
   useEffect(() => {
     if (!chatSocket || !siteSocket) {
@@ -46,19 +49,23 @@ export default function useSocket() {
       chatSocket.on('connect', () => {
         console.log('chatSocket connected');
       });
+
       chatSocket.on('showRoomList', (data) => {
         console.log(data);
         if (data.length === 0) {
-          setRoom([{ roomName: '전체', participants: [] }]);
+          setRoom([{ roomName: 'Room-전체', participants: [] }]);
         } else {
           setRoom(data);
         }
       });
+
       chatSocket.on('updateForNewUser', (data:newUserMessage) => {
-        const newChat = [...chat];
-        newChat.push({ chat: data.message });
-        setChat(newChat);
+        setNewChat(data);
         chatSocket.emit('fetchRoom');
+      });
+
+      chatSocket.on('responseMessage', (data:newUserMessage|ChatProps) => {
+        setNewChat(data);
       });
     }
   }, [chatSocket]);
