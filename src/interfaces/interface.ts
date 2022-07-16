@@ -156,16 +156,55 @@ export interface IRegisterFormProps {
     githubAvatar: string;
 }
 
-export interface ISearchArticleByAuthorProps {
-    [index: string]: string;
-    author: string;
-    type: IArticleTypes;
+export interface ISearchArticlesByTitleProps {
+    [index: string]: IArticleTypes;
+    title: string;
+    articleType: IArticleTypes;
+    filter: string;
+    page: string;
+    perPage: string;
 }
 
-export interface ISearchArticleByTitleProps {
+export interface ISearchArticlesByUserIdProps {
+    [index: string]: IArticleTypes;
+    userId: string;
+    articleType: IArticleTypes;
+    filter: string;
+    page: string;
+    perPage: string;
+}
+
+export interface ISearchArticlesByAuthorProps {
+    [index: string]: IArticleTypes;
+    author: string;
+    articleType: IArticleTypes;
+    filter: string;
+    page: string;
+    perPage: string;
+}
+
+export interface ISearchProjectsByTitleProps {
     [index: string]: string;
     title: string;
-    type: IArticleTypes;
+    filter: string;
+    page: string;
+    perPage: string;
+}
+
+export interface ISearchProjectsByUserIdProps {
+    [index: string]: string;
+    userId: string;
+    filter: string;
+    page: string;
+    perPage: string;
+}
+
+export interface ISearchProjectsByAuthorProps {
+    [index: string]: string;
+    author: string;
+    filter: string;
+    page: string;
+    perPage: string;
 }
 
 export interface IProjectGetParamsProps {
