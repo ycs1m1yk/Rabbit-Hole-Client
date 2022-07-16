@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 import React, {
-  ChangeEvent, useContext, useEffect, useState, useCallback, KeyboardEvent,
+  ChangeEvent, useContext, useEffect, useState, useCallback, KeyboardEvent, useRef,
 } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { AiOutlineMinus, AiOutlineArrowLeft, AiOutlineSend } from 'react-icons/ai';
@@ -147,7 +147,6 @@ export default function MaxChat({ minimizeHandler }:{minimizeHandler:()=>void}) 
       };
       // 유저 데이터 fetch 후 소켓에 등록
       if (chatSocket) {
-        console.log(newUser);
         chatSocket.emit('newUser', chatSocket.id, newUser);
       }
     },
@@ -157,6 +156,13 @@ export default function MaxChat({ minimizeHandler }:{minimizeHandler:()=>void}) 
   const roomState = useRecoilValue(roomAtom); // 채팅방 목록
   const [participant, setParticipant] = useRecoilState(participantAtom);// 참가자 목록
   const [textValue, setTextValue] = useState('');
+  const scrollRef = useRef<HTMLDivElement>(null); // 스크롤 시 하단 고정용 Dom selector
+
+  useEffect(() => {
+    if (chatState && scrollRef.current) {
+      scrollRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [chatState]);
 
   const backLobbyHandler = useCallback(() => {
     if (chatSocket) {
@@ -194,13 +200,11 @@ export default function MaxChat({ minimizeHandler }:{minimizeHandler:()=>void}) 
         trackCardinalNumber: data.trackCardinalNumber,
         chat: textValue,
       };
-      console.log(room?.roomName, newChat);
       chatSocket?.emit('chatMessage', room?.roomName, newChat);
     }
   };
 
   const chatValueHandler = useCallback((e:ChangeEvent<HTMLTextAreaElement>) => {
-    console.log(e.target.value);
     setTextValue(() => e.target.value);
   }, []);
 
@@ -229,21 +233,21 @@ export default function MaxChat({ minimizeHandler }:{minimizeHandler:()=>void}) 
     <ChatContaier>
       <Header>
         {data && (
-        <Profile
-          avatar={data.githubAvatar}
-          name={data.name}
-          track={data.track}
-          trackCardinalNumber={data.trackCardinalNumber}
-        />
+          <Profile
+            avatar={data.githubAvatar}
+            name={data.name}
+            track={data.track}
+            trackCardinalNumber={data.trackCardinalNumber}
+          />
         )}
         <div style={{ fontSize: '1.8rem' }}>
           {room
-          && (
-          <AiOutlineArrowLeft
-            style={{ marginRight: '1rem', cursor: 'pointer' }}
-            onClick={backLobbyHandler}
-          />
-          )}
+            && (
+            <AiOutlineArrowLeft
+              style={{ marginRight: '1rem', cursor: 'pointer' }}
+              onClick={backLobbyHandler}
+            />
+            )}
           <AiOutlineMinus style={{ cursor: 'pointer' }} onClick={minimizeHandler} />
         </div>
       </Header>
@@ -258,17 +262,19 @@ export default function MaxChat({ minimizeHandler }:{minimizeHandler:()=>void}) 
                   onClick={() => { handleRoomClick(room.participants, room.roomName); }}
                 />
               </div>
-              {chatState.map((chat:ChatProps|newUserMessage) => {
+              {chatState.map((chat:ChatProps|newUserMessage, index:number) => {
                 if (isChat(chat) && data) {
                   return (
-                    <ChatBlock
-                      profile={chat.profile}
-                      name={chat.name}
-                      track={chat.track}
-                      trackCardinalNumber={chat.trackCardinalNumber}
-                      chat={chat.chat}
-                      mychat={chat.senderId === data._id}
-                    />
+                    <div ref={index === chatState.length - 1 ? scrollRef : null}>
+                      <ChatBlock
+                        profile={chat.profile}
+                        name={chat.name}
+                        track={chat.track}
+                        trackCardinalNumber={chat.trackCardinalNumber}
+                        chat={chat.chat}
+                        mychat={chat.senderId === data._id}
+                      />
+                    </div>
                   );
                 }
                 if (isAlert(chat)) {
@@ -291,25 +297,25 @@ export default function MaxChat({ minimizeHandler }:{minimizeHandler:()=>void}) 
             </>
           )}
         {participant
-        && (
-        <Participants
-          room={room}
-          participants={participant.participantData}
-          clean={() => { handleRoomClick(null, ''); }}
-          enter={() => { handleRoomEnter(participant.roomName); }}
-        />
-        )}
+          && (
+          <Participants
+            room={room}
+            participants={participant.participantData}
+            clean={() => { handleRoomClick(null, ''); }}
+            enter={() => { handleRoomEnter(participant.roomName); }}
+          />
+          )}
       </Content>
       <Sender>
         {(room && data)
-        && (
-        <>
-          <Chat rows={2} value={textValue} onChange={chatValueHandler} onKeyUp={chatKeyHandler} />
-          <Button onClick={chatSendHandler}>
-            <AiOutlineSend />
-          </Button>
-        </>
-        )}
+          && (
+          <>
+            <Chat rows={2} value={textValue} onChange={chatValueHandler} onKeyUp={chatKeyHandler} />
+            <Button onClick={chatSendHandler}>
+              <AiOutlineSend />
+            </Button>
+          </>
+          )}
       </Sender>
     </ChatContaier>
   );
