@@ -23,28 +23,28 @@ const mypageList = [
   {
     id: 0,
     name: '게시글 관리',
-    path: '/',
+    path: '?type=articles',
     selected: true,
     icon: <AiOutlineUser />,
   },
   {
     id: 1,
     name: '개인정보 수정',
-    path: '/board',
+    path: '?type=mypage',
     selected: false,
     icon: <AiOutlineEdit />,
   },
   {
     id: 2,
     name: '멘토링 관리',
-    path: '/mentoring',
+    path: '?type=mentoring',
     selected: false,
     icon: <AiOutlineTeam />,
   },
   {
     id: 3,
     name: '프로젝트 관리',
-    path: '/projects',
+    path: '?type=projects',
     selected: false,
     icon: <AiOutlineProject />,
   },
@@ -102,12 +102,11 @@ const MyPageItem = styled.li<{selected: boolean}>`
     height: 5rem;
     margin: 1rem 0;
     font-size: 1.8rem;
-    border-radius: 5px;
+    border-radius: 10px;
     cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-weight: bold;
     color: ${(props) => (!props.selected ? props.theme.palette.black : 'white')};
     background-color: ${(props) => (props.selected ? props.theme.palette.eliceViolet : 'white')};
     &:hover{

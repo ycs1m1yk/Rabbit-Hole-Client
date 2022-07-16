@@ -4,10 +4,9 @@ import * as interfaces from '@interfaces/interface';
 const BASE_URL = `${import.meta.env.VITE_API_BASE_URL}`;
 
 // User - POST 회원가입
-export const postRegister = (bodyData: interfaces.IRegisterFormProps) => fetch(`${BASE_URL}/users/register`, {
+export const postRegister = (bodyData: FormData) => fetch(`${BASE_URL}/users/register`, {
   method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify(bodyData),
+  body: bodyData,
 }).then((res) => res.json());
 
 // User - GET 로그인
