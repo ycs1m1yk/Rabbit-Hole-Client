@@ -10,6 +10,7 @@ import { useMutation } from 'react-query';
 import { postRegister, getUserLogin } from '@/lib/userApi';
 import { useSearchParams } from 'react-router-dom';
 import { IRegisterFormProps } from '@/interfaces/interface';
+import { AiOutlineConsoleSql } from 'react-icons/ai';
 import SelectBox from '../selectBox';
 
 const ErrorMessage = styled.span`
@@ -83,9 +84,17 @@ function RegisterForm() {
       githubProfileUrl,
       githubEmail,
       githubAvatar,
+      authImage: data.authImage[0],
     };
-    formData.authImage = '업로드 준비중....';
-    const newUser = await postRegister(formData);
+
+    const fd: FormData = new FormData();
+
+    for (const key in formData) {
+      fd.append(key, formData[key]);
+      console.log(fd.get(key));
+    }
+
+    const newUser = await postRegister(fd);
     if (newUser) {
       window.location.href = getUserLogin;
     }
@@ -100,7 +109,7 @@ function RegisterForm() {
     <>
       <ModalTitle>추가 정보 입력</ModalTitle>
       <h2 style={{ marginBottom: '2rem' }}>회원가입을 위해 추가정보가 필요합니다.</h2>
-      <StyledRegisterForm>
+      <StyledRegisterForm encType="multipart/form-data">
         <InputTitle>이름</InputTitle>
         <StyledRegisterInput
           {...register('name', {

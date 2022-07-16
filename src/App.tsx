@@ -13,7 +13,7 @@ const Home = lazy(() => import('@pages/home/home'));
 const Board = lazy(() => import('@pages/board'));
 const Mentoring = lazy(() => import('@pages/mentoring'));
 const Projects = lazy(() => import('@/pages/projects/projects'));
-const Mypage = lazy(() => import('@pages/mypage'));
+const Mypage = lazy(() => import('@pages/myPage/myPage'));
 const BoardDetail = lazy(() => import('@pages/boardDetail/boardDetail'));
 const ProjectDetail = lazy(() => import('@pages/projects/projectDetail'));
 
