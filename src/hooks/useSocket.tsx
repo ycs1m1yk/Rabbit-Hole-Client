@@ -49,7 +49,7 @@ export default function useSocket() {
       chatSocket.on('connect', () => {
         console.log('chatSocket connected');
       });
-
+      // 채팅방 목록 fetch
       chatSocket.on('showRoomList', (data) => {
         console.log(data);
         if (data.length === 0) {
@@ -58,12 +58,12 @@ export default function useSocket() {
           setRoom(data);
         }
       });
-
+      // 채팅방 입장 메시지
       chatSocket.on('updateForNewUser', (data:newUserMessage) => {
         setNewChat(data);
         chatSocket.emit('fetchRoom');
       });
-
+      // 채팅 목록 업데이트
       chatSocket.on('responseMessage', (data:newUserMessage|ChatProps) => {
         setNewChat(data);
       });

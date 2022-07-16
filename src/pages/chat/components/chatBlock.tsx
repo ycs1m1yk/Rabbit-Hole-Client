@@ -24,9 +24,6 @@ const Content = styled.div<{mychat:boolean}>`
     background-color: ${({ theme, mychat }) => (mychat ? theme.palette.lightViolet : 'white')};
 `;
 
-const Alert = styled.p`
-
-`;
 export default function ChatBlock(
   {
     profile, name, chat, mychat, track, trackCardinalNumber,
