@@ -81,8 +81,6 @@ export default function Header() {
   const { authInfo, setLogout } = useToken(); // 로그인 상태 확인
 
   const handleClick = useCallback((e: MouseEvent) => {
-    e.preventDefault();
-
     const target = e.target as HTMLElement;
     const anchorTarget = target.closest('a') || undefined;
 
