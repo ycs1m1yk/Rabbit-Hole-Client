@@ -1,10 +1,8 @@
-import Button from '@/components/button';
-import Search from '@/components/search';
-import SideBar from '@/components/sideBar';
-import Table from '@/components/table';
 import React from 'react';
 import { useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
+
+import SideBar from '@/components/sideBar';
 import MyPageContent from './myPageContent';
 
 const MyPageContainer = styled.div`
@@ -21,14 +19,6 @@ const VerticalDivider = styled.div`
   height: 100vh;
 `;
 
-const MyPageHeader = styled.div`
-  margin: 5rem 2rem 2rem 2rem;
-  display: flex;
-  flex-direction: row;
-  width: 50%;
-  justify-content: space-between;
-`;
-
 function MyPage() {
   const [searchParams] = useSearchParams();
   const myPageType = searchParams.get('type');
@@ -39,11 +29,7 @@ function MyPage() {
         <SideBar type="myPage" />
       </SidebarContainer>
       <VerticalDivider />
-      {/* <MyPageHeader>
-        <Button onClick={() => console.log('Click')}>선택 삭제</Button>
-        <Search />
-      </MyPageHeader> */}
-      <MyPageContent type={myPageType && myPageType} />
+      {myPageType !== null ? <MyPageContent type={myPageType} /> : null}
     </MyPageContainer>
   );
 }

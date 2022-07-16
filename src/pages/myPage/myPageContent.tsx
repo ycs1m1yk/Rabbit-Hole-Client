@@ -4,10 +4,10 @@ import { getMyPage } from '@/lib/userApi';
 import React, { useEffect } from 'react';
 
 interface IMyPageTypeProps {
-  type: string | null;
+  [index: string] : any;
+  type: string;
 }
 
-// getAllProjects의 params객체에 빈 객체 넣으면 모든 프로젝트가 다 오는지 확인
 const queryFn = {
   mypage: getMyPage(),
   projects: getAllProjects({}),
@@ -20,7 +20,8 @@ const queryFn = {
 
 /*
   TODO
-  - [ ] type으로 관련 정보 불러오기 -> 개인정보, 프로젝트, 게시글 순으로 진행
+  - [O] type으로 관련 정보 불러오기 -> 개인정보, 프로젝트, 게시글 순으로 진행
+  - [ ]
 */
 
 function MyPageContent({ type }: IMyPageTypeProps) {
