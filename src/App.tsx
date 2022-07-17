@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from 'react';
+import React, { lazy } from 'react';
 import {
   BrowserRouter, Routes, Route,
 } from 'react-router-dom';
@@ -26,9 +26,11 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/board" element={<Board />} />
           <Route path="/board/detail" element={<BoardDetail />} />
+          <Route path="/board/search" element={<Board />} />
           <Route path="/mentoring" element={<Mentoring />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/projects/detail" element={<ProjectDetail />} />
+          <Route path="/projects/search" element={<Projects />} />
           <Route path="/mypage" element={<Mypage />} />
         </Route>
         <Route path="/github/register" element={<Register />} />
