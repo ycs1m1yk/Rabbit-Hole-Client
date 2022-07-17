@@ -22,17 +22,17 @@ interface SideBarProps{
 const mypageList = [
   {
     id: 0,
-    name: '게시글 관리',
-    path: '?type=articles',
+    name: '개인정보 수정',
+    path: '?type=mypage',
     selected: true,
-    icon: <AiOutlineUser />,
+    icon: <AiOutlineEdit />,
   },
   {
     id: 1,
-    name: '개인정보 수정',
-    path: '?type=mypage',
+    name: '게시글 관리',
+    path: '?type=articles',
     selected: false,
-    icon: <AiOutlineEdit />,
+    icon: <AiOutlineUser />,
   },
   {
     id: 2,
