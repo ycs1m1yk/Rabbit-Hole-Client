@@ -2,9 +2,6 @@
 import React, { ReactNode, useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import {
-  AiOutlineUser, AiOutlineEdit, AiOutlineTeam, AiOutlineProject,
-} from 'react-icons/ai';
 
 interface ContentProps{
     id:number,
@@ -19,36 +16,6 @@ interface SideBarProps{
     contentsList?: ContentProps[],
 }
 
-const mypageList = [
-  {
-    id: 0,
-    name: '개인정보 수정',
-    path: '?type=mypage',
-    selected: true,
-    icon: <AiOutlineEdit />,
-  },
-  {
-    id: 1,
-    name: '게시글 관리',
-    path: '?type=articles',
-    selected: false,
-    icon: <AiOutlineUser />,
-  },
-  {
-    id: 2,
-    name: '멘토링 관리',
-    path: '?type=mentoring',
-    selected: false,
-    icon: <AiOutlineTeam />,
-  },
-  {
-    id: 3,
-    name: '프로젝트 관리',
-    path: '?type=projects',
-    selected: false,
-    icon: <AiOutlineProject />,
-  },
-];
 const boardListMock = [
   {
     id: 0,
@@ -129,8 +96,7 @@ const defaultProps = {
 export default function SideBar({ type, contentsList }:SideBarProps) {
   const navigate = useNavigate(); // 라우팅
 
-  const contentsData = type === 'myPage' ? mypageList : boardListMock; // page타입에 따라 다른 리스트
-  const [contents, setContents] = useState<ContentProps[]>(contentsData); // 리스트의 선택 상태 관리
+  const [contents, setContents] = useState<ContentProps[]>(contentsList); // 리스트의 선택 상태 관리
 
   // 리스트 선택 시 selected상태 변경 및 라우팅
   const itemClickHandler = (event: React.MouseEvent<HTMLLIElement>, id: number, path: string) => {

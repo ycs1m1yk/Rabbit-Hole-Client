@@ -45,8 +45,17 @@ export const getProjectByUserId = (token: string, userId: string, params: interf
   return fetch(`${BASE_URL}/users/${userId}/projects?${par}`, {
     headers: {
       Authorization: `Bearer ${token}`,
-      // 'Content-Type': 'application/json',
-      // Accept: 'application/json',
+    },
+  }).then((res) => res.json());
+};
+
+export const getArticleByUserId = (token: string, userId: string, params: interfaces.IArticleGetByIdProps) => {
+  const param = new URLSearchParams(params);
+  const par = param.toString();
+
+  return fetch(`${BASE_URL}/users/${userId}/articles?${par}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
     },
   }).then((res) => res.json());
 };

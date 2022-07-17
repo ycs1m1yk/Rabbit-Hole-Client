@@ -3,9 +3,10 @@ import React, { useEffect, useState } from 'react';
 
 import { getAllArticle } from '@/lib/articleApi';
 import { getAllProjects } from '@/lib/projectApi';
-import { getMyPage, getProjectByUserId } from '@/lib/userApi';
+import { getArticleByUserId, getMyPage, getProjectByUserId } from '@/lib/userApi';
 import { IArticleProps, IProjectProps, IUserProps } from '@/interfaces/interface';
 import useToken from '@/hooks/useToken';
+import { useQuery } from 'react-query';
 import MyPageBoard from './components/MyPageBoard';
 import MyPageProjects from './components/MyPageProjects';
 import MyPageProfile from './components/MyPageProfile';
@@ -25,51 +26,38 @@ interface IMyPageTypeProps {
 */
 
 function MyPageContainer({ type }: IMyPageTypeProps): any {
-  const [data, setData] = useState<IUserProps | IProjectProps | IArticleProps[]>();
-  const [page, setPage] = useState<number>(1);
-  const [perPage, setPerPage] = useState<number>(5);
   const { authInfo } = useToken();
 
-  const params = { page: page + 1, perPage };
-  console.log(params);
+  const [articlePage, setArticlePage] = useState<number>(0);
+  const [articlePerPage, setArticlePerPage] = useState<number>(5);
 
-  const queryFn = {
-    mypage: authInfo && getMyPage(authInfo?.token),
-    projects: authInfo && getProjectByUserId(authInfo?.token, authInfo?.userId, params),
-    articles: [
-      getAllArticle({ articleType: 'question' }),
-      getAllArticle({ articleType: 'free' }),
-      getAllArticle({ articleType: 'study' }),
-    ],
-  };
+  const [projectPage, setProjectPage] = useState<number>(0);
+  const [projectPerPage, setProjectPerPage] = useState<number>(5);
 
-  const getDataFromApi = () => {
-    if (type === 'articles') {
-      return Promise.all(
-        queryFn[type].map(async (fn) => fn),
-      );
-    }
-    return queryFn[type];
-  };
+  const articleParams = { page: articlePage + 1, perPage: articlePerPage };
+  const projectParams = { page: projectPage + 1, perPage: projectPerPage };
+
+  const { data: profileData } = useQuery(['mypage', 'proflie'], () => getMyPage(authInfo!.token), {
+    staleTime: 180000,
+  });
+  const { data: projectsData, refetch: projectRefetch } = useQuery(['mypage', 'projects'], () => getProjectByUserId(authInfo!.token, authInfo!.userId, projectParams));
+
+  const { data: articleData, refetch: articleRefetch } = useQuery(['mypage', 'article'], () => getArticleByUserId(authInfo!.token, authInfo!.userId, articleParams));
 
   useEffect(() => {
-    async function fetchData() {
-      const response = await getDataFromApi();
-      console.log(response);
-      setData(response);
-    }
-    fetchData();
-  }, [type, page, perPage, setPage, setPerPage]);
+    if (type === 'articles') articleRefetch();
+    else if (type === 'projects') projectRefetch();
+  }, [articlePage, articlePerPage, projectPage, projectPerPage]);
 
   switch (type) {
-    case 'mypage':
-      return data && <MyPageProfile data={data} />;
+    case 'profile':
+      return profileData && <MyPageProfile data={profileData} />;
     case 'articles':
-      return data && <MyPageBoard page={page} perPage={perPage} setPage={setPage} setPerPage={setPerPage} data={data} />;
+      return articleData && <MyPageBoard page={articlePage} perPage={articlePerPage} setPage={setArticlePage} setPerPage={setArticlePerPage} data={articleData} />;
     case 'projects':
-      return data && <MyPageProjects page={page} perPage={perPage} setPage={setPage} setPerPage={setPerPage} data={data} />;
-    case 'mentoring':
-      return data && <MyPageMentoring />;
+      return projectsData && <MyPageProjects page={projectPage} perPage={projectPerPage} setPage={setProjectPage} setPerPage={setProjectPerPage} data={projectsData} />;
+    // case 'mentoring':
+    //   return targetData && <MyPageMentoring />;
     default:
       return <div>Default</div>;
   }

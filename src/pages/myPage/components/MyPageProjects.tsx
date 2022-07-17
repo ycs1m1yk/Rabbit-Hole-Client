@@ -12,7 +12,8 @@ interface IProjectProps {
 function MyPageProjects({
   data, page, perPage, setPage, setPerPage,
 }: IProjectProps) {
-  console.log(data, page, perPage);
+  console.log('Project Data:', data, page, perPage);
+
   return (
     <div>
       <Pagination handler={setPage} />
