@@ -36,7 +36,7 @@ const HeaderRight = styled.div`
   display: flex;
   align-items: center;
   
-  & > div:not(:first-child) {
+  & > *:not(:first-child) {
     margin-left: 2rem;
   }
 `;
