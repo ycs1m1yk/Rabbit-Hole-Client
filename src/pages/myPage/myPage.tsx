@@ -3,7 +3,8 @@ import { useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 import SideBar from '@/components/sideBar';
-import MyPageContent from './myPageContent';
+import useToken from '@/hooks/useToken';
+import MyPageContent from './myPageContainer';
 
 const MyPageContainer = styled.div`
   display: flex;
@@ -22,6 +23,7 @@ const VerticalDivider = styled.div`
 function MyPage() {
   const [searchParams] = useSearchParams();
   const myPageType = searchParams.get('type');
+  const { authInfo } = useToken();
 
   return (
     <MyPageContainer>
@@ -29,7 +31,9 @@ function MyPage() {
         <SideBar type="myPage" />
       </SidebarContainer>
       <VerticalDivider />
-      {myPageType !== null ? <MyPageContent type={myPageType} /> : null}
+      {myPageType !== null && authInfo !== null
+        ? <MyPageContent token={authInfo.token} type={myPageType} />
+        : null}
     </MyPageContainer>
   );
 }

@@ -11,10 +11,9 @@ export interface IUserProps {
     githubProfileUrl: string;
     githubAvatar: string;
     carrots?: number;
-    refreshToken: string;
     role?: string;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt: string;
+    updatedAt: string;
     __v: number;
 }
 
