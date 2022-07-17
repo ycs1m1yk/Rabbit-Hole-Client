@@ -1,16 +1,18 @@
+/* eslint-disable max-len */
 import React, { useEffect, useState } from 'react';
 
 import { getAllArticle } from '@/lib/articleApi';
 import { getAllProjects } from '@/lib/projectApi';
-import { getMyPage } from '@/lib/userApi';
+import { getMyPage, getProjectByUserId } from '@/lib/userApi';
 import { IArticleProps, IProjectProps, IUserProps } from '@/interfaces/interface';
+import useToken from '@/hooks/useToken';
 import MyPageBoard from './components/MyPageBoard';
 import MyPageProjects from './components/MyPageProjects';
 import MyPageProfile from './components/MyPageProfile';
+import MyPageMentoring from './components/MyPageMentoring';
 
 interface IMyPageTypeProps {
   [index: string] : any;
-  token: string;
   type: string;
 }
 
@@ -22,12 +24,18 @@ interface IMyPageTypeProps {
   - [ ] 게시글 관리
 */
 
-function MyPageContainer({ token, type }: IMyPageTypeProps): any {
+function MyPageContainer({ type }: IMyPageTypeProps): any {
   const [data, setData] = useState<IUserProps | IProjectProps | IArticleProps[]>();
+  const [page, setPage] = useState<number>(1);
+  const [perPage, setPerPage] = useState<number>(5);
+  const { authInfo } = useToken();
+
+  const params = { page: page + 1, perPage };
+  console.log(params);
 
   const queryFn = {
-    mypage: getMyPage(token),
-    projects: getAllProjects({}),
+    mypage: authInfo && getMyPage(authInfo?.token),
+    projects: authInfo && getProjectByUserId(authInfo?.token, authInfo?.userId, params),
     articles: [
       getAllArticle({ articleType: 'question' }),
       getAllArticle({ articleType: 'free' }),
@@ -47,20 +55,21 @@ function MyPageContainer({ token, type }: IMyPageTypeProps): any {
   useEffect(() => {
     async function fetchData() {
       const response = await getDataFromApi();
+      console.log(response);
       setData(response);
     }
     fetchData();
-  }, [type]);
+  }, [type, page, perPage, setPage, setPerPage]);
 
   switch (type) {
     case 'mypage':
       return data && <MyPageProfile data={data} />;
     case 'articles':
-      return data && <MyPageBoard data={data} />;
+      return data && <MyPageBoard page={page} perPage={perPage} setPage={setPage} setPerPage={setPerPage} data={data} />;
     case 'projects':
-      return data && <MyPageProjects data={data} />;
+      return data && <MyPageProjects page={page} perPage={perPage} setPage={setPage} setPerPage={setPerPage} data={data} />;
     case 'mentoring':
-      return data && <MyPageProjects />;
+      return data && <MyPageMentoring />;
     default:
       return <div>Default</div>;
   }

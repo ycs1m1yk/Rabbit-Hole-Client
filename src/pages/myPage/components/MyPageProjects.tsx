@@ -1,8 +1,23 @@
-import React from 'react';
+import Pagination from '@/components/pagination';
+import React, { Dispatch, SetStateAction } from 'react';
 
-function MyPageProjects({ data }: any) {
-  console.log(data);
-  return <div>MyPageProjects</div>;
+interface IProjectProps {
+  data: any;
+  page: number;
+  perPage: number;
+  setPage: Dispatch<SetStateAction<number>>;
+  setPerPage: Dispatch<SetStateAction<number>>;
+}
+
+function MyPageProjects({
+  data, page, perPage, setPage, setPerPage,
+}: IProjectProps) {
+  console.log(data, page, perPage);
+  return (
+    <div>
+      <Pagination handler={setPage} />
+    </div>
+  );
 }
 
 export default MyPageProjects;

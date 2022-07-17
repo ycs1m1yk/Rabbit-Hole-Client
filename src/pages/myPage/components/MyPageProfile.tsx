@@ -35,9 +35,9 @@ const InputValue = styled.input`
 const ImageContainer = styled.div``;
 
 const ProfileImage = styled.img`
-  border-radius: 50%;
   width: 150px;
   height: 150px;
+  border-radius: 50%;
 `;
 
 const ButtonConatiner = styled.div`

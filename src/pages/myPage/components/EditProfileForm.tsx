@@ -3,6 +3,8 @@ import React, { useRef } from 'react';
 import styled from 'styled-components';
 import postImage from '@/lib/imageApi';
 import useToken from '@/hooks/useToken';
+import { useSetRecoilState } from 'recoil';
+import modalAtom from '@/recoil/modal/modalAtom';
 
 const ImageInput = styled.input`
   margin-bottom: 3rem;
@@ -24,6 +26,7 @@ const PreviewImage = styled.img`
 function EditProfileForm() {
   const inputRef = useRef<HTMLInputElement>(null);
   const previewRef = useRef<HTMLImageElement>(null);
+  const setModal = useSetRecoilState(modalAtom);
   const { authInfo } = useToken();
 
   const handleEdit = async () => {
@@ -43,6 +46,7 @@ function EditProfileForm() {
       formData.set('image', blob);
       const response = await postImage(authInfo!.token, formData);
       localStorage.setItem('imageUrl', response.imageUrl);
+      setModal(null);
     }
   };
 

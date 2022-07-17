@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import * as interfaces from '@interfaces/interface';
 
 // React Query의 fetcher function은 반드시 json의 Promise를 반환
@@ -36,3 +37,16 @@ export const getMyPage = (token: string) => fetch(`${BASE_URL}/users/mypage`, {
 export const getOtherPage = (token: string, githubEmail: string) => fetch(`${BASE_URL}/users/${githubEmail}`, {
   headers: { Authorization: `Bearer ${token}` },
 }).then((res) => res.json());
+
+export const getProjectByUserId = (token: string, userId: string, params: interfaces.IProjectGetParamsProps) => {
+  const param = new URLSearchParams(params);
+  const par = param.toString();
+
+  return fetch(`${BASE_URL}/users/${userId}/projects?${par}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      // 'Content-Type': 'application/json',
+      // Accept: 'application/json',
+    },
+  }).then((res) => res.json());
+};

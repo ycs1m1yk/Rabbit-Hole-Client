@@ -32,7 +32,7 @@ function MyPage() {
       </SidebarContainer>
       <VerticalDivider />
       {myPageType !== null && authInfo !== null
-        ? <MyPageContent token={authInfo.token} type={myPageType} />
+        ? <MyPageContent type={myPageType} />
         : null}
     </MyPageContainer>
   );

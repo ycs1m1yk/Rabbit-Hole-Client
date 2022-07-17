@@ -170,8 +170,8 @@ export interface ISearchArticleByTitleProps {
 export interface IProjectGetParamsProps {
     [index: string]: any;
     filter?: string | null;
-    page?: number | null;
-    perPage?: number | null;
+    page?: number;
+    perPage?: number;
 }
 
 export interface IProjectPostParamsProps {
