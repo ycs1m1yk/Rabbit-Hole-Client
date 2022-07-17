@@ -50,35 +50,28 @@ const Posts = styled.div`
   align-items: flex-start;
 `;
 
-const EmptyField = styled.p`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 40px;
-  font-weight: 700;
-  color: ${({ theme }) => theme.palette.black};
-`;
-
 const defaultProps = {
   type: 'default',
   title: '',
+  userId: '',
 };
 
 type postList = {
   type?: string;
   title?: string;
   posts: IArticleProps[];
+  userId?: string;
+  // eslint-disable-next-line no-unused-vars
+  sortHandler: Function | undefined;
 } & typeof defaultProps
 
-export default function PostList({ type, title, posts } : postList) {
+export default function PostList({
+  type, title, posts, userId, sortHandler,
+} : postList) {
   // 기준에 맞춰 정렬된 데이터 불러오기
-  const handleSort = async (sortBy: string): Promise<any> => {
-    console.log(type, sortBy);
+  const handleClick = (sortType: string) => {
+    if (typeof sortHandler === 'function') { sortHandler(sortType); }
   };
-
-  useEffect(() => {
-
-  }, [handleSort]);
 
   return (
     <Container>
@@ -86,8 +79,8 @@ export default function PostList({ type, title, posts } : postList) {
       {type !== 'main'
         ? (
           <Alignments>
-            <Alignment onClick={() => handleSort('new')}>최신순</Alignment>
-            <Alignment onClick={() => handleSort('popular')}>인기순</Alignment>
+            <Alignment onClick={() => handleClick('date')}>최신순</Alignment>
+            <Alignment onClick={() => handleClick('views')}>인기순</Alignment>
           </Alignments>
         ) : null}
       <Posts>
@@ -103,6 +96,7 @@ export default function PostList({ type, title, posts } : postList) {
             type={type}
             articleId={post._id}
             articleType={post.articleType}
+            likeThis={!!post.likes.find((el) => el.userId === userId)}
           />
         ))}
       </Posts>

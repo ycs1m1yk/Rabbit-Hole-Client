@@ -7,7 +7,8 @@ import 'prismjs/themes/prism.css';
 import '@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight.css';
 import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';
 import Prism from 'prismjs';
-import { postImage } from '@lib/userApi';
+import postImage from '@lib/imageApi';
+import { useMutation } from 'react-query';
 
 interface EditorProps{
   height?:string
@@ -35,30 +36,27 @@ const MarkdownEditor = forwardRef<Editor, EditorProps>((props, ref) => {
       height={props.height}
       plugins={[[codeSyntaxHighlight, { highlighter: Prism }]]}
       hooks={{
-        addImageBlobHook(blob, callback) {
-          try {
-            console.log(blob);
-            if (blob instanceof File) {
+        async addImageBlobHook(blob, callback) {
+          const formData = new FormData();
+          let message;
+          let name = '업로드 실패';
+          if (blob instanceof File) {
+            try {
               if (blob.size > 5242880) {
-                callback('5mb 이하의 파일만 업로드해주세요.');
+                throw new Error('5MB 이하의 사진을 업로드해주세요.');
               }
-              const fileReader = new FileReader();
-              fileReader.onloadend = () => {
-                if (fileReader.result) {
-                  console.log(fileReader.result);
-                  const data = new FormData();
-                  data.append('body', blob);
-                  data.append('type', blob.type);
-                  data.append('filename', blob.name);
-                  postImage(data);
-                }
-              };
-              fileReader.readAsArrayBuffer(blob);
+              if (blob.type !== 'image/jpeg' && blob.type !== 'image/jpg' && blob.type !== 'image/gif' && blob.type !== 'image/png') {
+                throw new Error('지원하지 않는 이미지 타입입니다.');
+              }
+              formData.set('image', blob);
+              const response = await postImage(formData);
+              message = response.imageUrl;
+              name = blob.name;
+            } catch (error:any) {
+              message = error.message;
             }
-          } catch (error) {
-            callback(`${error} 파일 업로드 중 오류가 발생했습니다.`);
           }
-          return false;
+          callback(message, name);
         },
       }}
     />

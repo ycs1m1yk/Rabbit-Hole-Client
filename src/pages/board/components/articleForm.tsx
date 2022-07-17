@@ -5,7 +5,7 @@ import React, {
 import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
 import { Editor } from '@toast-ui/react-editor';
-import { AiOutlineWarning } from 'react-icons/ai';
+import { AiOutlineQuestionCircle, AiOutlineWarning } from 'react-icons/ai';
 
 import TagsInput from '@/components/tagsInput';
 import MarkdownEditor from '@/components/markdownEditor';
@@ -14,6 +14,7 @@ import SelectBox from '@components/selectBox';
 
 import useToken from '@/hooks/useToken';
 import { createArticle } from '@/lib/articleApi';
+import { FaCarrot } from 'react-icons/fa';
 
 const ModalHeader = styled.div`
   display: flex;
@@ -24,8 +25,96 @@ const ModalHeader = styled.div`
   align-self: flex-start;
 `;
 
-const ModalTitle = styled.div`
+const ModalTitle = styled.h1`
   border: none;
+`;
+
+const SelectBoxWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  text-align: center;
+  position: absolute;
+  top: 12rem;
+  right: 5rem;
+  
+  & select {
+    text-align: center;
+    height: 3.5rem;
+    border: 1.5px solid ${({ theme }) => theme.palette.borderGray}
+  }
+  & div {
+    height: 12rem;
+    overflow: auto;
+  }
+`;
+
+const CarrotsInfo = styled.span`
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  font-weight: bold;
+  position: absolute;
+  top: -0.5rem;
+  left: 9rem;
+  z-index: 1;
+
+  & svg {
+    width: 1.3rem;
+    height: 1.3rem;
+    color: ${({ theme }) => theme.palette.carrotOrange};
+  }
+`;
+
+const CarrotLabel = styled.span`
+  font-size: 1.7rem;
+`;
+
+const ToolTipText = styled.span`
+  width: 2rem;
+  height: 2rem;
+  margin-right: -2rem;
+  color: deeppink;
+  font-weight: bold;
+  display: inline-block;
+  position: relative;
+  
+  & span {
+    display: none;
+    position: absolute;
+    max-width: 20rem;
+    border: 1px solid;
+    border-radius: 1rem;
+    padding: 0.5rem;
+    font-size: 0.8rem;
+    color: white;
+    background: ${({ theme }) => theme.palette.lightViolet};
+  }
+  :hover span {
+    width: 14rem;
+    white-space: normal;
+    word-break: break-word;
+    display: block;
+    top: 2.2rem;
+    right: -1rem;
+    z-index: 1;
+
+    -webkit-animation: 0.3s linear normal slide_down;
+          animation: 0.3s linear normal slide_down;
+
+    @keyframes slide_down {
+      0% {
+        opacity: 0.1;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+  }
+`;
+
+const ToolTipIcon = styled(AiOutlineQuestionCircle)`
+  margin-right: 0.5rem;
+  color: ${({ theme }) => theme.palette.eliceViolet};
 `;
 
 const StyledArticleForm = styled.form`
@@ -84,14 +173,15 @@ interface IArticleForm {
 }
 
 function ArticleForm() {
-  const boardMap = {
+  const boardMap: any = {
     질문답변: 'question',
     자유주제: 'free',
     스터디: 'study',
   };
   const editorRef = useRef<Editor>(null);
   const [tags, setTags] = useState<{name: string}[]>([]);
-  const [selectedBoard, setSelectedBoard] = useState<string>('게시판 선택');
+  const [board, setBoard] = useState<string>('게시판 선택');
+  const [carrots, setCarrots] = useState<number>(0);
   const { register, handleSubmit, formState: errors } = useForm<IArticleForm>();
   const { authInfo } = useToken();
 
@@ -103,20 +193,18 @@ function ArticleForm() {
   const onValid = useCallback((data: any) => {
     const formData: IArticleForm = {
       ...data,
-      articleType: boardMap[selectedBoard],
+      articleType: boardMap[board],
       tags,
       content: editorRef.current?.getInstance().getMarkdown(),
     };
     (async () => {
       if (authInfo) {
-        const { token, userName, carrots } = authInfo;
-        const bodyData = { ...formData, author: userName, carrots: 10 };
-        const resp = await createArticle(token, bodyData);
-        console.log(bodyData);
-        console.log(resp);
+        const { token, userName } = authInfo;
+        const bodyData = { ...formData, author: userName, carrots };
+        await createArticle(token, bodyData);
       }
     })();
-  }, [selectedBoard, tags]);
+  }, [board, tags]);
 
   // Form 데이터가 유효하지 않은 경우 호출되는 함수
   const onInvalid = useCallback(() => {
@@ -127,13 +215,33 @@ function ArticleForm() {
   /**
    * - [x] 게시판 선택 selextBox 추가
    * - [] 게시글 5000자 제한 처리
-   * - [] postArticle api
+   * - [x] postArticle api
+   * - [x] 질문답변 선택하면 당근걸기
    */
   return (
     <>
       <ModalHeader>
         <ModalTitle>게시글 작성</ModalTitle>
-        <SelectBox options={['질문답변', '자유주제', '스터디']} defaultValue="게시판 선택" selectedOption={selectedBoard} setSelectedOption={setSelectedBoard} width={200} type="register" />
+        <SelectBox options={['질문답변', '자유주제', '스터디']} defaultValue="게시판 선택" selectedOption={board} setSelectedOption={setBoard} width={200} type="register" />
+        {board === '질문답변' && (
+        <SelectBoxWrapper className="selectbox-carrots">
+          <CarrotsInfo>
+            <FaCarrot />
+            {`: ${authInfo?.carrots}개`}
+          </CarrotsInfo>
+          <CarrotLabel>
+            당근걸기
+          </CarrotLabel>
+          <ToolTipText>
+            <span>
+              당근을 설정하면 답변을 좀 더
+              빨리 받을 수도 있어요!
+            </span>
+          </ToolTipText>
+          <ToolTipIcon />
+          <SelectBox options={[...Array(11).fill(0).map((v, i) => i * 10)]} defaultValue="당근 추가" selectedOption={carrots} setSelectedOption={setCarrots} width={70} type="register" />
+        </SelectBoxWrapper>
+        )}
       </ModalHeader>
       <StyledArticleForm onKeyDown={handleEnterSubmit}>
         <InputWrapper>

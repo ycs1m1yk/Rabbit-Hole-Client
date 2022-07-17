@@ -48,8 +48,8 @@ export interface IArticleGetProps {
     [index: string]: any;
     articleType: IArticleTypes;
     filter?: string;
-    page?: number;
-    perPage?: number;
+    page?: string;
+    perPage?: string;
 }
 
 export interface IArticlePostProps {
@@ -76,7 +76,7 @@ export interface ICommentProps {
     content: string;
     likes: ILikesProps[];
     isAdopted: boolean;
-    createdAt: Date;
+    createdAt: string;
     updatedAt: Date;
     __v: number;
 }
@@ -110,7 +110,7 @@ export interface IProjectProps {
     views: string;
     tags: ITagsProps[];
     likes: ILikesProps[];
-    createdAt: Date;
+    createdAt: string;
     updatedAt: Date;
     __v: number;
 }
@@ -176,9 +176,9 @@ export interface ISearchArticleByTitleProps {
 
 export interface IProjectGetParamsProps {
     [index: string]: any;
-    filter: string;
-    page: number;
-    perPage: any;
+    filter?: string | null;
+    page?: number | null;
+    perPage?: number | null;
 }
 
 export interface IProjectPostParamsProps {

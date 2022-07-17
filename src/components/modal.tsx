@@ -1,4 +1,4 @@
-import React, { MouseEvent, useCallback } from 'react';
+import React, { MouseEvent, useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 import { AiOutlineClose } from 'react-icons/ai';
 
@@ -33,6 +33,7 @@ const DialogBox = styled.dialog`
   font-size: 2rem;
   white-space: nowrap;
   overflow: auto;
+  position: relative;
   z-index: 10000;
 `;
 
@@ -74,6 +75,14 @@ function Modal({
     e.preventDefault();
     setModalState(null);
   }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
+
   return (
     <ModalContainer>
       <DialogBox>
