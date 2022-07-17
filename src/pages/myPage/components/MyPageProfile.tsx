@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useRef } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
 import Button from '@/components/button';
@@ -54,6 +54,8 @@ interface IForm {
 function MyPageProfile({ data }: any) {
   const { register, handleSubmit } = useForm<IForm>();
   const setModal = useSetRecoilState(modalAtom);
+  const profileImageUrl = localStorage.getItem('imageUrl');
+
   console.log(data);
 
   const onValid = (formData: IForm) => {
@@ -84,7 +86,7 @@ function MyPageProfile({ data }: any) {
         </ButtonConatiner>
       </InputForm>
       <ImageContainer>
-        <ProfileImage src={data.githubAvatar} />
+        <ProfileImage src={profileImageUrl || data.githubAvatar} />
         <Button onClick={() => handleModalOpen('ProfileImage')}>Edit</Button>
       </ImageContainer>
     </Container>

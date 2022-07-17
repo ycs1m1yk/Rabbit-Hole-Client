@@ -1,6 +1,8 @@
 import Button from '@/components/button';
 import React, { useRef } from 'react';
 import styled from 'styled-components';
+import postImage from '@/lib/imageApi';
+import useToken from '@/hooks/useToken';
 
 const ImageInput = styled.input`
   margin-bottom: 3rem;
@@ -22,9 +24,26 @@ const PreviewImage = styled.img`
 function EditProfileForm() {
   const inputRef = useRef<HTMLInputElement>(null);
   const previewRef = useRef<HTMLImageElement>(null);
+  const { authInfo } = useToken();
 
-  const handleEdit = () => {
-    console.log(inputRef?.current?.files[0]);
+  const handleEdit = async () => {
+    const formData = new FormData();
+    if (inputRef.current?.files) {
+      const blob = inputRef.current.files[0];
+
+      if (blob.type !== 'image/jpeg' && blob.type !== 'image/jpg' && blob.type !== 'image/gif' && blob.type !== 'image/png') {
+        alert('지원하지 않는 이미지 형식입니다:(');
+        return;
+      }
+      if (blob.size > 5242880) {
+        alert('5MB 이하의 사진을 업로드해주세요:)');
+        return;
+      }
+
+      formData.set('image', blob);
+      const response = await postImage(authInfo!.token, formData);
+      localStorage.setItem('imageUrl', response.imageUrl);
+    }
   };
 
   // File Reader 이용하여 이미지 미리보기
