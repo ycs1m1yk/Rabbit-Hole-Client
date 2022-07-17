@@ -3,7 +3,7 @@ import React, {
   ChangeEvent, useContext, useEffect, useState, useCallback, KeyboardEvent, useRef,
 } from 'react';
 import styled, { keyframes } from 'styled-components';
-import { AiOutlineMinus, AiOutlineArrowLeft, AiOutlineSend } from 'react-icons/ai';
+import { AiOutlineMinus, AiOutlineImport, AiOutlineSend } from 'react-icons/ai';
 import { lighten } from 'polished';
 import { getMyPage } from '@lib/userApi';
 import { useQuery } from 'react-query';
@@ -243,7 +243,7 @@ export default function MaxChat({ minimizeHandler }:{minimizeHandler:()=>void}) 
         <div style={{ fontSize: '1.8rem' }}>
           {room
             && (
-            <AiOutlineArrowLeft
+            <AiOutlineImport
               style={{ marginRight: '1rem', cursor: 'pointer' }}
               onClick={backLobbyHandler}
             />
