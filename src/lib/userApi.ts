@@ -1,4 +1,5 @@
 import * as interfaces from '@interfaces/interface';
+import { json } from 'stream/consumers';
 
 // React Query의 fetcher function은 반드시 json의 Promise를 반환
 const BASE_URL = `${import.meta.env.VITE_API_BASE_URL}`;
@@ -19,11 +20,11 @@ export const deleteUser = (token: string) => fetch(`${BASE_URL}/users`, {
 }).then((res) => res.json());
 
 // User - PUT 정보수정
-export const updateUserProfile = (token: string, bodyData: interfaces.IRegisterFormProps) => fetch(`${BASE_URL}/users`, {
+export const updateUserProfile = (token: string, bodyData: interfaces.IUserPUTProps) => fetch(`${BASE_URL}/users`, {
   method: 'PUT',
   headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
   body: JSON.stringify(bodyData),
-}).then((res) => res.json());
+}).then((res) => ({ status: res.status, data: res.json() }));
 
 // User - GET 마이페이지
 export const getMyPage = (token: string) => fetch(`${BASE_URL}/users/mypage`, {

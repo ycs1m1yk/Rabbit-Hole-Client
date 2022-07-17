@@ -191,3 +191,12 @@ export interface IProjectPutParamsProps {
     thumbnail: string;
     tags: ITagsProps[];
 }
+
+export interface IUserPUTProps {
+    name?: string;
+    track?: string;
+    trackCardinalNumber?: string;
+    position?: string;
+    githubEmail?: string;
+    githubProfileUrl?: string;
+}

@@ -6,6 +6,8 @@ import Button from '@/components/button';
 import { useSetRecoilState } from 'recoil';
 import modalAtom from '@/recoil/modal/modalAtom';
 import { ModalTypes } from '@/interfaces/type';
+import { updateUserProfile } from '@/lib/userApi';
+import useToken from '@/hooks/useToken';
 
 const Container = styled.div`
   margin: 6rem 2rem 2rem 6rem;
@@ -52,14 +54,23 @@ interface IForm {
 }
 
 function MyPageProfile({ data }: any) {
+  const { authInfo } = useToken();
   const { register, handleSubmit } = useForm<IForm>();
   const setModal = useSetRecoilState(modalAtom);
   const profileImageUrl = localStorage.getItem('imageUrl');
 
   console.log(data);
 
-  const onValid = (formData: IForm) => {
-    console.log('Form Data', formData);
+  const onValid = async (formData: IForm) => {
+    // console.log('Form Data', formData);
+    const response = await updateUserProfile(authInfo!.token, formData);
+    const { status } = response;
+
+    if (status !== 200) {
+      alert('정보 수정에 오류가 발생했습니다. 다시 시도해주세요:(');
+    } else {
+      alert('성공적으로 회원정보가 수정되었습니다:)');
+    }
   };
 
   const handleModalOpen = (modalType: ModalTypes) => {
