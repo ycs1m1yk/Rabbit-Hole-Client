@@ -59,10 +59,7 @@ function MyPageProfile({ data }: any) {
   const setModal = useSetRecoilState(modalAtom);
   const profileImageUrl = localStorage.getItem('imageUrl');
 
-  console.log(data);
-
   const onValid = async (formData: IForm) => {
-    // console.log('Form Data', formData);
     const response = await updateUserProfile(authInfo!.token, formData);
     const { status } = response;
 
