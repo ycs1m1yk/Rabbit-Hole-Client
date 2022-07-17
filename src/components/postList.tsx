@@ -50,6 +50,18 @@ const Posts = styled.div`
   align-items: flex-start;
 `;
 
+const EmptyField = styled.p`
+  width: 70rem;
+  text-align: center;
+  margin-top: 23rem;
+  margin-bottom: 18rem;
+  color: ${({ theme }) => theme.palette.black};
+  opacity: 0.5;
+  font-size: 4rem;
+  font-weight: 700;
+`;
+
+
 const defaultProps = {
   type: 'default',
   title: '',
@@ -73,7 +85,7 @@ export default function PostList({
     if (typeof sortHandler === 'function') { sortHandler(sortType); }
   };
 
-  return (
+  return posts.length > 0 ? (
     <Container>
       {type === 'main' ? <Title>{title}</Title> : null}
       {type !== 'main'
@@ -91,7 +103,7 @@ export default function PostList({
             title={post.title}
             content={post.content}
             date={post.createdAt}
-            comment={123}
+            comment={post.comments?.length || 0}
             heart={post.likes.length}
             type={type}
             articleId={post._id}
@@ -101,7 +113,7 @@ export default function PostList({
         ))}
       </Posts>
     </Container>
-  );
+  ) : <EmptyField>일치하는 게시글이 없습니다.</EmptyField>;
 }
 
 PostList.defaultProps = defaultProps;

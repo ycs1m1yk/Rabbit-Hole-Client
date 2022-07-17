@@ -26,6 +26,10 @@ export interface ITagsProps {
     name: string;
 }
 
+export interface ICommentsProps {
+    commentId: string;
+}
+
 export type IArticleTypes = 'question' | 'free' | 'study' | string
 
 export interface IArticleProps {
@@ -39,6 +43,7 @@ export interface IArticleProps {
     views: number;
     carrots?: number;
     tags: ITagsProps[];
+    comments: ICommentsProps[];
     createdAt: string;
     updatedAt: string;
     __v: number;
