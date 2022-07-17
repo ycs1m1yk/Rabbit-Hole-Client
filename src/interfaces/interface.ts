@@ -47,9 +47,9 @@ export interface IArticleProps {
 export interface IArticleGetProps {
     [index: string]: any;
     articleType: IArticleTypes;
-    filter?: string;
-    page?: string;
-    perPage?: string;
+    filter: string;
+    page: string;
+    perPage: string;
 }
 
 export interface IArticlePostProps {
@@ -209,9 +209,9 @@ export interface ISearchProjectsByAuthorProps {
 
 export interface IProjectGetParamsProps {
     [index: string]: any;
-    filter?: string | null;
-    page?: number | null;
-    perPage?: number | null;
+    filter: string;
+    page: string;
+    perPage: string;
 }
 
 export interface IProjectPostParamsProps {
