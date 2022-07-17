@@ -51,6 +51,12 @@ export interface IArticleGetProps {
     perPage?: string;
 }
 
+export interface IArticleGetByIdProps {
+    [index: string]: any;
+    page?: number;
+    perPage?: number;
+}
+
 export interface IArticlePostProps {
     articleType: string;
     author: string;

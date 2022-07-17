@@ -27,7 +27,7 @@ const mypageList = [
   {
     id: 0,
     name: '개인정보 수정',
-    path: '?type=mypage',
+    path: '?type=profile',
     selected: true,
     icon: <AiOutlineEdit />,
   },
