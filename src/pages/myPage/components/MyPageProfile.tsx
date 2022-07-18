@@ -27,6 +27,7 @@ const InputTitle = styled.h2`
 
 const InputValue = styled.input`
   font-size: 1.5rem;
+  padding: 0.6rem;
   width: 100%;
   border: 1px solid ${({ theme }) => theme.palette.lightViolet};
   border-radius: 5px;
