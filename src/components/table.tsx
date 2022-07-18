@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { deleteProjectById } from '@/lib/projectApi';
 import useToken from '@/hooks/useToken';
+import { deleteArticleById } from '@/lib/articleApi';
 import Button from './button';
 
 // table
@@ -100,6 +101,20 @@ export default function Table({ type, items }:TableProps) {
         alert('프로젝트가 성공적으로 삭제되었습니다:)');
       }
     }
+
+    // 게시물 선택 삭제
+    if (type === 'article') {
+      if (checkedItems.length > 0) {
+        checkedItems.map(async (itemId: string) => {
+          const response = await deleteArticleById(authInfo!.token, itemId);
+          if (response.status >= 400) {
+            alert('게시물 삭제가 실패했습니다. 다시 시도해주세요:(');
+            window.location.reload();
+          }
+        });
+        alert('게시물이 성공적으로 삭제되었습니다:)');
+      }
+    }
   };
 
   return (
@@ -111,8 +126,9 @@ export default function Table({ type, items }:TableProps) {
         <colgroup>
           <col width="5%" />
           <col width="10%" />
-          <col width="65%" />
-          <col width="20%" />
+          <col width="30%" />
+          <col width="30%" />
+          <col width="25%" />
         </colgroup>
         )}
         {type === 'project' && (
@@ -128,7 +144,8 @@ export default function Table({ type, items }:TableProps) {
           {type === 'article' && (
             <tr>
               <HeadItem scope="col"><Checkbox type="checkbox" name="selectAll" id="" /></HeadItem>
-              <HeadItem scope="col">글 번호</HeadItem>
+              <HeadItem scope="col">연번</HeadItem>
+              <HeadItem scope="col">프로젝트 식별 번호</HeadItem>
               <HeadItem scope="col">제목</HeadItem>
               <HeadItem scope="col">작성 날짜</HeadItem>
             </tr>
@@ -137,7 +154,7 @@ export default function Table({ type, items }:TableProps) {
             <tr>
               <HeadItem scope="col"><Checkbox type="checkbox" name="selectAll" id="" /></HeadItem>
               <HeadItem scope="col">연번</HeadItem>
-              <HeadItem scope="col">프로젝트 식별 번호</HeadItem>
+              <HeadItem scope="col">게시물 식별 번호</HeadItem>
               <HeadItem scope="col">제목</HeadItem>
               <HeadItem scope="col">작성 날짜</HeadItem>
             </tr>
@@ -146,16 +163,17 @@ export default function Table({ type, items }:TableProps) {
         <TableBody>
           {
             items.length > 0 && items.map((item, i):React.ReactNode => {
-              // if (type === 'article') {
-              //   return (
-              //     <TableRow key={item.articleId} onClick={() => { clickHandler(item); }}>
-              //       <TableItem><input type="checkbox" name={item.articleId} id={item.articleId} /></TableItem>
-              //       <TableItem>{item.articleId}</TableItem>
-              //       <TableItem>{item.title}</TableItem>
-              //       <TableItem>{item.createdAt}</TableItem>
-              //     </TableRow>
-              //   );
-              // }
+              if (type === 'article') {
+                return (
+                  <TableRow key={item._id}>
+                    <TableItem><input type="checkbox" name={item._id} id={item._id} onChange={(e) => handleCheckBox(e, item._id)} /></TableItem>
+                    <TableItem onClick={() => clickHandler(item._id)}>{i + 1}</TableItem>
+                    <TableItem onClick={() => clickHandler(item._id)}>{item._id}</TableItem>
+                    <TableItem onClick={() => clickHandler(item._id)}>{item.title}</TableItem>
+                    <TableItem onClick={() => clickHandler(item._id)}>{item.createdAt.slice(0, 10)}</TableItem>
+                  </TableRow>
+                );
+              }
               if (type === 'project') {
                 return (
                   <TableRow key={item._id}>

@@ -51,7 +51,7 @@ function MyPageContainer({ type }: IMyPageTypeProps): any {
     case 'profile':
       return profileData && <MyPageProfile data={profileData} />;
     case 'articles':
-      return articleData && <MyPageBoard page={articlePage} perPage={articlePerPage} setPage={setArticlePage} setPerPage={setArticlePerPage} data={articleData} />;
+      return articleData && <MyPageBoard setPage={setArticlePage} setPerPage={setArticlePerPage} data={articleData} />;
     case 'projects':
       return projectsData && <MyPageProjects setPage={setProjectPage} setPerPage={setProjectPerPage} data={projectsData} />;
     default:
