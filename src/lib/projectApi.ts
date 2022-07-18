@@ -38,7 +38,7 @@ export const updateProjectById = (token: string, projectId: string, bodyData: in
     Authorization: `Bearer ${token}`,
   },
   body: JSON.stringify(bodyData),
-}).then((res) => res.json());
+}).then((res) => ({ status: res.status, data: res.json() }));
 
 // 프로젝트 삭제
 export const deleteProjectById = (token: string, projectId: string) => fetch(`${BASE_URL}/projects/${projectId}`, {

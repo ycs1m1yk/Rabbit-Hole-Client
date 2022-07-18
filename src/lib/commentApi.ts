@@ -29,7 +29,7 @@ export const deleteCommentById = (token: string, commentId: string) => fetch(`${
   headers: {
     Authorization: `Bearer ${token}`,
   },
-}).then((res) => res.json());
+}).then((res) => ({ status: res.status, data: res.json() }));
 
 // Comment - POST 댓글 좋아요
 export const increaseCommentLikes = (token: string, commentId: string) => fetch(`${BASE_URL}/comments/${commentId}/heart`, {

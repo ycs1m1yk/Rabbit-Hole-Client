@@ -18,7 +18,12 @@ import Button from '@/components/button';
 import { S3URL } from '@utils/regex';
 import useToken from '@/hooks/useToken';
 import { Editor } from '@toast-ui/react-editor';
-import { postComment } from '@/lib/commentApi';
+import { deleteCommentById, postComment } from '@/lib/commentApi';
+import ProjectForm from '@/components/forms/projectForm';
+import useModal from '@/hooks/useModal';
+import modalAtom from '@/recoil/modal/modalAtom';
+import { useSetRecoilState } from 'recoil';
+import { ModalTypes } from '@/interfaces/type';
 
 const ProjectDetailContainer = styled.div`
   padding: 3rem;
@@ -140,6 +145,7 @@ function ProjectDetail() {
   const editorRef = useRef<Editor>(null);
   const moveRef = useRef<null | HTMLDivElement>(null);
   const scrollRef = useRef<null | HTMLDivElement>(null);
+  const setModal = useSetRecoilState(modalAtom);
 
   const projectId = searchParams.get('projectId');
   let project;
@@ -148,7 +154,7 @@ function ProjectDetail() {
 
   if (projectId) {
     const { data } = useQuery<any>(['projectDetail', projectId], () => getProjectById(projectId));
-    console.log(data);
+
     if (data) {
       project = data.projectInfo;
       comments = data.commentList;
@@ -158,7 +164,7 @@ function ProjectDetail() {
 
   const [flag, setFlag] = useState<number>(0);
 
-  // Page viewpost 맨 아래, 맨 위로 이동
+  // Page view 맨 아래, 맨 위로 이동
   const handleBottomClick = (e: MouseEvent) => {
     if (e.pageY > 1000) {
       // 맨 위로 이동
@@ -187,7 +193,7 @@ function ProjectDetail() {
 
   // 프로젝트 삭제
   const handleProjectDelete = async () => {
-    if (confirm('정말 삭제하시겠습니다?')) {
+    if (confirm('정말 삭제하시겠습니까?')) {
       const response = await deleteProjectById(authInfo!.token, projectId as string);
       if (response.status === 200) {
         navigate('/projects?filter=date&page=1&perPage=8');
@@ -198,8 +204,21 @@ function ProjectDetail() {
     }
   };
 
+  // 프로젝트 수정
+  const handleProjectEdit = async (modalType: ModalTypes) => {
+    setModal(modalType);
+  };
+
+  // 댓글 삭제
+  const handleCommentDelete = async (commentId: string) => {
+    const response = await deleteCommentById(authInfo!.token, commentId);
+    if (response.status !== 200) {
+      alert('댓글 삭제 오류가 발생하였습니다. 다시 시도해주세요:(');
+    }
+    window.location.reload();
+  };
+
   useEffect(() => {
-    window.scrollTo(0, 0);
   }, [flag]);
 
   return project && (
@@ -234,7 +253,7 @@ function ProjectDetail() {
       </ProjectContentContainer>
       {authorId === authInfo?.userId && (
       <EditButtonContainer>
-        <Button onClick={() => console.log('수정')}>수정하기</Button>
+        <Button onClick={() => handleProjectEdit('Register')}>수정하기</Button>
         <Button onClick={handleProjectDelete}>삭제하기</Button>
       </EditButtonContainer>
       )}
@@ -257,6 +276,13 @@ function ProjectDetail() {
               </ReplyDate>
             </ReplyHeader>
             <MarkdownViewer text={comment.content} />
+            {
+              authInfo?.userId === comment.authorId && (
+              <ButtonContainer>
+                <Button size="small" onClick={() => handleCommentDelete(comment._id)}>삭제</Button>
+              </ButtonContainer>
+              )
+            }
           </ReplyContainer>
         ))}
       </ReplyWrapper>
