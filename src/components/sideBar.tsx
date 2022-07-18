@@ -16,27 +16,6 @@ interface SideBarProps{
     contentsList?: ContentProps[],
 }
 
-const boardListMock = [
-  {
-    id: 0,
-    name: '질문 & 답변',
-    path: '/',
-    selected: true,
-  },
-  {
-    id: 1,
-    name: '자유게시판',
-    path: '/',
-    selected: false,
-  },
-  {
-    id: 2,
-    name: '스터디 모집',
-    path: '/',
-    selected: false,
-  },
-];
-
 const Container = styled.aside`
     font-size: 1.6rem;
     min-width: 13rem;

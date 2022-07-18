@@ -59,6 +59,27 @@ const SelectBoxWrapper = styled.div`
   }
 `;
 
+const boardList = [
+  {
+    id: 0,
+    name: '질문 & 답변',
+    path: '/board?articleType=question&filter=views&page=1&perPage=10',
+    selected: true,
+  },
+  {
+    id: 1,
+    name: '자유게시판',
+    path: '/board?articleType=free&filter=views&page=1&perPage=10',
+    selected: false,
+  },
+  {
+    id: 2,
+    name: '스터디 모집',
+    path: '/board?articleType=study&filter=views&page=1&perPage=10',
+    selected: false,
+  },
+];
+
 export default function Board() {
   const setModalState = useSetRecoilState(modalAtom);
   const { authInfo } = useToken();
@@ -118,7 +139,7 @@ export default function Board() {
 
   return isSuccess || isSearchPage ? (
     <BoardContainer>
-      <SideBar type="board" />
+      <SideBar type="board" contentsList={boardList} />
       <BoardWrapper>
         <Search
           articleQuery={query}
