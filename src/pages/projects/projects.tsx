@@ -193,6 +193,7 @@ export default function Projects() {
       <PaginationContainer>
         <Pagination
           length={totalPage}
+          start={page ? +page - 1 : 0}
           handler={(pageNumber) => handleNavigate(pageNumber)}
         />
       </PaginationContainer>
