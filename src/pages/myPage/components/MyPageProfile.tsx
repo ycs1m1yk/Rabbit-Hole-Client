@@ -52,6 +52,7 @@ const ProfileImage = styled.img`
   width: 150px;
   height: 150px;
   border-radius: 50%;
+  box-shadow: 4px 4px 10px ${({ theme }): string => theme.palette.borderGray};
 `;
 
 const ButtonConatiner = styled.div`
