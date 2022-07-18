@@ -3,17 +3,19 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useSetRecoilState } from 'recoil';
 import { useSearchParams } from 'react-router-dom';
+import { useQuery } from 'react-query';
 
 import Button from '@/components/button';
 import Search from '@/components/search';
 import Card from '@/components/card';
 import Pagination from '@/components/pagination';
+import useToken from '@/hooks/useToken';
+import SelectBox from '@/components/selectBox';
+import Loading from '@/components/loading';
+
 import modalAtom from '@/recoil/modal/modalAtom';
 import { IProjectGetParamsProps, IProjectProps } from '@/interfaces/interface';
 import { getAllProjects } from '@/lib/projectApi';
-import useToken from '@/hooks/useToken';
-import SelectBox from '@/components/selectBox';
-import { useQuery } from 'react-query';
 
 const ProjectContainer = styled.div`
   padding: 3rem;
@@ -90,22 +92,21 @@ export default function Projects() {
   const setModal = useSetRecoilState(modalAtom);
 
   const { authInfo } = useToken();
-  const [perPage, setPerPage] = useState<number>(8);
-
-  /*
-    초기 진입 시 정렬 기본값
-      filter = 'date'
-      page = 1
-      perPage = 8
-  */
+  const [isSearchPage, setIsSearchPage] = useState<boolean>(false);
+  const [totalPage, setTotalPage] = useState<number>(0);
+  const [searchResult, setSearchResult] = useState<IProjectProps[] | []>([]);
   const [searchParams, setSearchParams] = useSearchParams();
-  const page = Number(searchParams.get('page'));
-  const filter = searchParams.get('filter');
+
+  const [perPage, setPerPage] = useState<string>('8');
+  const filter = searchParams.get('filter') ?? 'date';
+  const page = searchParams.get('page') ?? '1';
 
   const params: IProjectGetParamsProps = { filter, page, perPage };
 
-  const { data: projects, refetch } = useQuery(['project', 'gallery'], () => getAllProjects(params), {
+  const { isSuccess, data: projects, refetch } = useQuery(['project', 'gallery'], () => getAllProjects(params), {
+    enabled: !isSearchPage,
     staleTime: 180000,
+    onSuccess: ({ totalPage: tp }) => setTotalPage(tp),
   });
 
   // Modal Control
@@ -144,12 +145,17 @@ export default function Projects() {
     refetch();
   }, [filter, page, perPage]);
 
-  return (
+  return isSuccess || isSearchPage ? (
     <ProjectContainer>
       <ProjectHeader>
         프로젝트 갤러리
         <SearchContainer>
-          <Search width={400} height={35} />
+          <Search
+            projectQuery={params}
+            setSearchResult={setSearchResult}
+            setIsSearchPage={setIsSearchPage}
+            setTotalPage={setTotalPage}
+          />
         </SearchContainer>
         {
             authInfo?.token && (
@@ -163,11 +169,11 @@ export default function Projects() {
         <Alignment onClick={handleSortByDate}>최신순</Alignment>
         <Alignment onClick={handleSortByView}>인기순</Alignment>
         <SelectBoxWrapper className="selectbox-perpage">
-          <SelectBox options={[4, 8, 12, 16]} defaultValue="페이지당 개수" selectedOption={perPage} setSelectedOption={setPerPage} requestFunc={handlePerPage} width={70} type="register" />
+          <SelectBox options={['4', '8', '12', '16']} defaultValue="페이지당 개수" selectedOption={perPage} setSelectedOption={setPerPage} requestFunc={handlePerPage} width={70} type="register" />
         </SelectBoxWrapper>
       </Alignments>
       <Content>
-        {projects?.projectList.map((project: IProjectProps) => (
+        {(isSearchPage ? searchResult : projects.projectList).map((project: IProjectProps) => (
           <Card
             key={project._id}
             projectId={project._id}
@@ -186,10 +192,10 @@ export default function Projects() {
       </Content>
       <PaginationContainer>
         <Pagination
-          length={projects?.totalPage}
+          length={totalPage}
           handler={(pageNumber) => handleNavigate(pageNumber)}
         />
       </PaginationContainer>
     </ProjectContainer>
-  );
+  ) : <Loading />;
 }
