@@ -128,7 +128,7 @@ export default function Search({
   };
 
   useQuery<any, Error>(
-    ['articleList', debouncedInput, articleQuery],
+    ['articleList', inputType, debouncedInput, articleQuery],
     () => {
       const query = articleQuery as IArticleGetProps;
       switch (inputType) {
@@ -152,7 +152,7 @@ export default function Search({
   );
 
   useQuery<any, Error>(
-    ['projectList', debouncedInput, projectQuery],
+    ['articleList', inputType, debouncedInput, projectQuery],
     () => {
       const query = projectQuery as IProjectGetParamsProps;
       switch (inputType) {
@@ -167,8 +167,8 @@ export default function Search({
     },
     {
       enabled: !isEmptyObj(projectQuery) && debouncedInput !== '',
-      onSuccess: ({ projectList, totalPage }) => {
-        setSearchResult(projectList);
+      onSuccess: ({ articleList, totalPage }) => {
+        setSearchResult(articleList);
         setTotalPage(totalPage);
       },
       onError: (err) => console.log(err),
