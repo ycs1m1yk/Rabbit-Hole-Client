@@ -1,16 +1,12 @@
 /* eslint-disable max-len */
 import React, { useEffect, useState } from 'react';
 
-import { getAllArticle } from '@/lib/articleApi';
-import { getAllProjects } from '@/lib/projectApi';
 import { getArticleByUserId, getMyPage, getProjectByUserId } from '@/lib/userApi';
-import { IArticleProps, IProjectProps, IUserProps } from '@/interfaces/interface';
 import useToken from '@/hooks/useToken';
 import { useQuery } from 'react-query';
 import MyPageBoard from './components/MyPageBoard';
 import MyPageProjects from './components/MyPageProjects';
 import MyPageProfile from './components/MyPageProfile';
-import MyPageMentoring from './components/MyPageMentoring';
 
 interface IMyPageTypeProps {
   [index: string] : any;
