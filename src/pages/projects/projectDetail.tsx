@@ -5,7 +5,7 @@ import { useQuery } from 'react-query';
 import { useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 import LogoImage from '@assets/images/rabbit-hole-logo-300.jpg';
-import checkEmptyArray from '@utils/func';
+import { isEmptyArray } from '@utils/func';
 import MarkdownViewer from '@/components/markdownViewer';
 import { getProjectById } from '@/lib/projectApi';
 import { ICommentProps, ITagsProps } from '@/interfaces/interface';
@@ -163,7 +163,7 @@ function ProjectDetail() {
           <ProjectInfoTitle>작성자</ProjectInfoTitle>
           <ProjectAuthor>{project.author}</ProjectAuthor>
           {
-            checkEmptyArray(project.tags) ? null : (
+            isEmptyArray(project.tags) ? null : (
               <ProjectTagConatiner>
                 <ProjectInfoTitle>태그</ProjectInfoTitle>
                 {project.tags.map((tag: ITagsProps, i: number) => <ProjectTag key={String(i) + tag.name}>{tag.name}</ProjectTag>)}

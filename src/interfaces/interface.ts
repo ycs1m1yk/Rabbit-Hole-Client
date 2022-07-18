@@ -25,6 +25,10 @@ export interface ITagsProps {
     name: string;
 }
 
+export interface ICommentsProps {
+    commentId: string;
+}
+
 export type IArticleTypes = 'question' | 'free' | 'study' | string
 
 export interface IArticleProps {
@@ -38,6 +42,7 @@ export interface IArticleProps {
     views: number;
     carrots?: number;
     tags: ITagsProps[];
+    comments: ICommentsProps[];
     createdAt: string;
     updatedAt: string;
     __v: number;
@@ -46,9 +51,9 @@ export interface IArticleProps {
 export interface IArticleGetProps {
     [index: string]: any;
     articleType: IArticleTypes;
-    filter?: string;
-    page?: string;
-    perPage?: string;
+    filter: string;
+    page: string;
+    perPage: string;
 }
 
 export interface IArticleGetByIdProps {
@@ -161,23 +166,62 @@ export interface IRegisterFormProps {
     githubAvatar: string;
 }
 
-export interface ISearchArticleByAuthorProps {
-    [index: string]: string;
-    author: string;
-    type: IArticleTypes;
+export interface ISearchArticlesByTitleProps {
+    [index: string]: IArticleTypes;
+    title: string;
+    articleType: IArticleTypes;
+    filter: string;
+    page: string;
+    perPage: string;
 }
 
-export interface ISearchArticleByTitleProps {
+export interface ISearchArticlesByUserIdProps {
+    [index: string]: IArticleTypes;
+    userId: string;
+    articleType: IArticleTypes;
+    filter: string;
+    page: string;
+    perPage: string;
+}
+
+export interface ISearchArticlesByAuthorProps {
+    [index: string]: IArticleTypes;
+    author: string;
+    articleType: IArticleTypes;
+    filter: string;
+    page: string;
+    perPage: string;
+}
+
+export interface ISearchProjectsByTitleProps {
     [index: string]: string;
     title: string;
-    type: IArticleTypes;
+    filter: string;
+    page: string;
+    perPage: string;
+}
+
+export interface ISearchProjectsByUserIdProps {
+    [index: string]: string;
+    userId: string;
+    filter: string;
+    page: string;
+    perPage: string;
+}
+
+export interface ISearchProjectsByAuthorProps {
+    [index: string]: string;
+    author: string;
+    filter: string;
+    page: string;
+    perPage: string;
 }
 
 export interface IProjectGetParamsProps {
     [index: string]: any;
-    filter?: string | null;
-    page?: number;
-    perPage?: number;
+    filter: string;
+    page: string;
+    perPage: string;
 }
 
 export interface IProjectPostParamsProps {

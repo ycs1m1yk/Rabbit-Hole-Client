@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { lighten } from 'polished';
 import styled from 'styled-components';
 import Logo from '@components/logo';
-import Search from '@components/search';
 
 import modalAtom from '@/recoil/modal/modalAtom';
 import { useSetRecoilState } from 'recoil';
@@ -36,7 +35,7 @@ const HeaderRight = styled.div`
   display: flex;
   align-items: center;
   
-  & :not(:first-child) {
+  & > *:not(:first-child) {
     margin-left: 2rem;
   }
 `;
@@ -81,8 +80,6 @@ export default function Header() {
   const { authInfo, setLogout } = useToken(); // 로그인 상태 확인
 
   const handleClick = useCallback((e: MouseEvent) => {
-    e.preventDefault();
-
     const target = e.target as HTMLElement;
     const anchorTarget = target.closest('a') || undefined;
 
@@ -108,7 +105,6 @@ export default function Header() {
         <StyledLink to="/projects?filter=date&page=1&perPage=8">프로젝트 갤러리</StyledLink>
       </Nav>
       <HeaderRight>
-        <Search />
         {
           authInfo // 로그인 상태 조건부 렌더링
             ? (

@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useQuery } from 'react-query';
+import { useSearchParams } from 'react-router-dom';
 
 import SideBar from '@components/sideBar';
 import Search from '@components/search';
@@ -8,14 +9,14 @@ import SelectBox from '@components/selectBox';
 import Button from '@components/button';
 import PostList from '@components/postList';
 import Pagination from '@components/pagination';
+import Loading from '@components/loading';
 
-import modalAtom from '@/recoil/modal/modalAtom';
+import modalAtom from '@recoil/modal/modalAtom';
 import { useSetRecoilState } from 'recoil';
 
-import { IArticleGetProps } from '@/interfaces/interface';
-import { getAllArticle } from '@/lib/articleApi';
-import useToken from '@/hooks/useToken';
-import { useSearchParams } from 'react-router-dom';
+import { IArticleGetProps, IArticleProps } from '@interfaces/interface';
+import { getAllArticle } from '@lib/articleApi';
+import useToken from '@hooks/useToken';
 
 const BoardContainer = styled.div`
   display: flex;
@@ -45,6 +46,9 @@ const BoardWrapper = styled.div`
     position: absolute;
     top: 9rem;
   }
+  & > div:first-child {
+    align-self: flex-end;
+  }
 `;
 
 const SelectBoxWrapper = styled.div`
@@ -55,68 +59,76 @@ const SelectBoxWrapper = styled.div`
   }
 `;
 
-// TODO:
-/**
- * - [x] Modal 연결
- * - [x] articleForm 작성
- * - [x] perPage selectBox 추가
- * - [x] getAllAtricles로 게시글 뿌려주기
- * - [x] 최신순 추천순 정렬
- * - [x] 자신이 좋아요한 게시글 빨강하트
- * - [x] 페이지네이션 이동
- * - [] 페이지네이션 캐싱: react-query
- * - [x] 로그인 상태 조건부 랜더링
- */
+const boardList = [
+  {
+    id: 0,
+    name: '질문 & 답변',
+    path: '/board?articleType=question&filter=views&page=1&perPage=10',
+    selected: true,
+  },
+  {
+    id: 1,
+    name: '자유게시판',
+    path: '/board?articleType=free&filter=views&page=1&perPage=10',
+    selected: false,
+  },
+  {
+    id: 2,
+    name: '스터디 모집',
+    path: '/board?articleType=study&filter=views&page=1&perPage=10',
+    selected: false,
+  },
+];
+
 export default function Board() {
   const setModalState = useSetRecoilState(modalAtom);
   const { authInfo } = useToken();
-  const [isReady, setIsReady] = useState<boolean>(false);
   const [searchParams, setSearchParams] = useSearchParams();
-  const [perPage, setPerPage] = useState<number>(10);
-  const [query, setQuery] = useState<IArticleGetProps>({ articleType: 'question' });
+
+  const [isSearchPage, setIsSearchPage] = useState<boolean>(false);
+  const [totalPage, setTotalPage] = useState<number>(0);
+  const [perPage, setPerPage] = useState<string>('10');
+  const [query, setQuery] = useState<IArticleGetProps>({
+    articleType: 'question', filter: 'date', page: '1', perPage: '10',
+  });
+  const [searchResult, setSearchResult] = useState<IArticleProps[] | []>([]);
 
   const handleModalOpen = useCallback(() => {
     setModalState('Posting');
   }, []);
 
-  const handleSort = (sortType: string) => {
+  const handleSort = useCallback((sortType: string) => {
     searchParams.set('filter', sortType);
     searchParams.set('page', '1');
     setSearchParams(searchParams);
-  };
+  }, []);
 
   const handlePage = useCallback((idx: number) => {
     searchParams.set('page', `${idx + 1}`);
     setSearchParams(searchParams);
   }, []);
 
-  const handlePerPage = useCallback((perPageValue: number) => {
-    searchParams.set('perPage', `${perPageValue}`);
+  const handlePerPage = useCallback((perPageValue: string) => {
+    searchParams.set('perPage', perPageValue);
     searchParams.set('page', '1');
-    setSearchParams(searchParams);
+    setSearchParams(searchParams, { replace: true });
   }, []);
 
   const {
-    isSuccess, isError, data, error,
+    isSuccess, isError, data, error, refetch,
   } = useQuery<any, Error>(
     ['articleList', query],
     () => getAllArticle(query),
     {
+      enabled: !isSearchPage,
       staleTime: 180000,
+      onSuccess: ({ totalPage: tp }) => setTotalPage(tp),
     },
   );
 
   useEffect(() => {
-    if (isReady) {
-      searchParams.forEach((v, k) => setQuery((q) => ({ ...q, [k]: v })));
-    } else {
-      searchParams.set('articleType', 'question');
-      searchParams.set('filter', 'date');
-      searchParams.set('page', '1');
-      searchParams.set('perPage', '10');
-      setSearchParams(searchParams);
-      setIsReady(true);
-    }
+    searchParams.forEach((v, k) => setQuery((q) => ({ ...q, [k]: v })));
+    refetch();
   }, [searchParams]);
 
   if (isError) {
@@ -125,14 +137,19 @@ export default function Board() {
     );
   }
 
-  return isReady && isSuccess && (
+  return isSuccess || isSearchPage ? (
     <BoardContainer>
-      <SideBar type="board" />
+      <SideBar type="board" contentsList={boardList} />
       <BoardWrapper>
-        <Search width={800} />
+        <Search
+          articleQuery={query}
+          setSearchResult={setSearchResult}
+          setIsSearchPage={setIsSearchPage}
+          setTotalPage={setTotalPage}
+        />
         <SelectBoxWrapper className="selectbox-perpage" data-user-loged-in={!!authInfo}>
           <SelectBox
-            options={[5, 10, 15, 20]}
+            options={['5', '10', '15', '20']}
             defaultValue="페이지당 개수"
             selectedOption={perPage}
             setSelectedOption={setPerPage}
@@ -143,13 +160,13 @@ export default function Board() {
         </SelectBoxWrapper>
         {authInfo
       && <Button className="button-posting" size="medium" onClick={handleModalOpen}>게시글 등록</Button>}
-        <PostList posts={data.articleList} sortHandler={handleSort} />
+        <PostList posts={isSearchPage ? searchResult : data.articleList} sortHandler={handleSort} />
         <Pagination
-          length={data.totalPage}
+          length={totalPage}
           start={query.page ? +(query.page) - 1 : 0}
           handler={(pageIdx) => handlePage(pageIdx)}
         />
       </BoardWrapper>
     </BoardContainer>
-  );
+  ) : <Loading />;
 }

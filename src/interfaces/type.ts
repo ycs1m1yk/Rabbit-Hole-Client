@@ -6,4 +6,5 @@ export type AuthTypes = {
   token: string,
   expire: string,
   userId: string,
+  carrots: number,
 } | null
