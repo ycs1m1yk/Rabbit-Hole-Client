@@ -15,14 +15,6 @@ export interface ArticleProps{
 export default function Article({ article }: ArticleProps) {
   // const auth = React.useMemo(() => useRecoilValue(authAtom), [useRecoilValue(authAtom)]);
   const auth = useRecoilValue(authAtom);
-  const convertDateFormat = React.useCallback((date:Date) => {
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const monthData = month >= 10 ? month : `0${month}`;
-    const day = date.getDate();
-    const dayData = day >= 10 ? day : `0${day}`;
-    return [year, monthData, dayData].join('/');
-  }, []);
   const matchLike = React.useCallback(() => {
     const Likes = article.likes?.find((like) => like.userId === auth?.userId);
     return Likes;
@@ -43,7 +35,7 @@ export default function Article({ article }: ArticleProps) {
           </styles.TitleBox>
           <styles.InfoBox>
             <styles.Author>{article.author}</styles.Author>
-            <styles.DateField>{convertDateFormat(article.createdAt)}</styles.DateField>
+            <styles.DateField>{article.createdAt}</styles.DateField>
           </styles.InfoBox>
         </styles.InfoHead>
         <styles.Main>

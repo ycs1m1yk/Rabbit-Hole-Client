@@ -15,15 +15,6 @@ interface AnswerProps{
 export default function Answer({ comment }: AnswerProps) {
   // const auth = React.useMemo(() => useRecoilValue(authAtom), [useRecoilValue(authAtom)]);
   const auth = useRecoilValue(authAtom);
-  const convertDateFormat = React.useCallback((date:Date) => {
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const monthData = month >= 10 ? month : `0${month}`;
-    const day = date.getDate();
-    const dayData = day >= 10 ? day : `0${day}`;
-    return [year, monthData, dayData].join('/');
-  }, []);
-
   const matchLike = React.useCallback(() => {
     const Likes = comment.likes.find((like) => like.userId === auth?.userId);
     return Likes;
@@ -41,7 +32,7 @@ export default function Answer({ comment }: AnswerProps) {
             {comment.isAdopted && <BsFillBookmarkCheckFill size={30} />}
             <styles.Profile>{comment.author}</styles.Profile>
           </styles.ProfileBox>
-          <styles.CreateDate>{convertDateFormat(comment.createdAt)}</styles.CreateDate>
+          <styles.CreateDate>{comment.createdAt}</styles.CreateDate>
         </styles.InfoHeadBox>
       </styles.InfoHead>
       <styles.Main>
