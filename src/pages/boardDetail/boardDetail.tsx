@@ -1,9 +1,11 @@
 // eslint-disable-next-line no-underscore-dangle
+// eslint-disable-next-line no-alert
 import React, { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import * as styles from '@pages/boardDetail/styled';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { Editor } from '@toast-ui/react-editor';
 import authAtom from '@/recoil/auth/authAtom';
 // import { getArticleById } from '@/lib/api';
 import MarkdownEditor from '@/components/markdownEditor';
@@ -11,39 +13,49 @@ import Button from '@/components/button';
 import Article from '@/pages/boardDetail/components/Article';
 import Answer from '@/pages/boardDetail/components/Answer';
 import { getArticleById } from '@/lib/articleApi';
+import useToken from '@/hooks/useToken';
+import { postComment } from '@/lib/commentApi';
+import { ICommentProps } from '@/interfaces/interface';
 
 export default function BoardDetail() {
+  const queryClient = useQueryClient();
   const auth = useRecoilValue(authAtom);
-  const editor = React.useRef(null);
+  const editor = React.useRef<Editor>(null);
   const [query] = useSearchParams();
   const articleId = query.get('id');
-  let article;
-  let comments;
-  if (articleId) {
-    const { data } = useQuery<any>(['projectDetail', articleId], () => getArticleById(articleId));
-    if (data) {
-      article = data.articleInfo;
-      comments = data.commentList;
-    }
+  if (!articleId) {
+    return (<styles.EmptyField>일치하는 게시글이 없습니다.</styles.EmptyField>);
   }
+  const { authInfo } = useToken();
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
-  // const handleAnswer = React.useCallback(() => {
-  //   const content = editor.current.getInstance().getMarkdown();
-  //   const token = useToken();
-  //   const data = {
-  //     commentType: article.articleType,
-  //     content,
-  //   };
-    // 댓글 POST API
-    // postComment(token, data, article._id);
-  // }, []);
+
+  const { data } = useQuery<any>(['boardDetail', articleId], () => getArticleById(articleId), {
+    enabled: !!articleId,
+    select: (fetchData) => ({ article: fetchData.articleInfo, comments: fetchData.commentList }),
+  });
+
+  const handleAnswer = React.useCallback(async (articleType: string) => {
+    try {
+      const content = editor.current?.getInstance().getMarkdown();
+      const postParams = { commentType: articleType, content };
+      await postComment(authInfo!.token, articleId as string, postParams);
+      editor.current?.getInstance().insertText('');
+      queryClient.invalidateQueries();
+    } catch (e: any) {
+      alert('문제가 발생했습니다. 다시  시도해주세요:(');
+    }
+  }, []);
+  if (!data || (!data.article && !data.comments)) {
+    return (<styles.EmptyField>일치하는 게시글이 없습니다.</styles.EmptyField>)
+  }
   return (
     <styles.Container>
-      {article && <Article article={article} />}
+      {data && <Article article={data.article} />}
       <styles.AnswerSection>
-        {comments && comments.map((comment) => (
+        {data && data.comments.map((comment:ICommentProps) => (
           // eslint-disable-next-line no-underscore-dangle
           <Answer key={comment._id} comment={comment} />
         ))}
@@ -60,12 +72,11 @@ export default function BoardDetail() {
             <MarkdownEditor ref={editor} />
           </styles.Main>
           <styles.SubInfo>
-            {/* <Button onClick={() => { handleAnswer(); }}>답변하기</Button> */}
+            <Button onClick={() => handleAnswer(data.article.articleType)}>답변하기</Button>
           </styles.SubInfo>
         </styles.AnswerBox>
         )}
       </styles.AnswerSection>
     </styles.Container>
   );
-
 }

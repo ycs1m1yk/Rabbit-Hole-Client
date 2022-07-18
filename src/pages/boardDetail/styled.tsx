@@ -138,3 +138,14 @@ export const ArticleSection = styled.section`
   flex-direction: column;
   align-items: center;
 `;
+
+export const EmptyField = styled.p`
+width: 70rem;
+text-align: center;
+margin-top: 23rem;
+margin-bottom: 18rem;
+color: ${({ theme }) => theme.palette.black};
+opacity: 0.5;
+font-size: 4rem;
+font-weight: 700;
+`;
