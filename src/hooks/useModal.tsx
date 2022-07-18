@@ -7,6 +7,7 @@ import Modal from '@/components/modal';
 import Login from '@/pages/auth/login';
 import ProjectForm from '@/components/forms/projectForm';
 import ArticleForm from '@/pages/board/components/articleForm';
+import EditProfileForm from '@/pages/myPage/components/EditProfileForm';
 
 export default function useModal() {
   const getModalPage = () => {
@@ -30,6 +31,12 @@ export default function useModal() {
         return (
           <Modal>
             <ArticleForm />
+          </Modal>
+        );
+      case 'ProfileImage':
+        return (
+          <Modal>
+            <EditProfileForm />
           </Modal>
         );
       default:

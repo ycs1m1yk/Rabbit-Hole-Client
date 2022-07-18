@@ -1,12 +1,14 @@
 import React, { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
+import { useNavigate } from 'react-router-dom';
 import authAtom from '@/recoil/auth/authAtom';
 
 export default function useToken() {
   const [authInfo, setAuthInfo] = useRecoilState(authAtom);
+  const navigate = useNavigate();
   const setLogout = () => {
     setAuthInfo(null);
-    window.location.reload();
+    navigate('/');
   };
   useEffect(() => {
     if (authInfo) {

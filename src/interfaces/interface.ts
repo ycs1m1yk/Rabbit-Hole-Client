@@ -11,10 +11,9 @@ export interface IUserProps {
     githubProfileUrl: string;
     githubAvatar: string;
     carrots?: number;
-    refreshToken: string;
     role?: string;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt: string;
+    updatedAt: string;
     __v: number;
 }
 
@@ -55,6 +54,12 @@ export interface IArticleGetProps {
     filter: string;
     page: string;
     perPage: string;
+}
+
+export interface IArticleGetByIdProps {
+    [index: string]: any;
+    page?: number;
+    perPage?: number;
 }
 
 export interface IArticlePostProps {
@@ -235,4 +240,13 @@ export interface IProjectPutParamsProps {
     description: string;
     thumbnail: string;
     tags: ITagsProps[];
+}
+
+export interface IUserPUTProps {
+    name?: string;
+    track?: string;
+    trackCardinalNumber?: string;
+    position?: string;
+    githubEmail?: string;
+    githubProfileUrl?: string;
 }

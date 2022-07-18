@@ -7,6 +7,8 @@ import 'prismjs/themes/prism.css';
 import '@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight.css';
 import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';
 import Prism from 'prismjs';
+import postImage from '@lib/imageApi';
+import useToken from '@/hooks/useToken';
 
 interface EditorProps{
   height?:string
@@ -22,6 +24,8 @@ const defaultProps = {
  */
 
 const MarkdownEditor = forwardRef<Editor, EditorProps>((props, ref) => {
+  const { authInfo } = useToken();
+
   // 이상한 default value bug 제거
   useEffect(() => {
     const bug = document.querySelector('.ProseMirror');
@@ -35,9 +39,27 @@ const MarkdownEditor = forwardRef<Editor, EditorProps>((props, ref) => {
       height={props.height}
       plugins={[[codeSyntaxHighlight, { highlighter: Prism }]]}
       hooks={{
-        addImageBlobHook(blob, callback) {
-          console.log(blob);
-          callback(import.meta.env.VITE_IMAGE_SERVER_URL, '티모');
+        async addImageBlobHook(blob, callback) {
+          const formData = new FormData();
+          let message;
+          let name = '업로드 실패';
+          if (blob instanceof File) {
+            try {
+              if (blob.size > 5242880) {
+                throw new Error('5MB 이하의 사진을 업로드해주세요.');
+              }
+              if (blob.type !== 'image/jpeg' && blob.type !== 'image/jpg' && blob.type !== 'image/gif' && blob.type !== 'image/png') {
+                throw new Error('지원하지 않는 이미지 타입입니다.');
+              }
+              formData.set('image', blob);
+              const response = await postImage(authInfo!.token, formData);
+              message = response.imageUrl;
+              name = blob.name;
+            } catch (error:any) {
+              message = error.message;
+            }
+          }
+          callback(message, name);
         },
       }}
     />
