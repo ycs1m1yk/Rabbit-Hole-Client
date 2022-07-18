@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { lighten } from 'polished';
 import styled from 'styled-components';
 import Logo from '@components/logo';
-import Search from '@components/search';
 
 import modalAtom from '@/recoil/modal/modalAtom';
 import { useSetRecoilState } from 'recoil';
@@ -106,7 +105,6 @@ export default function Header() {
         <StyledLink to="/projects?filter=date&page=1&perPage=8">프로젝트 갤러리</StyledLink>
       </Nav>
       <HeaderRight>
-        <Search />
         {
           authInfo // 로그인 상태 조건부 렌더링
             ? (
