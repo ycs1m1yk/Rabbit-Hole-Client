@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import SideBar from '@/components/sideBar';
 import useToken from '@/hooks/useToken';
 import {
-  AiOutlineEdit, AiOutlineUser, AiOutlineTeam, AiOutlineProject,
+  AiOutlineEdit, AiOutlineUser, AiOutlineTeam, AiOutlineProject, AiOutlineUnlock,
 } from 'react-icons/ai';
 import MyPageContent from './myPageContainer';
 
@@ -25,28 +25,28 @@ const VerticalDivider = styled.div`
 
 const mypageList = [
   {
-    id: 0,
+    id: 1,
     name: '개인정보 수정',
     path: '?type=profile',
     selected: true,
-    icon: <AiOutlineEdit />,
-  },
-  {
-    id: 1,
-    name: '게시글 관리',
-    path: '?type=articles',
-    selected: false,
     icon: <AiOutlineUser />,
   },
   {
     id: 2,
+    name: '게시글 관리',
+    path: '?type=articles',
+    selected: false,
+    icon: <AiOutlineEdit />,
+  },
+  {
+    id: 3,
     name: '멘토링 관리',
     path: '?type=mentoring',
     selected: false,
     icon: <AiOutlineTeam />,
   },
   {
-    id: 3,
+    id: 4,
     name: '프로젝트 관리',
     path: '?type=projects',
     selected: false,
@@ -54,15 +54,24 @@ const mypageList = [
   },
 ];
 
+const admin = {
+  id: 0,
+  name: '관리자 모드',
+  path: '/admin?type=user',
+  selected: false,
+  icon: <AiOutlineUnlock />,
+};
+
 function MyPage() {
   const [searchParams] = useSearchParams();
   const myPageType = searchParams.get('type');
-  const { authInfo } = useToken();
+  const { authInfo } = useToken(); // login url에서 role 요청
 
   return (
     <MyPageContainer>
       <SidebarContainer>
-        <SideBar type="myPage" contentsList={mypageList} />
+        {/* role에 따라 동적으로 */}
+        <SideBar type="myPage" contentsList={[admin, ...mypageList]} />
       </SidebarContainer>
       <VerticalDivider />
       {myPageType !== null && authInfo !== null
