@@ -48,10 +48,12 @@ export default function Article({ article }: ArticleProps) {
               : <AiOutlineHeart size={20} /> }
             <styles.LikeCount>{article.likes ? article.likes.length : 0}</styles.LikeCount>
           </styles.LikeBox>
-          <styles.ButtonBox>
-            <Button onClick={() => { handleUpdate(); }}>수정하기</Button>
-            <Button onClick={() => { handleDelete(); }}>삭제하기</Button>
-          </styles.ButtonBox>
+          {auth && article.authorId === auth.userId && (
+            <styles.ButtonBox>
+              <Button onClick={() => { handleUpdate(); }}>수정하기</Button>
+              <Button onClick={() => { handleDelete(); }}>삭제하기</Button>
+            </styles.ButtonBox>
+          )}
         </styles.SubInfo>
       </styles.ArticleContainer>
     </styles.ArticleSection>
