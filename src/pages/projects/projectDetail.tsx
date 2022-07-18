@@ -144,12 +144,15 @@ function ProjectDetail() {
   const projectId = searchParams.get('projectId');
   let project;
   let comments;
+  let authorId;
 
   if (projectId) {
     const { data } = useQuery<any>(['projectDetail', projectId], () => getProjectById(projectId));
+    console.log(data);
     if (data) {
       project = data.projectInfo;
       comments = data.commentList;
+      authorId = data.projectInfo.authorId;
     }
   }
 
@@ -229,10 +232,12 @@ function ProjectDetail() {
           </ProjectDescription>
         </ProjectInfo>
       </ProjectContentContainer>
+      {authorId === authInfo?.userId && (
       <EditButtonContainer>
         <Button onClick={() => console.log('수정')}>수정하기</Button>
         <Button onClick={handleProjectDelete}>삭제하기</Button>
       </EditButtonContainer>
+      )}
       <ProjectDetailHeader>
         답글(
         {comments.length}
