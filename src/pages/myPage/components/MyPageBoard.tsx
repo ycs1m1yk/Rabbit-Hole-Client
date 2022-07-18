@@ -22,6 +22,16 @@ const PaginationContainer = styled.div`
   text-align: center;
 `;
 
+const EmptyField = styled.p`
+  text-align: center;
+  margin-top: 23rem;
+  margin-bottom: 18rem;
+  color: ${({ theme }) => theme.palette.black};
+  opacity: 0.5;
+  font-size: 4rem;
+  font-weight: 700;
+`;
+
 interface IMyPageArticleProps {
   data: {articleList: IArticleProps[], totalPage: number};
   setPage: Dispatch<SetStateAction<number>>;
@@ -45,7 +55,7 @@ function MyPageProjects({
                 <Pagination length={data.totalPage} handler={setPage} />
               </PaginationContainer>
             </>
-          ) : <div>게시물이 존재하지 않습니다.</div>
+          ) : <EmptyField>등록된 게시물이 없습니다.</EmptyField>
       }
     </Container>
   );

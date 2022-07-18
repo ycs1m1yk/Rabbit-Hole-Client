@@ -54,9 +54,12 @@ const TableItem = styled.td`
 
   cursor: pointer;
 `;
-const Checkbox = styled.input`
-  color: #E1CFFF;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
 `;
+
 interface TableProps{
   items: IProjectProps[] | IArticleProps[]
   type: string;
@@ -84,6 +87,38 @@ export default function Table({ type, items }:TableProps) {
       }
       return [...prev, id];
     });
+  };
+
+  // 전체 삭제
+  const handleAllItemDelete = () => {
+    const allItems = items.map((item) => item._id);
+    if (confirm('정말 삭제하시겠습니까?')) {
+      if (type === 'project') {
+        if (allItems.length > 0) {
+          allItems.map(async (itemId: string) => {
+            const response = await deleteProjectById(authInfo!.token, itemId);
+            if (response.status >= 400) {
+              alert('프로젝트 삭제가 실패했습니다. 다시 시도해주세요:(');
+              window.location.reload();
+            }
+          });
+          alert('프로젝트가 성공적으로 삭제되었습니다:)');
+        }
+      }
+
+      if (type === 'article') {
+        if (allItems.length > 0) {
+          allItems.map(async (itemId: string) => {
+            const response = await deleteArticleById(authInfo!.token, itemId);
+            if (response.status >= 400) {
+              alert('게시물 삭제가 실패했습니다. 다시 시도해주세요:(');
+              window.location.reload();
+            }
+          });
+          alert('게시물이 성공적으로 삭제되었습니다:)');
+        }
+      }
+    }
   };
 
   // 선택한 Item 삭제
@@ -119,7 +154,10 @@ export default function Table({ type, items }:TableProps) {
 
   return (
     <div>
-      <Button onClick={handleItemDelete}>선택 삭제</Button>
+      <ButtonContainer>
+        <Button onClick={handleItemDelete}>선택 삭제</Button>
+        <Button onClick={handleAllItemDelete}>전체 삭제</Button>
+      </ButtonContainer>
       {items.length > 0 && (
       <TableContainer>
         {type === 'article' && (
@@ -143,7 +181,7 @@ export default function Table({ type, items }:TableProps) {
         <TableHead>
           {type === 'article' && (
             <tr>
-              <HeadItem scope="col"><Checkbox type="checkbox" name="selectAll" id="" /></HeadItem>
+              <HeadItem scope="col" />
               <HeadItem scope="col">연번</HeadItem>
               <HeadItem scope="col">프로젝트 식별 번호</HeadItem>
               <HeadItem scope="col">제목</HeadItem>
@@ -152,7 +190,7 @@ export default function Table({ type, items }:TableProps) {
           )}
           {type === 'project' && (
             <tr>
-              <HeadItem scope="col"><Checkbox type="checkbox" name="selectAll" id="" /></HeadItem>
+              <HeadItem scope="col" />
               <HeadItem scope="col">연번</HeadItem>
               <HeadItem scope="col">게시물 식별 번호</HeadItem>
               <HeadItem scope="col">제목</HeadItem>

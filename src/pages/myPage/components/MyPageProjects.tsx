@@ -22,6 +22,16 @@ const PaginationContainer = styled.div`
   text-align: center;
 `;
 
+const EmptyField = styled.p`
+  text-align: center;
+  margin-top: 23rem;
+  margin-bottom: 18rem;
+  color: ${({ theme }) => theme.palette.black};
+  opacity: 0.5;
+  font-size: 4rem;
+  font-weight: 700;
+`;
+
 interface IMyPageProjectProps {
   data: {projectList: IProjectProps[], totalPage: number};
   setPage: Dispatch<SetStateAction<number>>;
@@ -31,15 +41,23 @@ interface IMyPageProjectProps {
 function MyPageProjects({
   data, setPage, setPerPage,
 }: IMyPageProjectProps) {
-  return (
+  return data.projectList && (
     <Container>
       <Title>내 프로젝트 관리</Title>
-      <TableConatiner>
-        <Table type="project" items={data.projectList} />
-      </TableConatiner>
-      <PaginationContainer>
-        <Pagination length={data.totalPage} handler={setPage} />
-      </PaginationContainer>
+      {
+        data.projectList.length > 0
+          ? (
+            <>
+              <TableConatiner>
+                <Table type="project" items={data.projectList} />
+              </TableConatiner>
+              <PaginationContainer>
+                <Pagination length={data.totalPage} handler={setPage} />
+              </PaginationContainer>
+            </>
+          ) : <EmptyField>등록된 프로젝트가 없습니다.</EmptyField>
+      }
+
     </Container>
   );
 }
