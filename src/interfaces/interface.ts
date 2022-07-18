@@ -219,7 +219,7 @@ export interface ISearchProjectsByAuthorProps {
 
 export interface IProjectGetParamsProps {
     [index: string]: any;
-    filter: string;
+    filter?: string;
     page: string;
     perPage: string;
 }

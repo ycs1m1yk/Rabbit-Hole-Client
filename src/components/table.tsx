@@ -1,12 +1,19 @@
+/* eslint-disable max-len */
 /* eslint no-underscore-dangle: 0 */
-import React from 'react';
+import {
+  IArticleProps, IProjectProps,
+} from '@/interfaces/interface';
+import React, { ChangeEvent, useState } from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
+import { deleteProjectById } from '@/lib/projectApi';
+import useToken from '@/hooks/useToken';
+import Button from './button';
 
 // table
 const TableContainer = styled.table`
-  max-width: 900px;
-  width: 100%;
-  margin: 5rem;
+  width: 900px;
+  margin: 2rem 0;
   border: 1px solid #E1CFFF;
 `;
 const TableHead = styled.thead`
@@ -43,54 +50,64 @@ const TableItem = styled.td`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+
+  cursor: pointer;
 `;
 const Checkbox = styled.input`
   color: #E1CFFF;
 `;
-
-interface articleObj{
-  type: 'article';
-  articleId: string;
-  title: string;
-  createdAt: Date;
-}
-
-interface projectObj{
-  type: 'project';
-  _id: string;
-  title: string;
-  createdAt: Date;
-}
 interface TableProps{
-  items: articleObj[] | projectObj[];
+  items: IProjectProps[] | IArticleProps[]
+  type: string;
 }
 
-export default function Table({ items }:TableProps) {
-  const padTo2Digits = (num: number):string => num.toString().padStart(2, '0');
+export default function Table({ type, items }:TableProps) {
+  const navigate = useNavigate();
+  const { authInfo } = useToken();
 
-  const formatDate = (date: Date):string => (
-    `${[
-      date.getFullYear(),
-      padTo2Digits(date.getMonth() + 1),
-      padTo2Digits(date.getDate()),
-    ].join('-')
-    } ${
-      [
-        padTo2Digits(date.getHours()),
-        padTo2Digits(date.getMinutes()),
-        padTo2Digits(date.getSeconds()),
-      ].join(':')}`
-  );
+  const [checkedItems, setCheckedItems] = useState<any>([]);
 
-  const clickHandler = (item : articleObj | projectObj) => {
-    console.log('디테일 이동', item);
+  const clickHandler = (itemId : string) => {
+    if (type === 'project') {
+      navigate(`/projects/detail?projectId=${itemId}`);
+    } else if (type === 'article') {
+      console.log('article detail 이동');
+    }
+  };
+
+  const handleCheckBox = (e: ChangeEvent, id: string) => {
+    setCheckedItems((prev: string[]) => {
+      if (prev.includes(id)) {
+        const newArr = prev.filter((itemId) => itemId !== id);
+        return newArr;
+      }
+      return [...prev, id];
+    });
+  };
+
+  // 선택한 Item 삭제
+  const handleItemDelete = async () => {
+    // Project 선택 삭제
+    if (type === 'project') {
+      if (checkedItems.length > 0) {
+        checkedItems.map(async (itemId: string) => {
+          const response = await deleteProjectById(authInfo!.token, itemId);
+          if (response.status >= 400) {
+            alert('프로젝트 삭제가 실패했습니다. 다시 시도해주세요:(');
+            window.location.reload();
+          }
+        });
+        alert('프로젝트가 성공적으로 삭제되었습니다:)');
+      }
+    }
   };
 
   return (
     <div>
+      <Button onClick={handleItemDelete}>선택 삭제</Button>
       {items.length > 0 && (
       <TableContainer>
-        {items[0].type === 'article' && (
+        {type === 'article' && (
         <colgroup>
           <col width="5%" />
           <col width="10%" />
@@ -98,26 +115,17 @@ export default function Table({ items }:TableProps) {
           <col width="20%" />
         </colgroup>
         )}
-        {/* {items[0].type === 'mentoring' && (
-        <colgroup>
-          <col width="5%" />
-          <col width="15%" />
-          <col width="20%" />
-          <col width="20%" />
-          <col width="20%" />
-          <col width="20%" />
-        </colgroup>
-        )} */}
-        {items[0].type === 'project' && (
+        {type === 'project' && (
         <colgroup>
           <col width="5%" />
           <col width="10%" />
-          <col width="65%" />
-          <col width="20%" />
+          <col width="30%" />
+          <col width="30%" />
+          <col width="25%" />
         </colgroup>
         )}
         <TableHead>
-          {items[0].type === 'article' && (
+          {type === 'article' && (
             <tr>
               <HeadItem scope="col"><Checkbox type="checkbox" name="selectAll" id="" /></HeadItem>
               <HeadItem scope="col">글 번호</HeadItem>
@@ -125,20 +133,11 @@ export default function Table({ items }:TableProps) {
               <HeadItem scope="col">작성 날짜</HeadItem>
             </tr>
           )}
-          {/* {items[0].type === 'mentoring' && (
+          {type === 'project' && (
             <tr>
               <HeadItem scope="col"><Checkbox type="checkbox" name="selectAll" id="" /></HeadItem>
-              <HeadItem scope="col">신청인</HeadItem>
-              <HeadItem scope="col">연락처</HeadItem>
-              <HeadItem scope="col">이메일</HeadItem>
-              <HeadItem scope="col">신청 내용</HeadItem>
-              <HeadItem scope="col">신청 날자</HeadItem>
-            </tr>
-          )} */}
-          {items[0].type === 'project' && (
-            <tr>
-              <HeadItem scope="col"><Checkbox type="checkbox" name="selectAll" id="" /></HeadItem>
-              <HeadItem scope="col">프로젝트 번호</HeadItem>
+              <HeadItem scope="col">연번</HeadItem>
+              <HeadItem scope="col">프로젝트 식별 번호</HeadItem>
               <HeadItem scope="col">제목</HeadItem>
               <HeadItem scope="col">작성 날짜</HeadItem>
             </tr>
@@ -146,24 +145,25 @@ export default function Table({ items }:TableProps) {
         </TableHead>
         <TableBody>
           {
-            items.length > 0 && items.map((item):React.ReactNode => {
-              if (item.type === 'article') {
+            items.length > 0 && items.map((item, i):React.ReactNode => {
+              // if (type === 'article') {
+              //   return (
+              //     <TableRow key={item.articleId} onClick={() => { clickHandler(item); }}>
+              //       <TableItem><input type="checkbox" name={item.articleId} id={item.articleId} /></TableItem>
+              //       <TableItem>{item.articleId}</TableItem>
+              //       <TableItem>{item.title}</TableItem>
+              //       <TableItem>{item.createdAt}</TableItem>
+              //     </TableRow>
+              //   );
+              // }
+              if (type === 'project') {
                 return (
-                  <TableRow key={item.articleId} onClick={() => { clickHandler(item); }}>
-                    <TableItem><input type="checkbox" name={item.articleId} id={item.articleId} /></TableItem>
-                    <TableItem>{item.articleId}</TableItem>
-                    <TableItem>{item.title}</TableItem>
-                    <TableItem>{formatDate(item.createdAt)}</TableItem>
-                  </TableRow>
-                );
-              }
-              if (item.type === 'project') {
-                return (
-                  <TableRow key={item._id} onClick={() => { clickHandler(item); }}>
-                    <TableItem><input type="checkbox" name={item._id} id={item._id} /></TableItem>
-                    <TableItem>{item._id}</TableItem>
-                    <TableItem>{item.title}</TableItem>
-                    <TableItem>{formatDate(item.createdAt)}</TableItem>
+                  <TableRow key={item._id}>
+                    <TableItem><input type="checkbox" name={item._id} id={item._id} onChange={(e) => handleCheckBox(e, item._id)} /></TableItem>
+                    <TableItem onClick={() => clickHandler(item._id)}>{i + 1}</TableItem>
+                    <TableItem onClick={() => clickHandler(item._id)}>{item._id}</TableItem>
+                    <TableItem onClick={() => clickHandler(item._id)}>{item.title}</TableItem>
+                    <TableItem onClick={() => clickHandler(item._id)}>{item.createdAt.slice(0, 10)}</TableItem>
                   </TableRow>
                 );
               }
