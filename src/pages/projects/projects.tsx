@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useSetRecoilState } from 'recoil';
 import { useSearchParams } from 'react-router-dom';
@@ -90,60 +90,52 @@ const SelectBoxWrapper = styled.div`
 
 export default function Projects() {
   const setModal = useSetRecoilState(modalAtom);
-
   const { authInfo } = useToken();
-  const [isSearchPage, setIsSearchPage] = useState<boolean>(false);
-  const [totalPage, setTotalPage] = useState<number>(0);
-  const [searchResult, setSearchResult] = useState<IProjectProps[] | []>([]);
   const [searchParams, setSearchParams] = useSearchParams();
 
+  const [isSearchPage, setIsSearchPage] = useState<boolean>(false);
+  const [totalPage, setTotalPage] = useState<number>(0);
   const [perPage, setPerPage] = useState<string>('8');
-  const filter = searchParams.get('filter') ?? 'date';
-  const page = searchParams.get('page') ?? '1';
+  const [query, setQuery] = useState<IProjectGetParamsProps>({
+    filter: 'date', page: '1', perPage: '8',
+  });
+  const [searchResult, setSearchResult] = useState<IProjectProps[] | []>([]);
 
-  const params: IProjectGetParamsProps = { filter, page, perPage };
-
-  const { isSuccess, data: projects, refetch } = useQuery(['project', 'gallery'], () => getAllProjects(params), {
+  const { isSuccess, data: projects, refetch } = useQuery(['project', 'gallery', query], () => getAllProjects(query), {
     enabled: !isSearchPage,
     staleTime: 180000,
     onSuccess: ({ totalPage: tp }) => setTotalPage(tp),
   });
 
   // Modal Control
-  const handleProjectEnrollment = (modalType: any) => {
+  const handleProjectEnrollment = useCallback((modalType: any) => {
     setModal(modalType);
-  };
+  }, []);
 
-  // 인기순 정렬
-  const handleSortByView = () => {
-    searchParams.set('filter', 'views');
+  // 프로젝트 정렬
+  const handleSort = useCallback((sortType: string) => {
+    searchParams.set('filter', sortType);
     searchParams.set('page', '1');
     setSearchParams(searchParams);
-  };
-
-  // 최신순 정렬
-  const handleSortByDate = () => {
-    searchParams.set('filter', 'date');
-    searchParams.set('page', '1');
-    setSearchParams(searchParams);
-  };
+  }, []);
 
   // 페이지당 프로젝트 수 설정
-  const handlePerPage = (perP: string) => {
+  const handlePerPage = useCallback((perP: string) => {
     searchParams.set('perPage', perP);
     searchParams.set('page', '1');
     setSearchParams(searchParams);
-  };
+  }, []);
 
   // 페이지 변화에 따른 URL 변경
-  const handleNavigate = (pageNumber: number) => {
+  const handleNavigate = useCallback((pageNumber: number) => {
     searchParams.set('page', `${pageNumber + 1}`);
     setSearchParams(searchParams);
-  };
+  }, []);
 
   useEffect(() => {
+    searchParams.forEach((v, k) => setQuery((q) => ({ ...q, [k]: v })));
     refetch();
-  }, [filter, page, perPage]);
+  }, [searchParams]);
 
   return isSuccess || isSearchPage ? (
     <ProjectContainer>
@@ -151,7 +143,7 @@ export default function Projects() {
         프로젝트 갤러리
         <SearchContainer>
           <Search
-            projectQuery={params}
+            projectQuery={query}
             setSearchResult={setSearchResult}
             setIsSearchPage={setIsSearchPage}
             setTotalPage={setTotalPage}
@@ -166,8 +158,8 @@ export default function Projects() {
           }
       </ProjectHeader>
       <Alignments>
-        <Alignment onClick={handleSortByDate}>최신순</Alignment>
-        <Alignment onClick={handleSortByView}>인기순</Alignment>
+        <Alignment onClick={() => handleSort('date')}>최신순</Alignment>
+        <Alignment onClick={() => handleSort('views')}>조회순</Alignment>
         <SelectBoxWrapper className="selectbox-perpage">
           <SelectBox options={['4', '8', '12', '16']} defaultValue="페이지당 개수" selectedOption={perPage} setSelectedOption={setPerPage} requestFunc={handlePerPage} width={70} type="register" />
         </SelectBoxWrapper>
@@ -193,7 +185,7 @@ export default function Projects() {
       <PaginationContainer>
         <Pagination
           length={totalPage}
-          start={page ? +page - 1 : 0}
+          start={query.page ? +(query.page) - 1 : 0}
           handler={(pageNumber) => handleNavigate(pageNumber)}
         />
       </PaginationContainer>
