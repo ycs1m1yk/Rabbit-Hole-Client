@@ -128,7 +128,7 @@ export default function Search({
   };
 
   useQuery<any, Error>(
-    ['articleList', inputType, debouncedInput, articleQuery],
+    ['articleList', debouncedInput, articleQuery],
     () => {
       const query = articleQuery as IArticleGetProps;
       switch (inputType) {
@@ -152,7 +152,7 @@ export default function Search({
   );
 
   useQuery<any, Error>(
-    ['articleList', inputType, debouncedInput, projectQuery],
+    ['articleList', debouncedInput, projectQuery],
     () => {
       const query = projectQuery as IProjectGetParamsProps;
       switch (inputType) {
