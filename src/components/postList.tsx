@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-nested-ternary */
-import React, { useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import PostItem from '@components/postItem';
 import { IArticleProps } from '@/interfaces/interface';
@@ -24,7 +24,7 @@ const Alignments = styled.ul`
   width: 100%;
   display: flex;
   align-items: center;
-  gap: 4rem;
+  gap: 1rem;
   & :hover{
     font-weight: 700;
     color: ${({ theme }) => theme.palette.eliceViolet};
@@ -61,7 +61,6 @@ const EmptyField = styled.p`
   font-weight: 700;
 `;
 
-
 const defaultProps = {
   type: 'default',
   title: '',
@@ -73,7 +72,6 @@ type postList = {
   title?: string;
   posts: IArticleProps[];
   userId?: string;
-  // eslint-disable-next-line no-unused-vars
   sortHandler: Function | undefined;
 } & typeof defaultProps
 
@@ -92,7 +90,7 @@ export default function PostList({
         ? (
           <Alignments>
             <Alignment onClick={() => handleClick('date')}>최신순</Alignment>
-            <Alignment onClick={() => handleClick('views')}>인기순</Alignment>
+            <Alignment onClick={() => handleClick('views')}>조회순</Alignment>
           </Alignments>
         ) : null}
       <Posts>
