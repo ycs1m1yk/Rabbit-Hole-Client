@@ -8,7 +8,7 @@ import '@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin
 import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';
 import Prism from 'prismjs';
 import postImage from '@lib/imageApi';
-import { useMutation } from 'react-query';
+import useToken from '@/hooks/useToken';
 
 interface EditorProps{
   height?:string
@@ -23,6 +23,8 @@ const defaultProps = {
  * Ref.current?.getInstance().getMarkdown(); 방식으로 string value 얻음
  */
 const MarkdownEditor = forwardRef<Editor, EditorProps>((props, ref) => {
+  const { authInfo } = useToken();
+
   // 이상한 default value bug 제거
   useEffect(() => {
     const bug = document.querySelector('.ProseMirror');
@@ -49,7 +51,7 @@ const MarkdownEditor = forwardRef<Editor, EditorProps>((props, ref) => {
                 throw new Error('지원하지 않는 이미지 타입입니다.');
               }
               formData.set('image', blob);
-              const response = await postImage(formData);
+              const response = await postImage(authInfo!.token, formData);
               message = response.imageUrl;
               name = blob.name;
             } catch (error:any) {

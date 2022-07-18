@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-nested-ternary */
-import React, { useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import PostItem from '@components/postItem';
 import { IArticleProps } from '@/interfaces/interface';
@@ -24,7 +24,7 @@ const Alignments = styled.ul`
   width: 100%;
   display: flex;
   align-items: center;
-  gap: 4rem;
+  gap: 1rem;
   & :hover{
     font-weight: 700;
     color: ${({ theme }) => theme.palette.eliceViolet};
@@ -50,6 +50,17 @@ const Posts = styled.div`
   align-items: flex-start;
 `;
 
+const EmptyField = styled.p`
+  width: 70rem;
+  text-align: center;
+  margin-top: 23rem;
+  margin-bottom: 18rem;
+  color: ${({ theme }) => theme.palette.black};
+  opacity: 0.5;
+  font-size: 4rem;
+  font-weight: 700;
+`;
+
 const defaultProps = {
   type: 'default',
   title: '',
@@ -61,7 +72,6 @@ type postList = {
   title?: string;
   posts: IArticleProps[];
   userId?: string;
-  // eslint-disable-next-line no-unused-vars
   sortHandler: Function | undefined;
 } & typeof defaultProps
 
@@ -73,14 +83,14 @@ export default function PostList({
     if (typeof sortHandler === 'function') { sortHandler(sortType); }
   };
 
-  return (
+  return posts.length > 0 ? (
     <Container>
       {type === 'main' ? <Title>{title}</Title> : null}
       {type !== 'main'
         ? (
           <Alignments>
             <Alignment onClick={() => handleClick('date')}>최신순</Alignment>
-            <Alignment onClick={() => handleClick('views')}>인기순</Alignment>
+            <Alignment onClick={() => handleClick('views')}>조회순</Alignment>
           </Alignments>
         ) : null}
       <Posts>
@@ -91,7 +101,7 @@ export default function PostList({
             title={post.title}
             content={post.content}
             date={post.createdAt}
-            comment={123}
+            comment={post.comments?.length || 0}
             heart={post.likes.length}
             type={type}
             articleId={post._id}
@@ -101,7 +111,7 @@ export default function PostList({
         ))}
       </Posts>
     </Container>
-  );
+  ) : <EmptyField>일치하는 게시글이 없습니다.</EmptyField>;
 }
 
 PostList.defaultProps = defaultProps;

@@ -4,17 +4,19 @@ import React, {
 } from 'react';
 import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
+import { useSetRecoilState } from 'recoil';
 import { Editor } from '@toast-ui/react-editor';
 import { AiOutlineQuestionCircle, AiOutlineWarning } from 'react-icons/ai';
+import { FaCarrot } from 'react-icons/fa';
 
-import TagsInput from '@/components/tagsInput';
-import MarkdownEditor from '@/components/markdownEditor';
-import Button from '@/components/button';
+import TagsInput from '@components/tagsInput';
+import MarkdownEditor from '@components/markdownEditor';
+import Button from '@components/button';
 import SelectBox from '@components/selectBox';
 
-import useToken from '@/hooks/useToken';
-import { createArticle } from '@/lib/articleApi';
-import { FaCarrot } from 'react-icons/fa';
+import useToken from '@hooks/useToken';
+import { createArticle } from '@lib/articleApi';
+import modalAtom from '@recoil/modal/modalAtom';
 
 const ModalHeader = styled.div`
   display: flex;
@@ -56,8 +58,6 @@ const CarrotsInfo = styled.span`
   position: absolute;
   top: -0.5rem;
   left: 9rem;
-  z-index: 1;
-
   & svg {
     width: 1.3rem;
     height: 1.3rem;
@@ -96,7 +96,6 @@ const ToolTipText = styled.span`
     display: block;
     top: 2.2rem;
     right: -1rem;
-    z-index: 1;
 
     -webkit-animation: 0.3s linear normal slide_down;
           animation: 0.3s linear normal slide_down;
@@ -172,17 +171,19 @@ interface IArticleForm {
   content: string;
 }
 
+const boardMap: any = {
+  질문답변: 'question',
+  자유주제: 'free',
+  스터디: 'study',
+};
+
 function ArticleForm() {
-  const boardMap: any = {
-    질문답변: 'question',
-    자유주제: 'free',
-    스터디: 'study',
-  };
   const editorRef = useRef<Editor>(null);
   const [tags, setTags] = useState<{name: string}[]>([]);
   const [board, setBoard] = useState<string>('게시판 선택');
   const [carrots, setCarrots] = useState<number>(0);
   const { register, handleSubmit, formState: errors } = useForm<IArticleForm>();
+  const setModalState = useSetRecoilState(modalAtom);
   const { authInfo } = useToken();
 
   const handleEnterSubmit = useCallback((e: KeyboardEvent) => {
@@ -202,6 +203,7 @@ function ArticleForm() {
         const { token, userName } = authInfo;
         const bodyData = { ...formData, author: userName, carrots };
         await createArticle(token, bodyData);
+        setModalState(null);
       }
     })();
   }, [board, tags]);
