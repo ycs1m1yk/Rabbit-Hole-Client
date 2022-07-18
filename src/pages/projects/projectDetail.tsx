@@ -1,15 +1,17 @@
+/* eslint-disable no-restricted-globals */
+/* eslint-disable no-alert */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable max-len */
 import React, {
   MouseEvent, useEffect, useRef, useState,
 } from 'react';
 import { useQuery } from 'react-query';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import LogoImage from '@assets/images/rabbit-hole-logo-300.jpg';
 import checkEmptyArray from '@utils/func';
 import MarkdownViewer from '@/components/markdownViewer';
-import { getProjectById } from '@/lib/projectApi';
+import { deleteProjectById, getProjectById } from '@/lib/projectApi';
 import { ICommentProps, ITagsProps } from '@/interfaces/interface';
 import MarkdownEditor from '@/components/markdownEditor';
 import Button from '@/components/button';
@@ -17,7 +19,6 @@ import { S3URL } from '@utils/regex';
 import useToken from '@/hooks/useToken';
 import { Editor } from '@toast-ui/react-editor';
 import { postComment } from '@/lib/commentApi';
-import { AiOutlineToTop } from 'react-icons/ai';
 
 const ProjectDetailContainer = styled.div`
   padding: 3rem;
@@ -25,6 +26,12 @@ const ProjectDetailContainer = styled.div`
 
 const ProjectDetailHeader = styled.h1`
   font-size: 2.5rem;
+`;
+
+const EditButtonContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
 `;
 
 const ProjectContentContainer = styled.div`
@@ -128,6 +135,7 @@ const GoToAnswer = styled.div`
 
 function ProjectDetail() {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const { authInfo } = useToken();
   const editorRef = useRef<Editor>(null);
   const moveRef = useRef<null | HTMLDivElement>(null);
@@ -174,13 +182,28 @@ function ProjectDetail() {
     }
   };
 
+  // 프로젝트 삭제
+  const handleProjectDelete = async () => {
+    if (confirm('정말 삭제하시겠습니다?')) {
+      const response = await deleteProjectById(authInfo!.token, projectId as string);
+      if (response.status === 200) {
+        navigate('/projects?filter=date&page=1&perPage=8');
+      } else {
+        alert('삭제에 실패하였습니다. 다시 시도해주세요:(');
+        window.location.reload();
+      }
+    }
+  };
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [flag]);
 
   return project && (
     <ProjectDetailContainer ref={scrollRef}>
-      <ProjectDetailHeader>프로젝트 상세</ProjectDetailHeader>
+      <ProjectDetailHeader>
+        프로젝트 상세
+      </ProjectDetailHeader>
       <ProjectContentContainer>
         {project.thumbnail.includes(S3URL)
           ? <ProjectImage src={project.thumbnail} />
@@ -206,6 +229,10 @@ function ProjectDetail() {
           </ProjectDescription>
         </ProjectInfo>
       </ProjectContentContainer>
+      <EditButtonContainer>
+        <Button onClick={() => console.log('수정')}>수정하기</Button>
+        <Button onClick={handleProjectDelete}>삭제하기</Button>
+      </EditButtonContainer>
       <ProjectDetailHeader>
         답글(
         {comments.length}

@@ -29,7 +29,7 @@ export const postProject = (token: string, bodyData: FormData) => fetch(`${BASE_
     Authorization: `Bearer ${token}`,
   },
   body: bodyData,
-}).then((res) => res.json());
+}).then((res) => ({ status: res.status, data: res.json() }));
 
 // 프로젝트 수정
 export const updateProjectById = (token: string, projectId: string, bodyData: interfaces.IProjectPutParamsProps) => fetch(`${BASE_URL}/projects?=${projectId}`, {
@@ -46,4 +46,4 @@ export const deleteProjectById = (token: string, projectId: string) => fetch(`${
   headers: {
     Authorization: `Bearer ${token}`,
   },
-}).then((res) => res.json());
+}).then((res) => ({ status: res.status, data: res.json() }));
