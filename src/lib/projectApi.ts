@@ -14,7 +14,7 @@ export const getAllProjects = (params: interfaces.IProjectGetParamsProps) => {
     .then((res) => res.json());
 };
 
-export const getProjectById = (projectId: string, params: interfaces.IProjectGetParamsProps) => {
+export const getProjectById = (projectId: string, params?: interfaces.IProjectGetParamsProps) => {
   const param = new URLSearchParams(params);
   const par = param.toString();
 
@@ -29,7 +29,7 @@ export const postProject = (token: string, bodyData: FormData) => fetch(`${BASE_
     Authorization: `Bearer ${token}`,
   },
   body: bodyData,
-}).then((res) => res.json());
+}).then((res) => ({ status: res.status, data: res.json() }));
 
 // 프로젝트 수정
 export const updateProjectById = (token: string, projectId: string, bodyData: interfaces.IProjectPutParamsProps) => fetch(`${BASE_URL}/projects?=${projectId}`, {
@@ -38,7 +38,7 @@ export const updateProjectById = (token: string, projectId: string, bodyData: in
     Authorization: `Bearer ${token}`,
   },
   body: JSON.stringify(bodyData),
-}).then((res) => res.json());
+}).then((res) => ({ status: res.status, data: res.json() }));
 
 // 프로젝트 삭제
 export const deleteProjectById = (token: string, projectId: string) => fetch(`${BASE_URL}/projects/${projectId}`, {
@@ -46,4 +46,4 @@ export const deleteProjectById = (token: string, projectId: string) => fetch(`${
   headers: {
     Authorization: `Bearer ${token}`,
   },
-}).then((res) => res.json());
+}).then((res) => ({ status: res.status, data: res.json() }));

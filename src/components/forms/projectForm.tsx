@@ -94,9 +94,15 @@ function ProjectForm() {
     }
 
     if (authInfo?.token) {
-      await postProject(authInfo.token, fd);
+      const response = await postProject(authInfo.token, fd);
+
+      if (response.status >= 400) {
+        alert('프로젝트 등록에 실패하였습니다. 다시 시도해주세요:(');
+      }
       setModal(null);
     }
+
+    window.location.reload();
   };
 
   return (

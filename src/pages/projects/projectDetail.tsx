@@ -1,17 +1,29 @@
+/* eslint-disable no-restricted-globals */
+/* eslint-disable no-alert */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable max-len */
-import React, { MouseEvent, useEffect } from 'react';
+import React, {
+  MouseEvent, useEffect, useRef, useState,
+} from 'react';
 import { useQuery } from 'react-query';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import LogoImage from '@assets/images/rabbit-hole-logo-300.jpg';
 import { isEmptyArray } from '@utils/func';
 import MarkdownViewer from '@/components/markdownViewer';
-import { getProjectById } from '@/lib/projectApi';
+import { deleteProjectById, getProjectById } from '@/lib/projectApi';
 import { ICommentProps, ITagsProps } from '@/interfaces/interface';
 import MarkdownEditor from '@/components/markdownEditor';
 import Button from '@/components/button';
 import { S3URL } from '@utils/regex';
+import useToken from '@/hooks/useToken';
+import { Editor } from '@toast-ui/react-editor';
+import { deleteCommentById, postComment } from '@/lib/commentApi';
+import ProjectForm from '@/components/forms/projectForm';
+import useModal from '@/hooks/useModal';
+import modalAtom from '@/recoil/modal/modalAtom';
+import { useSetRecoilState } from 'recoil';
+import { ModalTypes } from '@/interfaces/type';
 
 const ProjectDetailContainer = styled.div`
   padding: 3rem;
@@ -19,6 +31,12 @@ const ProjectDetailContainer = styled.div`
 
 const ProjectDetailHeader = styled.h1`
   font-size: 2.5rem;
+`;
+
+const EditButtonContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
 `;
 
 const ProjectContentContainer = styled.div`
@@ -74,13 +92,14 @@ const ReplyWrapper = styled.div`
 `;
 
 const ReplyContainer = styled.div<{isMyComment: boolean}>`
-  background-color: ${({ theme }) => theme.palette.borderGray};
   padding: 2rem;
   margin: 2rem 0;
   border-radius: 20px;
   width: 50%;
   align-self: ${(props) => (props.isMyComment ? 'flex-end' : 'flex-start')};
-  background-color: ${(props) => (props.isMyComment ? props.theme.palette.lightViolet : props.theme.palette.borderGray)};
+  /* background-color: ${(props) => (props.isMyComment ? props.theme.palette.lightViolet : props.theme.palette.borderGray)}; */
+  /* color: ${(props) => (props.isMyComment ? 'white' : 'black')}; */
+  background-color: ${(props) => (props.theme.palette.borderGray)};
 `;
 
 const ReplyHeader = styled.div`
@@ -104,7 +123,7 @@ const ButtonContainer = styled.div`
 `;
 
 const GoToAnswer = styled.div`
-  background-color: ${({ theme }) => theme.palette.lightViolet};
+  background-color: ${({ theme }) => theme.palette.gray};
   border-radius: 50%;
   position: fixed;
   width: 5rem;
@@ -121,38 +140,92 @@ const GoToAnswer = styled.div`
 
 function ProjectDetail() {
   const [searchParams] = useSearchParams();
-  // const { authInfo: { userId } } = useToken();
+  const navigate = useNavigate();
+  const { authInfo } = useToken();
+  const editorRef = useRef<Editor>(null);
+  const moveRef = useRef<null | HTMLDivElement>(null);
+  const scrollRef = useRef<null | HTMLDivElement>(null);
+  const setModal = useSetRecoilState(modalAtom);
 
   const projectId = searchParams.get('projectId');
-  const params = { page: 1, perPage: 5 };
   let project;
   let comments;
+  let authorId;
 
   if (projectId) {
-    const { data } = useQuery<any>(['projectDetail', projectId], () => getProjectById(projectId, params));
+    const { data } = useQuery<any>(['projectDetail', projectId], () => getProjectById(projectId));
+
     if (data) {
       project = data.projectInfo;
       comments = data.commentList;
+      authorId = data.projectInfo.authorId;
     }
   }
-  // console.log(project);
-  // console.log(comments);
 
+  const [flag, setFlag] = useState<number>(0);
+
+  // Page view 맨 아래, 맨 위로 이동
   const handleBottomClick = (e: MouseEvent) => {
     if (e.pageY > 1000) {
+      // 맨 위로 이동
       window.scrollTo({ top: 0, behavior: 'smooth' });
+      moveRef.current!.innerText = 'Down';
     } else {
-      window.scrollTo({ top: 2500, left: 0, behavior: 'smooth' });
+      // 맨 아래로 이동
+      scrollRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' });
+      moveRef.current!.innerText = 'Up';
     }
   };
 
+  // 댓글 POST
+  const handleCommentPost = async () => {
+    try {
+      const content = editorRef.current?.getInstance().getMarkdown();
+      const postParams = { commentType: 'project', content };
+      await postComment(authInfo!.token, projectId as string, postParams);
+
+      window.location.reload();
+      setFlag((prev) => prev + 1);
+    } catch (e: any) {
+      alert('문제가 발생했습니다. 다시  시도해주세요:(');
+    }
+  };
+
+  // 프로젝트 삭제
+  const handleProjectDelete = async () => {
+    if (confirm('정말 삭제하시겠습니까?')) {
+      const response = await deleteProjectById(authInfo!.token, projectId as string);
+      if (response.status === 200) {
+        navigate('/projects?filter=date&page=1&perPage=8');
+      } else {
+        alert('삭제에 실패하였습니다. 다시 시도해주세요:(');
+        window.location.reload();
+      }
+    }
+  };
+
+  // 프로젝트 수정
+  const handleProjectEdit = async (modalType: ModalTypes) => {
+    setModal(modalType);
+  };
+
+  // 댓글 삭제
+  const handleCommentDelete = async (commentId: string) => {
+    const response = await deleteCommentById(authInfo!.token, commentId);
+    if (response.status !== 200) {
+      alert('댓글 삭제 오류가 발생하였습니다. 다시 시도해주세요:(');
+    }
+    window.location.reload();
+  };
+
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
+  }, [flag]);
 
   return project && (
-    <ProjectDetailContainer>
-      <ProjectDetailHeader>프로젝트 상세</ProjectDetailHeader>
+    <ProjectDetailContainer ref={scrollRef}>
+      <ProjectDetailHeader>
+        프로젝트 상세
+      </ProjectDetailHeader>
       <ProjectContentContainer>
         {project.thumbnail.includes(S3URL)
           ? <ProjectImage src={project.thumbnail} />
@@ -178,10 +251,20 @@ function ProjectDetail() {
           </ProjectDescription>
         </ProjectInfo>
       </ProjectContentContainer>
-      <ProjectDetailHeader>답글</ProjectDetailHeader>
+      {authorId === authInfo?.userId && (
+      <EditButtonContainer>
+        <Button onClick={() => handleProjectEdit('Register')}>수정하기</Button>
+        <Button onClick={handleProjectDelete}>삭제하기</Button>
+      </EditButtonContainer>
+      )}
+      <ProjectDetailHeader>
+        답글(
+        {comments.length}
+        개)
+      </ProjectDetailHeader>
       <ReplyWrapper>
         {comments.map((comment: ICommentProps) => (
-          <ReplyContainer isMyComment={Math.random() > 0.5} key={comment._id}>
+          <ReplyContainer isMyComment={authInfo?.userId === comment.authorId} key={comment._id}>
             <ReplyHeader>
               <ReplyAuthor>
                 작성자:
@@ -193,14 +276,21 @@ function ProjectDetail() {
               </ReplyDate>
             </ReplyHeader>
             <MarkdownViewer text={comment.content} />
+            {
+              authInfo?.userId === comment.authorId && (
+              <ButtonContainer>
+                <Button size="small" onClick={() => handleCommentDelete(comment._id)}>삭제</Button>
+              </ButtonContainer>
+              )
+            }
           </ReplyContainer>
         ))}
       </ReplyWrapper>
-      <MarkdownEditor />
+      <MarkdownEditor ref={editorRef} />
       <ButtonContainer>
-        <Button onClick={() => console.log('답글 POST')}>답변하기</Button>
+        <Button onClick={handleCommentPost}>답변하기</Button>
       </ButtonContainer>
-      <GoToAnswer onClick={handleBottomClick}>Move</GoToAnswer>
+      <GoToAnswer ref={moveRef} onClick={handleBottomClick}>Move</GoToAnswer>
     </ProjectDetailContainer>
   );
 }

@@ -93,8 +93,8 @@ export interface ICommentProps {
 
 export interface IPostCommentProps {
     commentType: string;
-    articleId: string;
-    content: string;
+    articleId?: string;
+    content: string | undefined;
 }
 
 export interface IChatProps {
