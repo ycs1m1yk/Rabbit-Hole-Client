@@ -14,7 +14,7 @@ export const getAllProjects = (params: interfaces.IProjectGetParamsProps) => {
     .then((res) => res.json());
 };
 
-export const getProjectById = (projectId: string, params: interfaces.IProjectGetParamsProps) => {
+export const getProjectById = (projectId: string, params?: interfaces.IProjectGetParamsProps) => {
   const param = new URLSearchParams(params);
   const par = param.toString();
 

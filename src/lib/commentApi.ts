@@ -4,7 +4,7 @@ import * as interfaces from '@interfaces/interface';
 const BASE_URL = `${import.meta.env.VITE_API_BASE_URL}`;
 
 // Comment - POST 댓글 작성
-export const postComment = (token: string, bodyData: interfaces.IPostCommentProps) => fetch(`${BASE_URL}/comments`, {
+export const postComment = (token: string, id: string, bodyData: interfaces.IPostCommentProps) => fetch(`${BASE_URL}/comments/${id}`, {
   method: 'POST',
   body: JSON.stringify(bodyData),
   headers: {
