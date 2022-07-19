@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import RegisterForm from '@/components/forms/registerForm';
+import RegisterForm from '@/pages/auth/registerForm';
 
 const Container = styled.div`
   height: 100%;

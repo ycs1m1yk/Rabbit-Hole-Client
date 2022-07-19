@@ -3,7 +3,7 @@
 import {
   IArticleProps, IProjectProps,
 } from '@/interfaces/interface';
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { deleteProjectById } from '@/lib/projectApi';
@@ -273,7 +273,6 @@ export default function Table({ type, items }:TableProps) {
         </TableBody>
       </TableContainer>
       )}
-      {items.length === 0 && <div>No data</div>}
     </div>
   );
 }

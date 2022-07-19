@@ -51,9 +51,9 @@ export interface IArticleProps {
 export interface IArticleGetProps {
     [index: string]: any;
     articleType: IArticleTypes;
-    filter: string;
-    page: string;
-    perPage: string;
+    filter?: string;
+    page?: string;
+    perPage?: string;
 }
 
 export interface IArticleGetByIdProps {

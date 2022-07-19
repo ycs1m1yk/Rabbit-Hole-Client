@@ -15,9 +15,9 @@ import modalAtom from '@/recoil/modal/modalAtom';
 import { useSetRecoilState } from 'recoil';
 import { useSearchParams } from 'react-router-dom';
 import { IProjectProps } from '@/interfaces/interface';
-import MarkdownEditor from '../markdownEditor';
-import Button from '../button';
-import TagsInput from '../tagsInput';
+import MarkdownEditor from '../../../components/markdownEditor';
+import Button from '../../../components/button';
+import TagsInput from '../../../components/tagsInput';
 
 const ModalTitle = styled.h1`
   text-align: center;
@@ -102,7 +102,6 @@ function ProjectEditForm() {
       tags: JSON.stringify(tags),
     };
 
-    console.log(formData);
     const fd: any = new FormData();
 
     for (const key in formData) {
@@ -111,14 +110,14 @@ function ProjectEditForm() {
 
     if (authInfo?.token) {
       const response = await updateProjectById(authInfo.token, projectId as string, fd);
-      console.log(response);
+
       if (response.status >= 400) {
         alert('프로젝트 등록에 실패하였습니다. 다시 시도해주세요:(');
       }
       setModal(null);
     }
 
-    // window.location.reload();
+    window.location.reload();
   };
 
   const getPrevFormData = async (PID: string) => {

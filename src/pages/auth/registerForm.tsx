@@ -5,13 +5,10 @@ import { useForm } from 'react-hook-form';
 import { regPhoneNumber, regURL } from '@/utils/regex';
 
 import Button from '@components/button';
-
-import { useMutation } from 'react-query';
 import { postRegister, getUserLogin } from '@/lib/userApi';
 import { useSearchParams } from 'react-router-dom';
 import { IRegisterFormProps } from '@/interfaces/interface';
-import { AiOutlineConsoleSql } from 'react-icons/ai';
-import SelectBox from '../selectBox';
+import SelectBox from '../../components/selectBox';
 
 const ErrorMessage = styled.span`
   margin-bottom: 0.5rem;
@@ -65,7 +62,6 @@ interface IForm {
 }
 
 function RegisterForm() {
-  const { isSuccess, isError } = useMutation(postRegister);
   const [queries] = useSearchParams();
   const { register, handleSubmit, formState: errors } = useForm<IForm>();
   const [selectedTrack, setSelectedTrack] = useState<string>('SW 엔지니어 트랙');

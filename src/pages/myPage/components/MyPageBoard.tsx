@@ -39,7 +39,7 @@ interface IMyPageArticleProps {
   setPerPage: Dispatch<SetStateAction<number>>;
 }
 
-function MyPageProjects({
+function MyPageBoard({
   data, page, setPage, setPerPage,
 }: IMyPageArticleProps) {
   useEffect(() => {
@@ -65,4 +65,4 @@ function MyPageProjects({
   );
 }
 
-export default MyPageProjects;
+export default MyPageBoard;

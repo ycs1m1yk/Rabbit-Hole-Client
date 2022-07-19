@@ -13,14 +13,6 @@ interface IMyPageTypeProps {
   type: string;
 }
 
-/*
-  TODO
-  - [O] type으로 관련 정보 불러오기 -> 개인정보, 프로젝트, 게시글 순으로 진행
-  - [O] 개인정보수정 완료
-  - [ ] 프로젝트 관리
-  - [ ] 게시글 관리
-*/
-
 function MyPageContainer({ type }: IMyPageTypeProps): any {
   const { authInfo } = useToken();
   const [articlePage, setArticlePage] = useState<number>(0);
