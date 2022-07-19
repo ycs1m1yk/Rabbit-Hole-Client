@@ -1,4 +1,4 @@
-import React, { ReactNode, useState, useEffect } from 'react';
+import React, { ReactNode, useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 
@@ -35,10 +35,11 @@ const BoardItem = styled.li<{selected: boolean}>`
     height: 1.6rem;
     width: 50%;
     cursor: pointer;
-    color: ${(props) => (props.selected ? props.theme.palette.eliceViolet : props.theme.palette.gray)};
+    font-weight: ${({ selected }) => (selected ? 700 : 500)};
+    color: ${({ selected, theme }) => (selected ? theme.palette.eliceViolet : theme.palette.gray)};
     &:hover{
         font-size:1.65rem;
-        color: ${(props) => props.theme.palette.eliceViolet};
+        color: ${({ theme }) => theme.palette.eliceViolet};
     }
 `;
 
@@ -52,10 +53,10 @@ const MyPageItem = styled.li<{selected: boolean}>`
     display: flex;
     justify-content: center;
     align-items: center;
-    color: ${(props) => (!props.selected ? props.theme.palette.black : 'white')};
-    background-color: ${(props) => (props.selected ? props.theme.palette.eliceViolet : 'white')};
+    color: ${({ selected, theme }) => (!selected ? theme.palette.black : 'white')};
+    background-color: ${({ selected, theme }) => (selected ? theme.palette.eliceViolet : 'white')};
     &:hover{
-        background-color: ${(props) => props.theme.palette.eliceViolet};
+        background-color: ${({ theme }) => theme.palette.eliceViolet};
         color: white;
     }
 `;
