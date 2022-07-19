@@ -14,7 +14,7 @@ export const createArticle = (token: string, bodyData: interfaces.IArticlePostPr
 }).then((res) => res.json());
 
 // Article - PUT 게시글 수정
-export const updateArticleById = (token: string, articleId: string, bodyData: interfaces.IArticlePutProps) => fetch(`${BASE_URL}/articles?=${articleId}`, {
+export const updateArticleById = (token: string, articleId: string, bodyData: interfaces.IArticlePutProps) => fetch(`${BASE_URL}/articles/${articleId}`, {
   method: 'PUT',
   headers: {
     Authorization: `Bearer ${token}`,
