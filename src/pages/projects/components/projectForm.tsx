@@ -13,9 +13,9 @@ import { postProject } from '@/lib/projectApi';
 import useToken from '@/hooks/useToken';
 import modalAtom from '@/recoil/modal/modalAtom';
 import { useSetRecoilState } from 'recoil';
-import MarkdownEditor from '../markdownEditor';
-import Button from '../button';
-import TagsInput from '../tagsInput';
+import MarkdownEditor from '@components/markdownEditor';
+import Button from '@components/button';
+import TagsInput from '@components/tagsInput';
 
 const ModalTitle = styled.h1`
   text-align: center;
