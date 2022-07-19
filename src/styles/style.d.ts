@@ -11,6 +11,7 @@ declare module 'styled-components'{
             borderGray: string,
             gray: string,
             black: string,
+            kakaoYellow: string,
         },
         status: {
             verifyGreen: string,

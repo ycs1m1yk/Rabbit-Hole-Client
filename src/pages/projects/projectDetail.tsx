@@ -3,7 +3,7 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable max-len */
 import React, {
-  MouseEvent, useEffect, useRef,
+  useRef, useState,
 } from 'react';
 import { useQuery } from 'react-query';
 import { useSearchParams, useNavigate } from 'react-router-dom';
@@ -22,6 +22,7 @@ import { deleteCommentById, postComment } from '@/lib/commentApi';
 import modalAtom from '@/recoil/modal/modalAtom';
 import { useSetRecoilState } from 'recoil';
 import { ModalTypes } from '@/interfaces/type';
+import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
 
 const ProjectDetailContainer = styled.div`
   padding: 3rem;
@@ -95,9 +96,7 @@ const ReplyContainer = styled.div<{isMyComment: boolean}>`
   border-radius: 20px;
   width: 50%;
   align-self: ${(props) => (props.isMyComment ? 'flex-end' : 'flex-start')};
-  /* background-color: ${(props) => (props.isMyComment ? props.theme.palette.lightViolet : props.theme.palette.borderGray)}; */
-  /* color: ${(props) => (props.isMyComment ? 'white' : 'black')}; */
-  background-color: ${(props) => (props.theme.palette.borderGray)};
+  background-color: ${(props) => (props.isMyComment ? props.theme.palette.kakaoYellow : props.theme.palette.borderGray)};
 `;
 
 const ReplyHeader = styled.div`
@@ -120,18 +119,38 @@ const ButtonContainer = styled.div`
   margin-top: 1rem;
 `;
 
+const LikeBox = styled.button<{ isClicked:boolean }>`
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #FFFF;
+  color: ${({ isClicked, theme }) => (isClicked ? '#ED4956' : theme.palette.gray)};
+  border: 1px solid ${({ isClicked, theme }) => (isClicked ? '#ED4956' : theme.palette.borderGray)};
+  border-radius: 10px;
+  padding: 0.5rem 1rem ;
+  margin-top: 2rem;
+`;
+
+const LikeCount = styled.span`
+  font-size: 14px;
+  vertical-align: middle;
+`;
+
 function ProjectDetail() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { authInfo } = useToken();
   const editorRef = useRef<Editor>(null);
   const setModal = useSetRecoilState(modalAtom);
+  const [clicked, setClicked] = useState<boolean>(false);
 
   const projectId = searchParams.get('projectId');
-  let project;
+  let project: any;
   let comments;
   let authorId;
 
+  // data fetching and initializing
   if (projectId) {
     const { data } = useQuery<any>(['projectDetail', projectId], () => getProjectById(projectId), {
       staleTime: 5000,
@@ -143,6 +162,8 @@ function ProjectDetail() {
       authorId = data.projectInfo.authorId;
     }
   }
+
+  console.log(project);
 
   // 댓글 POST
   const handleCommentPost = async () => {
@@ -184,8 +205,14 @@ function ProjectDetail() {
     window.location.reload();
   };
 
-  useEffect(() => {
-  }, [searchParams]);
+  const matchLike = React.useCallback(() => {
+    const Likes = project.likes?.find((like: any) => like.userId === authInfo?.userId);
+    return Likes;
+  }, [project, authInfo]);
+
+  const handleToggleLike = () => {
+    setClicked((prev) => !prev);
+  };
 
   return project && (
     <ProjectDetailContainer>
@@ -196,6 +223,7 @@ function ProjectDetail() {
         {project.thumbnail.includes(S3URL)
           ? <ProjectImage src={project.thumbnail} />
           : <ProjectImage width={300} height={300} src={LogoImage} />}
+
         <ProjectInfo>
           <ProjectInfoTitle>제목</ProjectInfoTitle>
           <ProjectTitle>{project.title}</ProjectTitle>
@@ -215,6 +243,12 @@ function ProjectDetail() {
           <ProjectDescription>
             <MarkdownViewer text={project.description} />
           </ProjectDescription>
+          <LikeBox isClicked={clicked} onClick={handleToggleLike}>
+            {authInfo && matchLike()
+              ? <AiFillHeart size={20} />
+              : <AiOutlineHeart size={20} /> }
+            <LikeCount>{project.likes ? project.likes.length : 0}</LikeCount>
+          </LikeBox>
         </ProjectInfo>
       </ProjectContentContainer>
       {authorId === authInfo?.userId && (
@@ -245,7 +279,7 @@ function ProjectDetail() {
             {
               authInfo?.userId === comment.authorId && (
               <ButtonContainer>
-                <Button size="small" onClick={() => handleCommentDelete(comment._id)}>삭제</Button>
+                <Button size="small" color="black" onClick={() => handleCommentDelete(comment._id)}>삭제</Button>
               </ButtonContainer>
               )
             }

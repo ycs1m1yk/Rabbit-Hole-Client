@@ -15,6 +15,7 @@ const theme: DefaultTheme = {
     borderGray: '#DEE2E6',
     gray: '#747474',
     black: '#151618',
+    kakaoYellow: '#F7E600',
   },
   status: {
     verifyGreen: '#59FE7D',
