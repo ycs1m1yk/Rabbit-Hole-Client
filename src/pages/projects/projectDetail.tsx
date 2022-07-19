@@ -11,7 +11,7 @@ import styled from 'styled-components';
 import LogoImage from '@assets/images/rabbit-hole-logo-300.jpg';
 import { isEmptyArray } from '@utils/func';
 import MarkdownViewer from '@/components/markdownViewer';
-import { deleteProjectById, getProjectById } from '@/lib/projectApi';
+import { deleteProjectById, getProjectById, increaseProjectLikes } from '@/lib/projectApi';
 import { ICommentProps, ITagsProps } from '@/interfaces/interface';
 import MarkdownEditor from '@/components/markdownEditor';
 import Button from '@/components/button';
@@ -25,11 +25,17 @@ import { ModalTypes } from '@/interfaces/type';
 import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
 
 const ProjectDetailContainer = styled.div`
-  padding: 3rem;
+  padding: 5rem;
 `;
 
 const ProjectDetailHeader = styled.h1`
   font-size: 2.5rem;
+`;
+
+const HeaderContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  flex: 1;
 `;
 
 const EditButtonContainer = styled.div`
@@ -129,7 +135,6 @@ const LikeBox = styled.button<{ isClicked:boolean }>`
   border: 1px solid ${({ isClicked, theme }) => (isClicked ? '#ED4956' : theme.palette.borderGray)};
   border-radius: 10px;
   padding: 0.5rem 1rem ;
-  margin-top: 2rem;
 `;
 
 const LikeCount = styled.span`
@@ -162,8 +167,6 @@ function ProjectDetail() {
       authorId = data.projectInfo.authorId;
     }
   }
-
-  console.log(project);
 
   // 댓글 POST
   const handleCommentPost = async () => {
@@ -205,19 +208,32 @@ function ProjectDetail() {
     window.location.reload();
   };
 
+  // 좋아요 눌렀는지 체크
   const matchLike = React.useCallback(() => {
     const Likes = project.likes?.find((like: any) => like.userId === authInfo?.userId);
     return Likes;
   }, [project, authInfo]);
 
-  const handleToggleLike = () => {
+  const handleToggleLike = React.useCallback(async () => {
     setClicked((prev) => !prev);
-  };
+    const response = await increaseProjectLikes(authInfo!.token, projectId as string);
+    if (response.status !== 200) {
+      alert('좋아할 수 없어요.. 다시 시도해주세요:(');
+    }
+  }, [clicked]);
 
   return project && (
     <ProjectDetailContainer>
       <ProjectDetailHeader>
-        프로젝트 상세
+        <HeaderContainer>
+          {project.title}
+          <LikeBox isClicked={clicked} onClick={handleToggleLike}>
+            {authInfo && matchLike()
+              ? <AiFillHeart size={20} />
+              : <AiOutlineHeart size={20} /> }
+            <LikeCount>{project.likes ? project.likes.length : 0}</LikeCount>
+          </LikeBox>
+        </HeaderContainer>
       </ProjectDetailHeader>
       <ProjectContentContainer>
         {project.thumbnail.includes(S3URL)
@@ -243,12 +259,6 @@ function ProjectDetail() {
           <ProjectDescription>
             <MarkdownViewer text={project.description} />
           </ProjectDescription>
-          <LikeBox isClicked={clicked} onClick={handleToggleLike}>
-            {authInfo && matchLike()
-              ? <AiFillHeart size={20} />
-              : <AiOutlineHeart size={20} /> }
-            <LikeCount>{project.likes ? project.likes.length : 0}</LikeCount>
-          </LikeBox>
         </ProjectInfo>
       </ProjectContentContainer>
       {authorId === authInfo?.userId && (
@@ -279,7 +289,7 @@ function ProjectDetail() {
             {
               authInfo?.userId === comment.authorId && (
               <ButtonContainer>
-                <Button size="small" color="black" onClick={() => handleCommentDelete(comment._id)}>삭제</Button>
+                <Button size="small" style={{ backgroundColor: 'black' }} onClick={() => handleCommentDelete(comment._id)}>삭제</Button>
               </ButtonContainer>
               )
             }
