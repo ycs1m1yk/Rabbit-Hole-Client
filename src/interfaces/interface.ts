@@ -51,9 +51,9 @@ export interface IArticleProps {
 export interface IArticleGetProps {
     [index: string]: any;
     articleType: IArticleTypes;
-    filter: string;
-    page: string;
-    perPage: string;
+    filter?: string;
+    page?: string;
+    perPage?: string;
 }
 
 export interface IArticleGetByIdProps {
@@ -166,6 +166,12 @@ export interface IRegisterFormProps {
     githubAvatar: string;
 }
 
+export interface IImageUploadProps{
+    body: string;
+    filename: string;
+    type: string;
+}
+
 export interface ISearchArticlesByTitleProps {
     [index: string]: IArticleTypes;
     title: string;
@@ -219,7 +225,7 @@ export interface ISearchProjectsByAuthorProps {
 
 export interface IProjectGetParamsProps {
     [index: string]: any;
-    filter: string;
+    filter?: string;
     page: string;
     perPage: string;
 }
@@ -234,14 +240,31 @@ export interface IProjectPostParamsProps {
 }
 
 export interface IProjectPutParamsProps {
-    author: string;
-    title: string;
-    shortDescription: string;
-    description: string;
-    thumbnail: string;
-    tags: ITagsProps[];
+    author?: string;
+    title?: string;
+    shortDescription?: string;
+    description?: string;
+    thumbnail?: string;
+    tags?: ITagsProps[];
 }
 
+export interface IMyPageResponse {
+    _id: string;
+    name: string;
+    track: string;
+    trackCardinalNumber: number;
+    position?: string;
+    authImage: string;
+    blogAddress?: string;
+    githubEmail: string;
+    githubProfileUrl: string;
+    githubAvatar: string;
+    carrots: number;
+    role: string;
+    createdAt: string;
+    updatedAt: string;
+    __v: number
+}
 export interface IUserPUTProps {
     name?: string;
     track?: string;

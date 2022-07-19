@@ -26,13 +26,11 @@ export default function Login() {
       <h2>
         여러분들의 궁금증을 해결하세요!
       </h2>
-      <div style={{ width: '90%' }}>
-        <Button size="large" fullSize onClick={handler}>
-          <AiFillGithub style={{ fontSize: '3rem', marginRight: '2rem' }} />
-          {' '}
-          Github 계정으로 로그인
-        </Button>
-      </div>
+      <Button size="large" fullSize onClick={handler}>
+        <AiFillGithub style={{ fontSize: '3rem', marginRight: '2rem' }} />
+        {' '}
+        Github 계정으로 로그인
+      </Button>
     </>
   );
 }

@@ -12,31 +12,43 @@ import useToken from '@/hooks/useToken';
 
 interface EditorProps{
   height?:string
+  initialValue?: string
 }
 
 const defaultProps = {
   height: '300px',
+  initialValue: '',
 };
 
 /**
  * ref const ref = useRef<Editor>(null) 방식으로 선언한 ref필요 (null로 initializing 필요)
  * Ref.current?.getInstance().getMarkdown(); 방식으로 string value 얻음
  */
-
 const MarkdownEditor = forwardRef<Editor, EditorProps>((props, ref) => {
   const { authInfo } = useToken();
 
-  // 이상한 default value bug 제거
-  useEffect(() => {
-    const bug = document.querySelector('.ProseMirror');
-    if (bug) bug.innerHTML = '';
-  }, []);
+  useEffect(
+    () => {
+      const bug = document.querySelectorAll('.ProseMirror');
+      if (bug.length) {
+        [...Array(bug.length / 2).keys()].forEach((value) => {
+          if (value === (bug.length / 2) - 1 && props.initialValue) {
+            bug[value * 2].innerHTML = props.initialValue;
+          } else {
+            bug[value * 2].innerHTML = '';
+          }
+        });
+      }
+    },
+    [props.initialValue],
+  );
 
   return (
     <Editor
       ref={ref}
       language="ko-KR"
       height={props.height}
+      initialValue={props.initialValue}
       plugins={[[codeSyntaxHighlight, { highlighter: Prism }]]}
       hooks={{
         async addImageBlobHook(blob, callback) {

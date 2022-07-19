@@ -20,7 +20,7 @@ type IPostItemProps = {
 } & typeof defaultProps;
 
 const Post = styled.div<{type: string}>`
-  width: ${(props) => (props.type === 'main' ? '400px' : '800px')};
+  width: ${(props) => (props.type === 'main' ? '600px' : '800px')};
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -40,7 +40,7 @@ const Post = styled.div<{type: string}>`
 `;
 
 const Main = styled.div<{type: string}>`
-  height: ${(props) => (props.type === 'main' ? '100px' : '170px')};
+  height: ${(props) => (props.type === 'main' ? '120px' : '170px')};
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -50,7 +50,7 @@ const Main = styled.div<{type: string}>`
 `;
 
 const Content = styled.div<{type: string}>`
-  height: ${(props) => (props.type === 'main' ? '50px' : '100px')};
+  height: ${(props) => (props.type === 'main' ? '70px' : '100px')};
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -58,7 +58,7 @@ const Content = styled.div<{type: string}>`
 `;
 
 const Profile = styled.p<{type: string}>`
-  font-size: ${(props) => (props.type === 'main' ? '10px' : '15px')};
+  font-size: ${(props) => (props.type === 'main' ? '12px' : '15px')};
   line-height: 16px;
   letter-spacing: 1.5px;
   font-weight: 500;
@@ -66,8 +66,8 @@ const Profile = styled.p<{type: string}>`
 `;
 
 const Title = styled.h3<{type: string}>`
-  max-width:  ${(props) => (props.type === 'main' ? '400px' : '700px')};
-  font-size: ${(props) => (props.type === 'main' ? '12px' : '20px')};
+  max-width:  ${(props) => (props.type === 'main' ? '500px' : '700px')};
+  font-size: ${(props) => (props.type === 'main' ? '15px' : '20px')};
   font-weight: 700;
   letter-spacing: 0.15px;
   color : ${({ theme }) => theme.palette.black};
@@ -80,8 +80,8 @@ const Title = styled.h3<{type: string}>`
 `;
 
 const Body = styled.p<{type: string}>`
-  max-width:  ${(props) => (props.type === 'main' ? '400px' : '700px')};
-  font-size: ${(props) => (props.type === 'main' ? '12px' : '20px')};
+  max-width:  ${(props) => (props.type === 'main' ? '500px' : '700px')};
+  font-size: ${(props) => (props.type === 'main' ? '15px' : '20px')};
   font-weight: 300;
   letter-spacing: 0.25px;
   line-height: 20px;
@@ -107,8 +107,8 @@ const Info = styled.div`
 `;
 
 const CommentBox = styled.div<{type: string}>`
-  width: ${(props) => (props.type === 'main' ? '40px' : '60px')};
-  height: ${(props) => (props.type === 'main' ? '40px' : '60px')};
+  width: ${(props) => (props.type === 'main' ? '50px' : '60px')};
+  height: ${(props) => (props.type === 'main' ? '50px' : '60px')};
   display: flex;
   flex-direction: column;
   justify-content: center;

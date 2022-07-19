@@ -8,6 +8,8 @@ import modalAtom from '@/recoil/modal/modalAtom';
 import { ModalTypes } from '@/interfaces/type';
 import { updateUserProfile } from '@/lib/userApi';
 import useToken from '@/hooks/useToken';
+import { IUserProps } from '@/interfaces/interface';
+import { FaCarrot } from 'react-icons/fa';
 
 const Container = styled.div`
   margin: 6rem 2rem 2rem 6rem;
@@ -33,12 +35,24 @@ const InputValue = styled.input`
   border-radius: 5px;
 `;
 
+const CarrotsInfo = styled.div`
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-top: 2rem;
+  & svg {
+    width: 1.8rem;
+    height: 1.8rem;
+    color: ${({ theme }) => theme.palette.carrotOrange}
+  }
+`;
+
 const ImageContainer = styled.div``;
 
 const ProfileImage = styled.img`
   width: 150px;
   height: 150px;
   border-radius: 50%;
+  box-shadow: 4px 4px 10px ${({ theme }): string => theme.palette.borderGray};
 `;
 
 const ButtonConatiner = styled.div`
@@ -54,7 +68,7 @@ interface IForm {
   githubProfileUrl: string;
 }
 
-function MyPageProfile({ data }: any) {
+function MyPageProfile({ data }: {data: IUserProps}) {
   const { authInfo } = useToken();
   const { register, handleSubmit } = useForm<IForm>();
   const setModal = useSetRecoilState(modalAtom);
@@ -69,6 +83,7 @@ function MyPageProfile({ data }: any) {
     } else {
       alert('성공적으로 회원정보가 수정되었습니다:)');
     }
+    window.location.reload();
   };
 
   const handleModalOpen = (modalType: ModalTypes) => {
@@ -97,6 +112,10 @@ function MyPageProfile({ data }: any) {
       <ImageContainer>
         <ProfileImage src={profileImageUrl || data.githubAvatar} />
         <Button onClick={() => handleModalOpen('ProfileImage')}>Edit</Button>
+        <CarrotsInfo>
+          <FaCarrot />
+          {`: ${authInfo?.carrots}개`}
+        </CarrotsInfo>
       </ImageContainer>
     </Container>
   );
