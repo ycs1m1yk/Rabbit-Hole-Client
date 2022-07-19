@@ -120,29 +120,11 @@ const ButtonContainer = styled.div`
   margin-top: 1rem;
 `;
 
-const GoToAnswer = styled.div`
-  background-color: ${({ theme }) => theme.palette.gray};
-  border-radius: 50%;
-  position: fixed;
-  width: 5rem;
-  height: 5rem;
-  bottom: 50%;
-  right: 3%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  cursor: pointer;
-  font-size: 1.5rem;
-`;
-
 function ProjectDetail() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { authInfo } = useToken();
   const editorRef = useRef<Editor>(null);
-  const moveRef = useRef<null | HTMLDivElement>(null);
-  const scrollRef = useRef<null | HTMLDivElement>(null);
   const setModal = useSetRecoilState(modalAtom);
 
   const projectId = searchParams.get('projectId');
@@ -161,19 +143,6 @@ function ProjectDetail() {
       authorId = data.projectInfo.authorId;
     }
   }
-
-  // Page view 맨 아래, 맨 위로 이동
-  const handlePageView = (e: MouseEvent) => {
-    if (e.pageY > 1000) {
-      // 맨 위로 이동
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      moveRef.current!.innerText = 'Down';
-    } else {
-      // 맨 아래로 이동
-      scrollRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' });
-      moveRef.current!.innerText = 'Up';
-    }
-  };
 
   // 댓글 POST
   const handleCommentPost = async () => {
@@ -216,11 +185,10 @@ function ProjectDetail() {
   };
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [searchParams]);
 
   return project && (
-    <ProjectDetailContainer ref={scrollRef}>
+    <ProjectDetailContainer>
       <ProjectDetailHeader>
         프로젝트 상세
       </ProjectDetailHeader>
@@ -288,7 +256,6 @@ function ProjectDetail() {
       <ButtonContainer>
         <Button onClick={handleCommentPost}>답변하기</Button>
       </ButtonContainer>
-      <GoToAnswer ref={moveRef} onClick={handlePageView}>Move</GoToAnswer>
     </ProjectDetailContainer>
   );
 }
