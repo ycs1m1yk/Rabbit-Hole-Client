@@ -2,17 +2,19 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable react/jsx-props-no-spreading */
 import React, {
-  useCallback, useState, KeyboardEvent, useRef,
+  useCallback, useState, KeyboardEvent, useRef, useEffect,
 } from 'react';
 import styled from 'styled-components';
 
 import { useForm } from 'react-hook-form';
 import { Editor } from '@toast-ui/react-editor';
-import { postProject } from '@/lib/projectApi';
+import { getProjectById, updateProjectById } from '@/lib/projectApi';
 
 import useToken from '@/hooks/useToken';
 import modalAtom from '@/recoil/modal/modalAtom';
 import { useSetRecoilState } from 'recoil';
+import { useSearchParams } from 'react-router-dom';
+import { IProjectProps } from '@/interfaces/interface';
 import MarkdownEditor from '../markdownEditor';
 import Button from '../button';
 import TagsInput from '../tagsInput';
@@ -68,21 +70,30 @@ interface IForm {
   thumbnail: string;
 }
 
-function ProjectForm() {
-  const {
-    register, handleSubmit, formState: { errors },
-  } = useForm<IForm>();
+function ProjectEditForm() {
+  const [prevData, setPrevData] = useState<IProjectProps>(); // 기존 정보
   const [tags, setTags] = useState<{name: string}[]>([]);
   const setModal = useSetRecoilState(modalAtom);
   const editorRef = useRef<Editor>(null);
   const { authInfo } = useToken();
+  const [searchParams] = useSearchParams();
+  const projectId = searchParams.get('projectId');
+  const {
+    register, handleSubmit, formState: { errors },
+  } = useForm<IForm>({
+    defaultValues: {
+      title: prevData?.title,
+      author: prevData?.author,
+      shortDescription: prevData?.shortDescription,
+    },
+  });
 
   // Tag 입력하고 Enter 시 Form Submit 방지
   const handleEnterSubmit = useCallback((e: KeyboardEvent) => {
     if (e.code === 'Enter') e.preventDefault();
   }, []);
 
-  // FormData POST 요청
+  // Form Data PUT 요청
   const onValid = async (data: IForm) => {
     const formData = {
       ...data,
@@ -91,6 +102,7 @@ function ProjectForm() {
       tags: JSON.stringify(tags),
     };
 
+    console.log(formData);
     const fd: any = new FormData();
 
     for (const key in formData) {
@@ -98,23 +110,37 @@ function ProjectForm() {
     }
 
     if (authInfo?.token) {
-      const response = await postProject(authInfo.token, fd);
-
+      const response = await updateProjectById(authInfo.token, projectId as string, fd);
+      console.log(response);
       if (response.status >= 400) {
         alert('프로젝트 등록에 실패하였습니다. 다시 시도해주세요:(');
       }
       setModal(null);
     }
 
-    window.location.reload();
+    // window.location.reload();
   };
+
+  const getPrevFormData = async (PID: string) => {
+    const response = await getProjectById(PID);
+    const data = { ...response.projectInfo };
+    setTags(data.tags);
+    setPrevData(data);
+  };
+
+  useEffect(() => {
+    if (projectId) {
+      getPrevFormData(projectId);
+    }
+  }, []);
 
   return (
     <>
-      <ModalTitle>프로젝트 등록</ModalTitle>
+      <ModalTitle>프로젝트 수정</ModalTitle>
       <ProjectInfomationForm encType="multipart/form-data" onKeyDown={handleEnterSubmit}>
         <InputTitle>Title</InputTitle>
         <ProjectInput
+          defaultValue={prevData?.title}
           {...register('title', {
             required: '제목은 필수 입력사항입니다:)',
           })}
@@ -122,6 +148,7 @@ function ProjectForm() {
         <ErrorMessage>{errors?.title?.message}</ErrorMessage>
         <InputTitle>작성자</InputTitle>
         <ProjectInput
+          defaultValue={prevData?.author}
           {...register('author', {
             required: '이름은 필수 입력사항입니다:)',
           })}
@@ -129,6 +156,7 @@ function ProjectForm() {
         <ErrorMessage>{errors?.author?.message}</ErrorMessage>
         <InputTitle>한 줄 소개</InputTitle>
         <ProjectInput
+          defaultValue={prevData?.shortDescription}
           {...register('shortDescription', {
             required: '한 줄 소개는 필수 입력사항입니다:)',
           })}
@@ -140,7 +168,7 @@ function ProjectForm() {
         </TagContainer>
         <EditorContainer style={{ marginBottom: '1rem' }}>
           <InputTitle style={{ marginBottom: '1rem' }}>본문</InputTitle>
-          <MarkdownEditor ref={editorRef} />
+          <MarkdownEditor initialValue={prevData?.description} ref={editorRef} />
         </EditorContainer>
         <InputTitle style={{ margin: '1rem 0' }}>프로젝트 이미지</InputTitle>
         <ProjectImageInput
@@ -156,4 +184,4 @@ function ProjectForm() {
   );
 }
 
-export default ProjectForm;
+export default ProjectEditForm;

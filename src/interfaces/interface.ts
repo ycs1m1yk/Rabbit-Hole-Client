@@ -234,12 +234,12 @@ export interface IProjectPostParamsProps {
 }
 
 export interface IProjectPutParamsProps {
-    author: string;
-    title: string;
-    shortDescription: string;
-    description: string;
-    thumbnail: string;
-    tags: ITagsProps[];
+    author?: string;
+    title?: string;
+    shortDescription?: string;
+    description?: string;
+    thumbnail?: string;
+    tags?: ITagsProps[];
 }
 
 export interface IUserPUTProps {
