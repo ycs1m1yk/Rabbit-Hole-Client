@@ -17,6 +17,7 @@ const Mypage = lazy(() => import('@pages/myPage/myPage'));
 const Admin = lazy(() => import('@pages/admin'));
 const BoardDetail = lazy(() => import('@pages/boardDetail/boardDetail'));
 const ProjectDetail = lazy(() => import('@pages/projects/projectDetail'));
+const NotFound = lazy(() => import('@pages/notFound'));
 
 function App() {
   const [getModalPage] = useModal();
@@ -37,6 +38,7 @@ function App() {
         </Route>
         <Route path="/github/register" element={<Register />} />
         <Route path="/github/login" element={<Token />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
       {getModalPage()}
     </BrowserRouter>
