@@ -135,6 +135,7 @@ const isAlert = (chat:ChatProps|newUserMessage)
 export default function MaxChat({ minimizeHandler }:{minimizeHandler:()=>void}) {
   const { authInfo } = useToken(); // 인증 토큰
   const { chatSocket } = useContext(SocketDispatch); // 채팅용 소켓
+  const [isComposing, setIsComposing] = useState(false); // Mac 한글 두번 출력 오류 Debug용 상태
 
   const { data } = useQuery(['profile', authInfo], () => authInfo && getMyPage(authInfo.token), {
     onSuccess(successdata) {
@@ -210,6 +211,8 @@ export default function MaxChat({ minimizeHandler }:{minimizeHandler:()=>void}) 
   }, []);
 
   const chatKeyHandler = useCallback((e:KeyboardEvent<HTMLTextAreaElement>) => {
+    if (isComposing) return;
+
     if (e.key === 'Enter') {
       if (!e.shiftKey) {
         chatSendHandler();
@@ -310,7 +313,14 @@ export default function MaxChat({ minimizeHandler }:{minimizeHandler:()=>void}) 
         {(room && data)
           && (
           <>
-            <Chat rows={2} value={textValue} onChange={chatValueHandler} onKeyUp={chatKeyHandler} />
+            <Chat
+              onCompositionStart={() => setIsComposing(true)}
+              onCompositionEnd={() => setIsComposing(false)}
+              rows={2}
+              value={textValue}
+              onChange={chatValueHandler}
+              onKeyUp={chatKeyHandler}
+            />
             <Button onClick={chatSendHandler}>
               <AiOutlineSend />
             </Button>
