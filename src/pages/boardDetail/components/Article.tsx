@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable no-alert */
 /* eslint-disable no-restricted-globals */
 // eslint-disable-next-line no-alert

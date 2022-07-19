@@ -6,16 +6,12 @@ import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
 import { useSetRecoilState } from 'recoil';
 import { Editor } from '@toast-ui/react-editor';
-import { AiOutlineQuestionCircle, AiOutlineWarning } from 'react-icons/ai';
-import { FaCarrot } from 'react-icons/fa';
-
+import { AiOutlineWarning } from 'react-icons/ai';
 import TagsInput from '@components/tagsInput';
 import MarkdownEditor from '@components/markdownEditor';
 import Button from '@components/button';
-import SelectBox from '@components/selectBox';
-
 import useToken from '@hooks/useToken';
-import { createArticle, getArticleById, updateArticleById } from '@lib/articleApi';
+import { getArticleById, updateArticleById } from '@lib/articleApi';
 import modalAtom from '@recoil/modal/modalAtom';
 import { useQuery } from 'react-query';
 import { useSearchParams } from 'react-router-dom';
@@ -31,91 +27,6 @@ const ModalHeader = styled.div`
 
 const ModalTitle = styled.h1`
   border: none;
-`;
-
-const SelectBoxWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  text-align: center;
-  position: absolute;
-  top: 12rem;
-  right: 5rem;
-  
-  & select {
-    text-align: center;
-    height: 3.5rem;
-    border: 1.5px solid ${({ theme }) => theme.palette.borderGray}
-  }
-  & div {
-    height: 12rem;
-    overflow: auto;
-  }
-`;
-
-const CarrotsInfo = styled.span`
-  display: flex;
-  align-items: center;
-  font-size: 1rem;
-  font-weight: bold;
-  position: absolute;
-  top: -0.5rem;
-  left: 9rem;
-  & svg {
-    width: 1.3rem;
-    height: 1.3rem;
-    color: ${({ theme }) => theme.palette.carrotOrange};
-  }
-`;
-
-const CarrotLabel = styled.span`
-  font-size: 1.7rem;
-`;
-
-const ToolTipText = styled.span`
-  width: 2rem;
-  height: 2rem;
-  margin-right: -2rem;
-  color: deeppink;
-  font-weight: bold;
-  display: inline-block;
-  position: relative;
-  
-  & span {
-    display: none;
-    position: absolute;
-    max-width: 20rem;
-    border: 1px solid;
-    border-radius: 1rem;
-    padding: 0.5rem;
-    font-size: 0.8rem;
-    color: white;
-    background: ${({ theme }) => theme.palette.lightViolet};
-  }
-  :hover span {
-    width: 14rem;
-    white-space: normal;
-    word-break: break-word;
-    display: block;
-    top: 2.2rem;
-    right: -1rem;
-
-    -webkit-animation: 0.3s linear normal slide_down;
-          animation: 0.3s linear normal slide_down;
-
-    @keyframes slide_down {
-      0% {
-        opacity: 0.1;
-      }
-      100% {
-        opacity: 1;
-      }
-    }
-  }
-`;
-
-const ToolTipIcon = styled(AiOutlineQuestionCircle)`
-  margin-right: 0.5rem;
-  color: ${({ theme }) => theme.palette.eliceViolet};
 `;
 
 const StyledArticleForm = styled.form`
@@ -186,7 +97,7 @@ export default function ArticleEditForm() {
     select: (fetchData) => ({ article: fetchData.articleInfo }),
     onSuccess: (fetchData) => {
       setTags(fetchData.article.tags);
-    }
+    },
   });
 
   const handleEnterSubmit = useCallback((e: KeyboardEvent) => {

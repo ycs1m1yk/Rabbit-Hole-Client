@@ -2,7 +2,7 @@
 /* eslint-disable no-restricted-globals */
 /* eslint-disable no-underscore-dangle */
 // eslint-disable-next-line no-underscore-dangle
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
 import { BsFillBookmarkCheckFill, BsBookmarkCheck } from 'react-icons/bs';
 import { useRecoilValue } from 'recoil';
@@ -13,7 +13,9 @@ import MarkdownViewer from '@/components/markdownViewer';
 import Button from '@/components/button';
 import * as styles from '@/pages/boardDetail/styled'
 import { ICommentProps } from '@/interfaces/interface';
-import { adoptComment, deleteCommentById, increaseCommentLikes, updateCommentById } from '@/lib/commentApi';
+import {
+  adoptComment, deleteCommentById, increaseCommentLikes, updateCommentById,
+} from '@/lib/commentApi';
 import useToken from '@/hooks/useToken';
 import MarkdownEditor from '@/components/markdownEditor';
 
@@ -76,7 +78,7 @@ export default function Answer({ comment, setToggleAnswerBox, toggleAnswerBox }:
       alert('로그인해 주세요');
       return;
     }
-    const res = await increaseCommentLikes(authInfo!.token, comment._id as string);
+    await increaseCommentLikes(authInfo!.token, comment._id as string);
     queryClient.invalidateQueries();
   }, []);
 
