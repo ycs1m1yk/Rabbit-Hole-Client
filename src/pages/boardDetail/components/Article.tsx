@@ -2,24 +2,27 @@
 /* eslint-disable no-restricted-globals */
 // eslint-disable-next-line no-alert
 import React from 'react';
-import { FaQuestion } from 'react-icons/fa';
+import { FaQuestion, FaCarrot } from 'react-icons/fa';
 import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useQueryClient } from 'react-query';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import * as styles from '@pages/boardDetail/styled'
 import authAtom from '@/recoil/auth/authAtom';
 import MarkdownViewer from '@/components/markdownViewer';
 import Button from '@/components/button';
-import { IArticleProps } from '@/interfaces/interface';
-import { useQuery, useQueryClient } from 'react-query';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { IArticleProps, ICommentProps } from '@/interfaces/interface';
 import useToken from '@/hooks/useToken';
 import { deleteArticleById, increaseArticleLikes } from '@/lib/articleApi';
+import modalAtom from '@/recoil/modal/modalAtom';
 
 export interface ArticleProps{
   article: IArticleProps;
+  comments: ICommentProps[];
 }
 
-export default function Article({ article }: ArticleProps) {
+export default function Article({ article, comments }: ArticleProps) {
+  const setModalState = useSetRecoilState(modalAtom);
   const auth = useRecoilValue(authAtom);
   const [query] = useSearchParams();
   const articleId = query.get('id');
@@ -27,23 +30,32 @@ export default function Article({ article }: ArticleProps) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
+  const adopted = React.useCallback(():boolean => {
+    const adoptedData = comments.filter(({ isAdopted }) => (
+      isAdopted === true
+    ));
+    return adoptedData.length > 0;
+  }, []);
+
+  const handleModalOpen = React.useCallback(() => {
+    setModalState('ArticleEdit');
+  }, []);
+
   const matchLike = React.useCallback(() => {
     const Likes = article.likes?.find((like) => like.userId === auth?.userId);
     return Likes;
   }, [article, auth]);
-
-  const handleUpdate = React.useCallback(() => {
-  }, []);
-
   const handleDelete = React.useCallback(async () => {
     if (confirm('정말 삭제하시겠습니까?')) {
       const res = await deleteArticleById(authInfo!.token, articleId as string);
-      if (res.result) {
-        alert(res.reason);
-        queryClient.invalidateQueries();
-      }
-      else {
+      console.log(res);
+      if (res.status === 200) {
+        alert('삭제되었습니다.');
         navigate('/board');
+      } else {
+        res.data.then(({ reason }) => {
+          alert(reason);
+        });
       }
     }
   }, []);
@@ -68,8 +80,23 @@ export default function Article({ article }: ArticleProps) {
           </styles.TitleBox>
           <styles.InfoBox>
             <styles.Author>{article.author}</styles.Author>
-            <styles.DateField>{article.createdAt}</styles.DateField>
+            {article.articleType === 'question' && (
+              <styles.CarrotBox>
+                <FaCarrot />
+                <styles.Carrot>{`${article.carrots} 개`}</styles.Carrot>
+              </styles.CarrotBox>
+            )}
+            <styles.DateField>{article.createdAt.slice(0, 10)}</styles.DateField>
           </styles.InfoBox>
+          {article.tags.length > 0 && (
+            <styles.Tags>
+              {article.tags.map((tag) => (
+                <styles.Tag key={tag.name}>
+                  <span>{tag.name}</span>
+                </styles.Tag>
+              ))}
+            </styles.Tags>
+          )}
         </styles.InfoHead>
         <styles.Main>
           <MarkdownViewer text={article.content} />
@@ -81,9 +108,9 @@ export default function Article({ article }: ArticleProps) {
               : <AiOutlineHeart size={20} /> }
             <styles.LikeCount>{article.likes ? article.likes.length : 0}</styles.LikeCount>
           </styles.LikeBox>
-          {auth && article.authorId === auth.userId && (
+          {auth && article.authorId === auth.userId && !adopted() && (
             <styles.ButtonBox>
-              <Button onClick={handleUpdate}>수정하기</Button>
+              <Button onClick={handleModalOpen}>수정하기</Button>
               <Button onClick={handleDelete}>삭제하기</Button>
             </styles.ButtonBox>
           )}

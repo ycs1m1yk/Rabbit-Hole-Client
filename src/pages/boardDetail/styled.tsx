@@ -137,6 +137,7 @@ export const ArticleSection = styled.section`
   display: flex;
   flex-direction: column;
   align-items: center;
+  border-bottom: 1px solid ${({ theme }) => theme.palette.borderGray};
 `;
 
 export const EmptyField = styled.p`
@@ -148,4 +149,40 @@ color: ${({ theme }) => theme.palette.black};
 opacity: 0.5;
 font-size: 4rem;
 font-weight: 700;
+`;
+
+export const AdoptedBox = styled.div`
+  cursor: pointer;
+`;
+
+export const Tags = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 60rem;
+`;
+
+export const Tag = styled.div`
+  font-size: 1.2rem;
+  display: inline-flex;
+  -webkit-box-align: center;
+  align-items: center;
+  gap: 0.5rem;
+  height: 2.5rem;
+  border-radius: 2rem;
+  padding: 0 1.2rem;
+  background: ${({ theme }) => theme.palette.lightViolet};
+  color: white;
+  margin-right: 0.75rem;
+`;
+
+export const Carrot = styled.span`
+
+color: ${({ theme }) => theme.palette.black};
+`;
+
+export const CarrotBox = styled.div`
+  font-size: 1.3rem;
+  display: flex;
+  gap: 1rem;
+  color: orange;
 `;
