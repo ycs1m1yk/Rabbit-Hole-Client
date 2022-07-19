@@ -23,8 +23,8 @@ export default function useSocket() {
 
   useEffect(() => {
     if (!chatSocket || !siteSocket) {
-      setChatSocket(io('http://localhost:8080/chat'));
-      setSiteSocket(io('http://localhost:8080/site'));
+      setChatSocket(io(`${import.meta.env.VITE_API_ORIGIN_URL}/chat`));
+      setSiteSocket(io(`${import.meta.env.VITE_API_ORIGIN_URL}/site`));
     }
     if (chatSocket && chatSocket.disconnected) {
       chatSocket.connect();

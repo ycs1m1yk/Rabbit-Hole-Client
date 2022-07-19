@@ -201,6 +201,7 @@ export default function MaxChat({ minimizeHandler }:{minimizeHandler:()=>void}) 
         chat: textValue,
       };
       chatSocket?.emit('chatMessage', room?.roomName, newChat);
+      setTextValue('');
     }
   };
 
@@ -212,7 +213,6 @@ export default function MaxChat({ minimizeHandler }:{minimizeHandler:()=>void}) 
     if (e.key === 'Enter') {
       if (!e.shiftKey) {
         chatSendHandler();
-        setTextValue('');
       } else {
         setTextValue(textValue.replaceAll(/(\n|\r\n)/g, '<br>'));
       }
