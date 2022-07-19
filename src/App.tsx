@@ -16,7 +16,6 @@ import useSocket from '@hooks/useSocket';
 
 const Home = lazy(() => import('@pages/home/home'));
 const Board = lazy(() => import('@pages/board'));
-const Mentoring = lazy(() => import('@pages/mentoring'));
 const Projects = lazy(() => import('@/pages/projects/projects'));
 const Mypage = lazy(() => import('@pages/myPage/myPage'));
 const Admin = lazy(() => import('@pages/admin'));
@@ -42,7 +41,6 @@ function App() {
             <Route path="/board" element={<Board />} />
             <Route path="/board/detail" element={<BoardDetail />} />
             <Route path="/board/search" element={<Board />} />
-            <Route path="/mentoring" element={<Mentoring />} />
             <Route path="/projects" element={<Projects />} />
             <Route path="/projects/detail" element={<ProjectDetail />} />
             <Route path="/projects/search" element={<Projects />} />
