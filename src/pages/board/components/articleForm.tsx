@@ -204,6 +204,7 @@ function ArticleForm() {
         const bodyData = { ...formData, author: userName, carrots };
         await createArticle(token, bodyData);
         setModalState(null);
+        window.location.reload();
       }
     })();
   }, [board, tags]);
