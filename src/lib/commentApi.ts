@@ -33,7 +33,7 @@ export const deleteCommentById = (token: string, commentId: string) => fetch(`${
 
 // Comment - POST 댓글 좋아요
 export const increaseCommentLikes = (token: string, commentId: string) => fetch(`${BASE_URL}/comments/${commentId}/heart`, {
-  method: 'POST',
+  method: 'PUT',
   headers: {
     Authorization: `Bearer ${token}`,
   },

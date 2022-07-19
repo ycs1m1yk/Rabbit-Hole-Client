@@ -4,7 +4,7 @@ import React, { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import * as styles from '@pages/boardDetail/styled';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import { Editor } from '@toast-ui/react-editor';
 import authAtom from '@/recoil/auth/authAtom';
 // import { getArticleById } from '@/lib/api';

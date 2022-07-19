@@ -49,10 +49,9 @@ export const getAllArticle = (params: interfaces.IArticleGetProps) => {
 };
 
 // 게시글 좋아요
-export const increaseArticleLikes = (token: string, articleId: string) => fetch(`${BASE_URL}/${articleId}`, {
-  method: 'POST',
+export const increaseArticleLikes = (token: string, articleId: string) => fetch(`${BASE_URL}/articles/${articleId}/heart`, {
+  method: 'PUT',
   headers: {
     Authorization: `Bearer ${token}`,
-    'Content-Type': 'application/json',
   },
 }).then((res) => res.json());
