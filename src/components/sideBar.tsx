@@ -1,7 +1,7 @@
 // sideBar
-import React, { ReactNode, useState } from 'react';
+import React, { ReactNode, useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 interface ContentProps{
     id:number,
@@ -72,10 +72,24 @@ const defaultProps = {
 };
 
 // contentList를 동적 생성 이후에 고려
-export default function SideBar({ type, contentsList }:SideBarProps) {
+export default function SideBar({ type, contentsList = [] }:SideBarProps) {
   const navigate = useNavigate(); // 라우팅
 
   const [contents, setContents] = useState<ContentProps[]>(contentsList); // 리스트의 선택 상태 관리
+  const [queryString] = useSearchParams();
+
+  useEffect(() => {
+    const queryType = type === 'board' ? 'articleType=' : 'type=';
+    let queryStringType = queryString.get('articleType');
+    if (!queryStringType) {
+      queryStringType = queryString.get('type');
+    }
+    setContents(
+      contents.map((content) => (content.path.split(queryType)[1] === queryStringType
+        ? { ...content, selected: true }
+        : { ...content, selected: false })),
+    );
+  }, [queryString]);
 
   // 리스트 선택 시 selected상태 변경 및 라우팅
   const itemClickHandler = (event: React.MouseEvent<HTMLLIElement>, id: number, path: string) => {
