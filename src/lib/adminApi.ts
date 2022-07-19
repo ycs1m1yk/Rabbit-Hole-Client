@@ -6,10 +6,10 @@ interface IUserProps {
   perPage: string;
 }
 interface IArticleProps {
-  [index: string]: string;
-  articleType: string;
-  page: string;
-  perPage: string;
+  [index: string]: any;
+  articleType?: string;
+  page?: string;
+  perPage?: string;
 }
 interface ICommentProps {
   [index: string]: string;

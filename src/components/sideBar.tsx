@@ -79,13 +79,13 @@ export default function SideBar({ type, contentsList = [] }:SideBarProps) {
   const [queryString] = useSearchParams();
 
   useEffect(() => {
-    const queryType = type === 'board' ? 'articleType=' : 'type=';
-    let queryStringType = queryString.get('articleType');
+    const queryType = type === 'board' ? 'articleType' : 'type';
+    let queryStringType = queryString.get('type');
     if (!queryStringType) {
-      queryStringType = queryString.get('type');
+      queryStringType = queryString.get('articleType');
     }
     setContents(
-      contents.map((content) => (content.path.split(queryType)[1] === queryStringType
+      contents.map((content) => (new URLSearchParams(content.path.split('?')[1]).get(queryType) === queryStringType
         ? { ...content, selected: true }
         : { ...content, selected: false })),
     );

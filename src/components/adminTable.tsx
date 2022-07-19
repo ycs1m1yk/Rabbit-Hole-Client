@@ -1,5 +1,7 @@
 /* eslint no-underscore-dangle: 0 */
-import React, { ChangeEvent, MouseEvent, useEffect, useState } from 'react';
+import React, {
+  ChangeEvent,
+} from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -7,7 +9,7 @@ import styled from 'styled-components';
 const TableContainer = styled.table`
   max-width: 900px;
   width: 100%;
-  margin: 5rem;
+  margin: 2rem auto;
   border: 1px solid #E1CFFF;
 `;
 const TableHead = styled.thead`
@@ -29,6 +31,7 @@ const TableBody = styled.tbody`
 `;
 const TableRow = styled.tr`
   z-index: 0;
+  position: relative;
   height: 40px;
   border-bottom: 1px solid #E1CFFF;
 
@@ -38,6 +41,7 @@ const TableRow = styled.tr`
   }
 `;
 const TableItem = styled.td`
+  position: relative;
   padding: 10px 0;
   text-align: center;
   vertical-align: middle;
@@ -50,7 +54,8 @@ const Checkbox = styled.input`
   color: #E1CFFF;
 `;
 const NormalCheck = styled.input`
-  z-index: 9999;
+  z-index: 1;
+  position: relative;
 `;
 interface articleObj{
   type: 'article';
@@ -97,28 +102,19 @@ export default function AdminTable({ items, setItems }:TableProps) {
   const page = Number(query.get('page'));
   const perPage = Number(query.get('perPage'));
   const detailHandler = (e:any, path:string) => {
-    e.stopImmediatePropagation();
     navigate(path);
   };
 
   const checkHandler = (e:ChangeEvent<HTMLInputElement>) => {
-    setItems(items.map((item, index) => {
-      if ((index >= perPage * (page - 1)
-        && index < perPage * (page - 1) + perPage)
-        && item._id === e.target.value) {
+    setItems(items.map((item) => {
+      if (item._id === e.target.value) {
         return { ...item, selected: e.target.checked };
       }
       return item;
     }));
   };
   const checkAllHandler = (e:ChangeEvent<HTMLInputElement>) => {
-    setItems(items.map((item, index) => {
-      if ((index >= perPage * (page - 1)
-        && index < perPage * (page - 1) + perPage)) {
-        return { ...item, selected: e.target.checked };
-      }
-      return item;
-    }));
+    setItems(items.map((item) => ({ ...item, selected: e.target.checked })));
   };
   const padTo2Digits = (num: number):string => num.toString().padStart(2, '0');
 
@@ -173,7 +169,7 @@ export default function AdminTable({ items, setItems }:TableProps) {
         <TableHead>
           {items[0].type === 'article' && (
             <tr>
-              <HeadItem scope="col"><Checkbox type="checkbox" name="selectAll" id="" /></HeadItem>
+              <HeadItem scope="col"><Checkbox type="checkbox" name="selectAll" id="" onChange={checkAllHandler} /></HeadItem>
               <HeadItem scope="col">글 번호</HeadItem>
               <HeadItem scope="col">제목</HeadItem>
               <HeadItem scope="col">작성자</HeadItem>
@@ -182,7 +178,7 @@ export default function AdminTable({ items, setItems }:TableProps) {
           )}
           {items[0].type === 'user' && (
             <tr>
-              <HeadItem scope="col"><Checkbox type="checkbox" name="selectAll" id="" /></HeadItem>
+              <HeadItem scope="col"><Checkbox type="checkbox" name="selectAll" id="" onChange={checkAllHandler} /></HeadItem>
               <HeadItem scope="col">프로필</HeadItem>
               <HeadItem scope="col">이름</HeadItem>
               <HeadItem scope="col">이메일</HeadItem>
@@ -194,7 +190,7 @@ export default function AdminTable({ items, setItems }:TableProps) {
           )}
           {items[0].type === 'project' && (
             <tr>
-              <HeadItem scope="col"><Checkbox type="checkbox" name="selectAll" id="" /></HeadItem>
+              <HeadItem scope="col"><Checkbox type="checkbox" name="selectAll" id="" onChange={checkAllHandler} /></HeadItem>
               <HeadItem scope="col">프로젝트 번호</HeadItem>
               <HeadItem scope="col">제목</HeadItem>
               <HeadItem scope="col">작성자</HeadItem>
@@ -204,23 +200,31 @@ export default function AdminTable({ items, setItems }:TableProps) {
         </TableHead>
         <TableBody>
           {
-            items.length > 0 && items.slice(perPage * (page - 1), perPage)
+            items.length > 0 && items
               .map((item:any, index:number):React.ReactNode => {
                 if (item.type === 'article') {
                   return (
-                    <TableRow onClick={(e) => { detailHandler(e, item.path); }}>
-                      <TableItem><NormalCheck type="checkbox" name="article" value={item._id} onChange={checkHandler} /></TableItem>
-                      <TableItem>{index}</TableItem>
-                      <TableItem>{item.title}</TableItem>
-                      <TableItem>{item.author}</TableItem>
-                      <TableItem>{formatDate(item.createdAt)}</TableItem>
+                    <TableRow>
+                      <TableItem><NormalCheck type="checkbox" name="article" value={item._id} checked={item.selected} onChange={checkHandler} /></TableItem>
+                      <TableItem onClick={(e) => { detailHandler(e, item.path); }}>
+                        {(page - 1) * perPage + 1 + index }
+                      </TableItem>
+                      <TableItem onClick={(e) => { detailHandler(e, item.path); }}>
+                        {item.title}
+                      </TableItem>
+                      <TableItem onClick={(e) => { detailHandler(e, item.path); }}>
+                        {item.author}
+                      </TableItem>
+                      <TableItem onClick={(e) => { detailHandler(e, item.path); }}>
+                        {formatDate(item.createdAt)}
+                      </TableItem>
                     </TableRow>
                   );
                 }
                 if (item.type === 'user') {
                   return (
                     <TableRow>
-                      <TableItem><NormalCheck type="checkbox" name="user" value={item._id} /></TableItem>
+                      <TableItem><NormalCheck type="checkbox" name="user" checked={item.selected} value={item._id} /></TableItem>
                       <TableItem>{item.avatar}</TableItem>
                       <TableItem>{item.name}</TableItem>
                       <TableItem>{item.email}</TableItem>
@@ -234,7 +238,7 @@ export default function AdminTable({ items, setItems }:TableProps) {
                 if (item.type === 'project') {
                   return (
                     <TableRow onClick={(e) => { detailHandler(e, item.path); }}>
-                      <TableItem><NormalCheck type="checkbox" name="project" value={item._id} /></TableItem>
+                      <TableItem><NormalCheck type="checkbox" name="project" checked={item.selected} value={item._id} /></TableItem>
                       <TableItem>{item._id}</TableItem>
                       <TableItem>{item.title}</TableItem>
                       <TableItem>{item.author}</TableItem>
