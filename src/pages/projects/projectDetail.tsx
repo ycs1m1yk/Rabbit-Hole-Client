@@ -3,7 +3,7 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable max-len */
 import React, {
-  MouseEvent, useEffect, useRef, useState,
+  MouseEvent, useEffect, useRef,
 } from 'react';
 import { useQuery } from 'react-query';
 import { useSearchParams, useNavigate } from 'react-router-dom';
@@ -19,8 +19,6 @@ import { S3URL } from '@utils/regex';
 import useToken from '@/hooks/useToken';
 import { Editor } from '@toast-ui/react-editor';
 import { deleteCommentById, postComment } from '@/lib/commentApi';
-import ProjectForm from '@/components/forms/projectForm';
-import useModal from '@/hooks/useModal';
 import modalAtom from '@/recoil/modal/modalAtom';
 import { useSetRecoilState } from 'recoil';
 import { ModalTypes } from '@/interfaces/type';
@@ -153,7 +151,9 @@ function ProjectDetail() {
   let authorId;
 
   if (projectId) {
-    const { data } = useQuery<any>(['projectDetail', projectId], () => getProjectById(projectId));
+    const { data } = useQuery<any>(['projectDetail', projectId], () => getProjectById(projectId), {
+      staleTime: 5000,
+    });
 
     if (data) {
       project = data.projectInfo;
@@ -251,7 +251,7 @@ function ProjectDetail() {
       </ProjectContentContainer>
       {authorId === authInfo?.userId && (
       <EditButtonContainer>
-        <Button onClick={() => handleProjectEdit('Register')}>수정하기</Button>
+        <Button onClick={() => handleProjectEdit('ProjectEdit')}>수정하기</Button>
         <Button onClick={handleProjectDelete}>삭제하기</Button>
       </EditButtonContainer>
       )}
