@@ -200,7 +200,7 @@ export default function MaxChat({ minimizeHandler }:{minimizeHandler:()=>void}) 
         trackCardinalNumber: data.trackCardinalNumber,
         chat: textValue,
       };
-      chatSocket?.emit('chatMessage', room?.roomName, newChat);
+      if (textValue)chatSocket?.emit('chatMessage', room?.roomName, newChat);
       setTextValue('');
     }
   };
