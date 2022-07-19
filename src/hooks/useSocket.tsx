@@ -58,11 +58,19 @@ export default function useSocket() {
           setRoom(data);
         }
       });
-      // 채팅방 입장 메시지
-      chatSocket.on('updateForNewUser', (data:newUserMessage) => {
+
+      // 채팅방 입장 메시지(전체)
+      chatSocket.on('updateForEveryone', (data:newUserMessage) => {
         setNewChat(data);
         chatSocket.emit('fetchRoom');
       });
+
+      // 채팅방 퇴장 메시지(전체)
+      chatSocket.on('updateLeaveEveryone', (data:newUserMessage) => {
+        setNewChat(data);
+        chatSocket.emit('fetchRoom');
+      });
+
       // 채팅 목록 업데이트
       chatSocket.on('responseMessage', (data:newUserMessage|ChatProps) => {
         setNewChat(data);
