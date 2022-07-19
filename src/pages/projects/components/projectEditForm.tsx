@@ -171,9 +171,7 @@ function ProjectEditForm() {
         </EditorContainer>
         <InputTitle style={{ margin: '1rem 0' }}>프로젝트 이미지</InputTitle>
         <ProjectImageInput
-          {...register('thumbnail', {
-            required: '프로젝트 사진은 필수 입력사항입니다:)',
-          })}
+          {...register('thumbnail')}
           type="file"
         />
         <ErrorMessage>{errors?.thumbnail?.message}</ErrorMessage>
