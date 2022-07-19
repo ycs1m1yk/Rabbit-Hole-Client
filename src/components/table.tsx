@@ -51,8 +51,10 @@ const Checkbox = styled.input`
 interface articleObj{
   type: 'article';
   articleId: string;
+  boardType: string;
   title: string;
   createdAt: Date;
+  selected: boolean;
 }
 
 interface projectObj{
@@ -60,12 +62,14 @@ interface projectObj{
   _id: string;
   title: string;
   createdAt: Date;
+  selected: boolean;
 }
 interface TableProps{
   items: articleObj[] | projectObj[];
+  clickHandler: (item:articleObj|projectObj)=>void
 }
 
-export default function Table({ items }:TableProps) {
+export default function Table({ items, clickHandler }:TableProps) {
   const padTo2Digits = (num: number):string => num.toString().padStart(2, '0');
 
   const formatDate = (date: Date):string => (
@@ -81,10 +85,6 @@ export default function Table({ items }:TableProps) {
         padTo2Digits(date.getSeconds()),
       ].join(':')}`
   );
-
-  const clickHandler = (item : articleObj | projectObj) => {
-    console.log('디테일 이동', item);
-  };
 
   return (
     <div>
@@ -139,6 +139,15 @@ export default function Table({ items }:TableProps) {
             <tr>
               <HeadItem scope="col"><Checkbox type="checkbox" name="selectAll" id="" /></HeadItem>
               <HeadItem scope="col">프로젝트 번호</HeadItem>
+              <HeadItem scope="col">제목</HeadItem>
+              <HeadItem scope="col">작성 날짜</HeadItem>
+            </tr>
+          )}
+          {items[0].type === 'particleAdmin' && (
+            <tr>
+              <HeadItem scope="col"><Checkbox type="checkbox" name="selectAll" id="" /></HeadItem>
+              <HeadItem scope="col">작성자</HeadItem>
+              <HeadItem scope="col">게시판</HeadItem>
               <HeadItem scope="col">제목</HeadItem>
               <HeadItem scope="col">작성 날짜</HeadItem>
             </tr>
