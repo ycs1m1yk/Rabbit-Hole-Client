@@ -1,21 +1,17 @@
 /* eslint-disable no-underscore-dangle */
 import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { useSetRecoilState } from 'recoil';
 import { useSearchParams } from 'react-router-dom';
 import { useQuery } from 'react-query';
 
-import Button from '@/components/button';
 import Search from '@/components/search';
 import Card from '@/components/card';
 import Pagination from '@/components/pagination';
-import useToken from '@/hooks/useToken';
 import SelectBox from '@/components/selectBox';
-import Loading from '@/components/loading';
 
-import modalAtom from '@/recoil/modal/modalAtom';
-import { IProjectGetParamsProps, IProjectProps } from '@/interfaces/interface';
-import { getAllProjects } from '@/lib/projectApi';
+import * as searchApi from '@lib/searchApi';
+import { IProjectProps } from '@/interfaces/interface';
+import { isEmptyArray } from '@/utils/func';
 
 const ProjectContainer = styled.div`
   padding: 3rem;
@@ -60,13 +56,6 @@ const SearchContainer = styled.div`
   top: -10%;
 `;
 
-const ButtonContainer = styled.div`
-  position: absolute;
-  right: 0%;
-  top: -10%;
-  min-height: 45px;
-`;
-
 const Content = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -88,21 +77,24 @@ const SelectBoxWrapper = styled.div`
   }
 `;
 
-export default function Projects() {
-  const setModal = useSetRecoilState(modalAtom);
-  const { authInfo } = useToken();
+const EmptyField = styled.p`
+  width: 70rem;
+  text-align: center;
+  margin: 20rem 0 20rem 43rem;
+  color: ${({ theme }) => theme.palette.black};
+  opacity: 0.5;
+  font-size: 4rem;
+  font-weight: 700;
+`;
+
+export default function ProjectsSearch() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [inputType, setInputType] = useState<string>('title');
   const [perPage, setPerPage] = useState<string>('8');
-  const [query, setQuery] = useState<IProjectGetParamsProps>({
+  const [query, setQuery] = useState<any>({
     filter: 'date', page: '1', perPage: '8',
   });
-
-  // Modal Control
-  const handleProjectEnrollment = useCallback((modalType: any) => {
-    setModal(modalType);
-  }, []);
 
   // 프로젝트 정렬
   const handleSort = useCallback((sortType: string) => {
@@ -124,15 +116,29 @@ export default function Projects() {
     setSearchParams(searchParams);
   }, []);
 
-  const { data, refetch } = useQuery(['projectList', query], () => getAllProjects(query), {
-    suspense: true,
-    staleTime: 180000,
-  });
+  const { data, refetch } = useQuery<any, Error>(
+    ['projectList', query],
+    () => {
+      if (inputType === 'title') {
+        return searchApi.searchProjectsByTitle({ ...query });
+      }
+      return searchApi.searchProjectsByAuthor({ ...query });
+    },
+    {
+      suspense: true,
+      staleTime: 180000,
+      onError: (err) => console.log(err),
+    },
+  );
 
   useEffect(() => {
     searchParams.forEach((v, k) => setQuery((q) => ({ ...q, [k]: v })));
     refetch();
   }, [searchParams]);
+
+  useEffect(() => {
+    console.log('프로젝트: ', data);
+  }, [data]);
 
   return (
     <ProjectContainer>
@@ -141,11 +147,6 @@ export default function Projects() {
         <SearchContainer>
           <Search projectQuery={query} setInputType={setInputType} />
         </SearchContainer>
-        {authInfo?.token && (
-        <ButtonContainer>
-          <Button size="small" onClick={() => handleProjectEnrollment('ProjectRegister')}>프로젝트 등록</Button>
-        </ButtonContainer>
-        )}
       </ProjectHeader>
       <Alignments>
         <Alignment onClick={() => handleSort('date')}>최신순</Alignment>
@@ -155,22 +156,24 @@ export default function Projects() {
         </SelectBoxWrapper>
       </Alignments>
       <Content>
-        {(data.projectList).map((project: IProjectProps) => (
-          <Card
-            key={project._id}
-            projectId={project._id}
-            title={project.title}
-            author={project.author}
-            shortDescription={project.shortDescription}
-            description={project.description}
-            thumbnail={project.thumbnail}
-            likes={project.likes.length}
-            tags={project.tags}
-            date={project.createdAt}
-            views={project.views}
-            type="project"
-          />
-        ))}
+        {isEmptyArray(data.projectList)
+          ? <EmptyField>일치하는 게시글이 없습니다.</EmptyField>
+          : data.projectList.map((project: IProjectProps) => (
+            <Card
+              key={project._id}
+              projectId={project._id}
+              title={project.title}
+              author={project.author}
+              shortDescription={project.shortDescription}
+              description={project.description}
+              thumbnail={project.thumbnail}
+              likes={project.likes.length}
+              tags={project.tags}
+              date={project.createdAt}
+              views={project.views}
+              type="project"
+            />
+          ))}
       </Content>
       <PaginationContainer>
         <Pagination
