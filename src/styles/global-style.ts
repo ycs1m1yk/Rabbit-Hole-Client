@@ -14,7 +14,7 @@ const GlobalStyle = createGlobalStyle`
   #root {
     min-height: 100vh;
     position: relative;
-    padding-bottom: 13.5rem;
+    padding-bottom: 75px;
   }
   a {
     text-decoration: none;
