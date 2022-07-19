@@ -166,6 +166,12 @@ export interface IRegisterFormProps {
     githubAvatar: string;
 }
 
+export interface IImageUploadProps{
+    body: string;
+    filename: string;
+    type: string;
+}
+
 export interface ISearchArticlesByTitleProps {
     [index: string]: IArticleTypes;
     title: string;
@@ -242,6 +248,23 @@ export interface IProjectPutParamsProps {
     tags?: ITagsProps[];
 }
 
+export interface IMyPageResponse {
+    _id: string;
+    name: string;
+    track: string;
+    trackCardinalNumber: number;
+    position?: string;
+    authImage: string;
+    blogAddress?: string;
+    githubEmail: string;
+    githubProfileUrl: string;
+    githubAvatar: string;
+    carrots: number;
+    role: string;
+    createdAt: string;
+    updatedAt: string;
+    __v: number
+}
 export interface IUserPUTProps {
     name?: string;
     track?: string;

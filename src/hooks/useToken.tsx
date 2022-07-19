@@ -5,10 +5,9 @@ import { useNavigate } from 'react-router-dom';
 
 export default function useToken() {
   const [authInfo, setAuthInfo] = useRecoilState(authAtom);
-  const navigate = useNavigate();
   const setLogout = () => {
     setAuthInfo(null);
-    navigate('/');
+    window.location.href = '/';
   };
   useEffect(() => {
     if (authInfo) {
