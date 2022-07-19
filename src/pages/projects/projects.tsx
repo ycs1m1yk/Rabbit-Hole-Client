@@ -152,7 +152,7 @@ export default function Projects() {
         {
             authInfo?.token && (
             <ButtonContainer>
-              <Button size="small" onClick={() => handleProjectEnrollment('Register')}>프로젝트 등록</Button>
+              <Button size="small" onClick={() => handleProjectEnrollment('ProjectRegister')}>프로젝트 등록</Button>
             </ButtonContainer>
             )
           }

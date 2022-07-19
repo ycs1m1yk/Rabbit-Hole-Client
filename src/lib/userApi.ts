@@ -10,6 +10,13 @@ export const postRegister = (bodyData: FormData) => fetch(`${BASE_URL}/users/reg
   body: bodyData,
 }).then((res) => res.json());
 
+// User - POST 이미지 업로드
+export const postImage = (bodyData: any) => fetch(`${BASE_URL}/users/image`, {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify(bodyData),
+}).then((res) => res.json());
+
 // User - GET 로그인
 export const getUserLogin = `${BASE_URL}/auth/github/login`;
 

@@ -62,7 +62,7 @@ export default function Home() {
   // Data fetching and set data
   const questionParams = { articleType: 'question' };
   const freeParams = { articleType: 'free' };
-  const projectParams = { filter: 'views', page: 1, perPage: 8 };
+  const projectParams = { filter: 'views', page: '1', perPage: '8' };
 
   const { data: freePosts } = useQuery(['free', 'main'], () => getAllArticle(freeParams), {
     staleTime: 180000,

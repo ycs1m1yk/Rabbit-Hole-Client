@@ -32,12 +32,12 @@ export const postProject = (token: string, bodyData: FormData) => fetch(`${BASE_
 }).then((res) => ({ status: res.status, data: res.json() }));
 
 // 프로젝트 수정
-export const updateProjectById = (token: string, projectId: string, bodyData: interfaces.IProjectPutParamsProps) => fetch(`${BASE_URL}/projects?=${projectId}`, {
+export const updateProjectById = (token: string, projectId: string, bodyData: FormData) => fetch(`${BASE_URL}/projects/${projectId}`, {
   method: 'PUT',
   headers: {
     Authorization: `Bearer ${token}`,
   },
-  body: JSON.stringify(bodyData),
+  body: bodyData,
 }).then((res) => ({ status: res.status, data: res.json() }));
 
 // 프로젝트 삭제

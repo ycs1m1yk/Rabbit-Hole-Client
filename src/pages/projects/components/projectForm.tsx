@@ -1,3 +1,5 @@
+/* eslint-disable guard-for-in */
+/* eslint-disable no-restricted-syntax */
 /* eslint-disable react/jsx-props-no-spreading */
 import React, {
   useCallback, useState, KeyboardEvent, useRef,
@@ -11,9 +13,9 @@ import { postProject } from '@/lib/projectApi';
 import useToken from '@/hooks/useToken';
 import modalAtom from '@/recoil/modal/modalAtom';
 import { useSetRecoilState } from 'recoil';
-import MarkdownEditor from '../markdownEditor';
-import Button from '../button';
-import TagsInput from '../tagsInput';
+import MarkdownEditor from '@components/markdownEditor';
+import Button from '@components/button';
+import TagsInput from '@components/tagsInput';
 
 const ModalTitle = styled.h1`
   text-align: center;
@@ -67,7 +69,9 @@ interface IForm {
 }
 
 function ProjectForm() {
-  const { register, handleSubmit, formState: { errors } } = useForm<IForm>();
+  const {
+    register, handleSubmit, formState: { errors },
+  } = useForm<IForm>();
   const [tags, setTags] = useState<{name: string}[]>([]);
   const setModal = useSetRecoilState(modalAtom);
   const editorRef = useRef<Editor>(null);
@@ -78,7 +82,7 @@ function ProjectForm() {
     if (e.code === 'Enter') e.preventDefault();
   }, []);
 
-  // Form Data가 유효하다면 이 곳에서 POST 요청
+  // FormData POST 요청
   const onValid = async (data: IForm) => {
     const formData = {
       ...data,
@@ -107,24 +111,27 @@ function ProjectForm() {
 
   return (
     <>
-      <ModalTitle>프로젝트 등록 및 수정</ModalTitle>
+      <ModalTitle>프로젝트 등록</ModalTitle>
       <ProjectInfomationForm encType="multipart/form-data" onKeyDown={handleEnterSubmit}>
         <InputTitle>Title</InputTitle>
-        <ProjectInput {...register('title', {
-          required: '제목은 필수 입력사항입니다:)',
-        })}
+        <ProjectInput
+          {...register('title', {
+            required: '제목은 필수 입력사항입니다:)',
+          })}
         />
         <ErrorMessage>{errors?.title?.message}</ErrorMessage>
         <InputTitle>작성자</InputTitle>
-        <ProjectInput {...register('author', {
-          required: '이름은 필수 입력사항입니다:)',
-        })}
+        <ProjectInput
+          {...register('author', {
+            required: '이름은 필수 입력사항입니다:)',
+          })}
         />
         <ErrorMessage>{errors?.author?.message}</ErrorMessage>
         <InputTitle>한 줄 소개</InputTitle>
-        <ProjectInput {...register('shortDescription', {
-          required: '한 줄 소개는 필수 입력사항입니다:)',
-        })}
+        <ProjectInput
+          {...register('shortDescription', {
+            required: '한 줄 소개는 필수 입력사항입니다:)',
+          })}
         />
         <ErrorMessage>{errors?.shortDescription?.message}</ErrorMessage>
         <InputTitle>태그</InputTitle>

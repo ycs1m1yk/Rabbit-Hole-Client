@@ -1,5 +1,3 @@
-import * as interfaces from '@interfaces/interface';
-
 // React Query의 fetcher function은 반드시 json의 Promise를 반환
 const BASE_URL = `${import.meta.env.VITE_API_BASE_URL}`;
 

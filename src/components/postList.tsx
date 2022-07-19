@@ -65,15 +65,16 @@ const defaultProps = {
   type: 'default',
   title: '',
   userId: '',
+  sortHandler: () => {},
 };
 
-type postList = {
+interface postList {
   type?: string;
   title?: string;
   posts: IArticleProps[];
   userId?: string;
-  sortHandler: Function | undefined;
-} & typeof defaultProps
+  sortHandler?: Function;
+}
 
 export default function PostList({
   type, title, posts, userId, sortHandler,
