@@ -29,7 +29,7 @@ export const deleteArticleById = (token: string, articleId: string) => fetch(`${
   headers: {
     Authorization: `Bearer ${token}`,
   },
-}).then((res) => res.json());
+}).then((res) => ({ status: res.status, data: res.json() }));
 
 // Article - GET 게시글 조회
 export const getArticleById = (articleId: string) => fetch(`${BASE_URL}/articles/${articleId}`)

@@ -1,6 +1,6 @@
 import Pagination from '@/components/pagination';
 import Table from '@/components/table';
-import React, { Dispatch, SetStateAction } from 'react';
+import React, { Dispatch, SetStateAction, useEffect } from 'react';
 import styled from 'styled-components';
 import { IArticleProps } from '@interfaces/interface';
 
@@ -34,13 +34,17 @@ const EmptyField = styled.p`
 
 interface IMyPageArticleProps {
   data: {articleList: IArticleProps[], totalPage: number};
+  page: number;
   setPage: Dispatch<SetStateAction<number>>;
   setPerPage: Dispatch<SetStateAction<number>>;
 }
 
 function MyPageProjects({
-  data, setPage, setPerPage,
+  data, page, setPage, setPerPage,
 }: IMyPageArticleProps) {
+  useEffect(() => {
+
+  }, [page]);
   return data.articleList && (
     <Container>
       <Title>내 게시글 관리</Title>
@@ -49,7 +53,7 @@ function MyPageProjects({
           ? (
             <>
               <TableConatiner>
-                <Table type="project" items={data.articleList} />
+                <Table type="article" items={data.articleList} />
               </TableConatiner>
               <PaginationContainer>
                 <Pagination length={data.totalPage} handler={setPage} />

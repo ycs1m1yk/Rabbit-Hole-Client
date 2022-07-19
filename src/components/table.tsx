@@ -3,7 +3,7 @@
 import {
   IArticleProps, IProjectProps,
 } from '@/interfaces/interface';
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { deleteProjectById } from '@/lib/projectApi';
@@ -71,14 +71,16 @@ export default function Table({ type, items }:TableProps) {
 
   const [checkedItems, setCheckedItems] = useState<any>([]);
 
+  // 아이템 눌렀을 때 detail로 routing
   const clickHandler = (itemId : string) => {
     if (type === 'project') {
       navigate(`/projects/detail?projectId=${itemId}`);
     } else if (type === 'article') {
-      console.log('article detail 이동');
+      navigate(`/board/detail?id=${itemId}`);
     }
   };
 
+  // 체크박스 누른 item의 id 값 얻어오기
   const handleCheckBox = (e: ChangeEvent, id: string) => {
     setCheckedItems((prev: string[]) => {
       if (prev.includes(id)) {
@@ -91,31 +93,56 @@ export default function Table({ type, items }:TableProps) {
 
   // 전체 삭제
   const handleAllItemDelete = () => {
-    const allItems = items.map((item) => item._id);
+    const allItems = items.map((item) => item._id); // 모든 아이템의 id
+    let flag = true; // 요청 성공 실패 여부
+
+    // 1차적으로 확인 후 진행
     if (confirm('정말 삭제하시겠습니까?')) {
+      // 프로젝트 전체 삭제
       if (type === 'project') {
         if (allItems.length > 0) {
           allItems.map(async (itemId: string) => {
             const response = await deleteProjectById(authInfo!.token, itemId);
+
+            // 요청 실패하는 경우
             if (response.status >= 400) {
               alert('프로젝트 삭제가 실패했습니다. 다시 시도해주세요:(');
-              window.location.reload();
+              flag = false;
+              setCheckedItems([]);
             }
           });
-          alert('프로젝트가 성공적으로 삭제되었습니다:)');
+
+          // 요청이 성공한 경우 성공 alert
+          if (flag) {
+            alert('프로젝트가 성공적으로 삭제되었습니다:)');
+          }
+
+          // 요청 결과 상관없이 페이지 reload
+          window.location.reload();
         }
       }
 
+      // 게시글 전체 삭제
       if (type === 'article') {
         if (allItems.length > 0) {
           allItems.map(async (itemId: string) => {
             const response = await deleteArticleById(authInfo!.token, itemId);
+
+            // 요청 실패하는 경우
             if (response.status >= 400) {
               alert('게시물 삭제가 실패했습니다. 다시 시도해주세요:(');
-              window.location.reload();
+              flag = false;
+              setCheckedItems([]);
             }
           });
-          alert('게시물이 성공적으로 삭제되었습니다:)');
+
+          // 요청이 성공한 경우 성공 alert
+          if (flag) {
+            alert('게시물이 성공적으로 삭제되었습니다:)');
+          }
+
+          // 요청 결과 상관없이 페이지 reload
+          window.location.reload();
         }
       }
     }
@@ -124,16 +151,27 @@ export default function Table({ type, items }:TableProps) {
   // 선택한 Item 삭제
   const handleItemDelete = async () => {
     // Project 선택 삭제
+    let flag = true;
     if (type === 'project') {
       if (checkedItems.length > 0) {
         checkedItems.map(async (itemId: string) => {
           const response = await deleteProjectById(authInfo!.token, itemId);
+
+          // 요청 실패하는 경우
           if (response.status >= 400) {
             alert('프로젝트 삭제가 실패했습니다. 다시 시도해주세요:(');
-            window.location.reload();
+            flag = false;
+            setCheckedItems([]);
           }
         });
-        alert('프로젝트가 성공적으로 삭제되었습니다:)');
+
+        // 요청이 성공한 경우 성공 alert
+        if (flag) {
+          alert('프로젝트가 성공적으로 삭제되었습니다:)');
+        }
+
+        // 요청 결과 상관없이 페이지 reload
+        window.location.reload();
       }
     }
 
@@ -142,12 +180,22 @@ export default function Table({ type, items }:TableProps) {
       if (checkedItems.length > 0) {
         checkedItems.map(async (itemId: string) => {
           const response = await deleteArticleById(authInfo!.token, itemId);
+
+          // 요청 실패하는 경우
           if (response.status >= 400) {
             alert('게시물 삭제가 실패했습니다. 다시 시도해주세요:(');
-            window.location.reload();
+            flag = false;
+            setCheckedItems([]);
           }
         });
-        alert('게시물이 성공적으로 삭제되었습니다:)');
+
+        // 요청이 성공한 경우 성공 alert
+        if (flag) {
+          alert('게시물이 성공적으로 삭제되었습니다:)');
+        }
+
+        // 요청 결과 상관없이 페이지 reload
+        window.location.reload();
       }
     }
   };
@@ -164,8 +212,7 @@ export default function Table({ type, items }:TableProps) {
         <colgroup>
           <col width="5%" />
           <col width="10%" />
-          <col width="30%" />
-          <col width="30%" />
+          <col width="60%" />
           <col width="25%" />
         </colgroup>
         )}
@@ -173,8 +220,7 @@ export default function Table({ type, items }:TableProps) {
         <colgroup>
           <col width="5%" />
           <col width="10%" />
-          <col width="30%" />
-          <col width="30%" />
+          <col width="60%" />
           <col width="25%" />
         </colgroup>
         )}
@@ -183,7 +229,6 @@ export default function Table({ type, items }:TableProps) {
             <tr>
               <HeadItem scope="col" />
               <HeadItem scope="col">연번</HeadItem>
-              <HeadItem scope="col">프로젝트 식별 번호</HeadItem>
               <HeadItem scope="col">제목</HeadItem>
               <HeadItem scope="col">작성 날짜</HeadItem>
             </tr>
@@ -192,7 +237,6 @@ export default function Table({ type, items }:TableProps) {
             <tr>
               <HeadItem scope="col" />
               <HeadItem scope="col">연번</HeadItem>
-              <HeadItem scope="col">게시물 식별 번호</HeadItem>
               <HeadItem scope="col">제목</HeadItem>
               <HeadItem scope="col">작성 날짜</HeadItem>
             </tr>
@@ -206,7 +250,6 @@ export default function Table({ type, items }:TableProps) {
                   <TableRow key={item._id}>
                     <TableItem><input type="checkbox" name={item._id} id={item._id} onChange={(e) => handleCheckBox(e, item._id)} /></TableItem>
                     <TableItem onClick={() => clickHandler(item._id)}>{i + 1}</TableItem>
-                    <TableItem onClick={() => clickHandler(item._id)}>{item._id}</TableItem>
                     <TableItem onClick={() => clickHandler(item._id)}>{item.title}</TableItem>
                     <TableItem onClick={() => clickHandler(item._id)}>{item.createdAt.slice(0, 10)}</TableItem>
                   </TableRow>
@@ -217,7 +260,6 @@ export default function Table({ type, items }:TableProps) {
                   <TableRow key={item._id}>
                     <TableItem><input type="checkbox" name={item._id} id={item._id} onChange={(e) => handleCheckBox(e, item._id)} /></TableItem>
                     <TableItem onClick={() => clickHandler(item._id)}>{i + 1}</TableItem>
-                    <TableItem onClick={() => clickHandler(item._id)}>{item._id}</TableItem>
                     <TableItem onClick={() => clickHandler(item._id)}>{item.title}</TableItem>
                     <TableItem onClick={() => clickHandler(item._id)}>{item.createdAt.slice(0, 10)}</TableItem>
                   </TableRow>
