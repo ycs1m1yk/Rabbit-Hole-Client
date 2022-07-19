@@ -1,5 +1,7 @@
 /* eslint-disable no-underscore-dangle */
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {
+  MouseEvent, useCallback, useEffect, useRef, useState,
+} from 'react';
 import styled from 'styled-components';
 import { useSetRecoilState } from 'recoil';
 import { useSearchParams } from 'react-router-dom';
@@ -11,7 +13,6 @@ import Card from '@/components/card';
 import Pagination from '@/components/pagination';
 import useToken from '@/hooks/useToken';
 import SelectBox from '@/components/selectBox';
-import Loading from '@/components/loading';
 
 import modalAtom from '@/recoil/modal/modalAtom';
 import { IProjectGetParamsProps, IProjectProps } from '@/interfaces/interface';
@@ -25,23 +26,26 @@ const Alignments = styled.ul`
   width: 100%;
   display: flex;
   align-items: center;
-  gap: 4rem;
-  & :hover{
-    font-weight: 700;
-    color: ${({ theme }) => theme.palette.eliceViolet};
-  }
+  gap: 1.5rem;
   position: relative;
   margin: 1rem 0;
 `;
 
 const Alignment = styled.li`
-  cursor: pointer;
+  vertical-align: middle;
+  margin-left: 2rem;
   list-style-type: disc;
+  color: ${({ theme }) => theme.palette.gray};
   font-size: 1.5rem;
   font-weight: 500;
   line-height: 26px;
-  vertical-align: middle;
-  margin-left: 2rem;
+  cursor: pointer;
+
+  &[selected],
+  &:hover{
+    font-weight: 700;
+    color: ${({ theme }) => theme.palette.eliceViolet};
+  }  
 `;
 
 const ProjectHeader = styled.div`
@@ -91,6 +95,7 @@ const SelectBoxWrapper = styled.div`
 export default function Projects() {
   const setModal = useSetRecoilState(modalAtom);
   const { authInfo } = useToken();
+  const sortRef = useRef<HTMLLIElement | null>(null);
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [inputType, setInputType] = useState<string>('title');
@@ -105,7 +110,13 @@ export default function Projects() {
   }, []);
 
   // 프로젝트 정렬
-  const handleSort = useCallback((sortType: string) => {
+  const handleSort = useCallback((e: MouseEvent<HTMLLIElement>, sortType: string) => {
+    if (sortRef.current) {
+      sortRef.current.removeAttribute('selected');
+    }
+    sortRef.current = e.target as HTMLLIElement;
+    sortRef.current.setAttribute('selected', '');
+
     searchParams.set('filter', sortType);
     searchParams.set('page', '1');
     setSearchParams(searchParams);
@@ -148,8 +159,8 @@ export default function Projects() {
         )}
       </ProjectHeader>
       <Alignments>
-        <Alignment onClick={() => handleSort('date')}>최신순</Alignment>
-        <Alignment onClick={() => handleSort('views')}>조회순</Alignment>
+        <Alignment onClick={(e) => handleSort(e, 'date')}>최신순</Alignment>
+        <Alignment onClick={(e) => handleSort(e, 'views')}>조회순</Alignment>
         <SelectBoxWrapper className="selectbox-perpage">
           <SelectBox options={['4', '8', '12', '16']} defaultValue="페이지당 개수" selectedOption={perPage} setSelectedOption={setPerPage} requestFunc={handlePerPage} width={70} type="register" />
         </SelectBoxWrapper>
