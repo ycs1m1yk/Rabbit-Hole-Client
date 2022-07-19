@@ -3,7 +3,7 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable max-len */
 import React, {
-  MouseEvent, useEffect, useRef, useState,
+  MouseEvent, useEffect, useRef,
 } from 'react';
 import { useQuery } from 'react-query';
 import { useSearchParams, useNavigate } from 'react-router-dom';
@@ -19,8 +19,6 @@ import { S3URL } from '@utils/regex';
 import useToken from '@/hooks/useToken';
 import { Editor } from '@toast-ui/react-editor';
 import { deleteCommentById, postComment } from '@/lib/commentApi';
-import ProjectForm from '@/components/forms/projectForm';
-import useModal from '@/hooks/useModal';
 import modalAtom from '@/recoil/modal/modalAtom';
 import { useSetRecoilState } from 'recoil';
 import { ModalTypes } from '@/interfaces/type';
@@ -153,7 +151,9 @@ function ProjectDetail() {
   let authorId;
 
   if (projectId) {
-    const { data } = useQuery<any>(['projectDetail', projectId], () => getProjectById(projectId));
+    const { data } = useQuery<any>(['projectDetail', projectId], () => getProjectById(projectId), {
+      staleTime: 5000,
+    });
 
     if (data) {
       project = data.projectInfo;
@@ -162,10 +162,8 @@ function ProjectDetail() {
     }
   }
 
-  const [flag, setFlag] = useState<number>(0);
-
   // Page view 맨 아래, 맨 위로 이동
-  const handleBottomClick = (e: MouseEvent) => {
+  const handlePageView = (e: MouseEvent) => {
     if (e.pageY > 1000) {
       // 맨 위로 이동
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -185,7 +183,6 @@ function ProjectDetail() {
       await postComment(authInfo!.token, projectId as string, postParams);
 
       window.location.reload();
-      setFlag((prev) => prev + 1);
     } catch (e: any) {
       alert('문제가 발생했습니다. 다시  시도해주세요:(');
     }
@@ -219,7 +216,8 @@ function ProjectDetail() {
   };
 
   useEffect(() => {
-  }, [flag]);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [searchParams]);
 
   return project && (
     <ProjectDetailContainer ref={scrollRef}>
@@ -253,7 +251,7 @@ function ProjectDetail() {
       </ProjectContentContainer>
       {authorId === authInfo?.userId && (
       <EditButtonContainer>
-        <Button onClick={() => handleProjectEdit('Register')}>수정하기</Button>
+        <Button onClick={() => handleProjectEdit('ProjectEdit')}>수정하기</Button>
         <Button onClick={handleProjectDelete}>삭제하기</Button>
       </EditButtonContainer>
       )}
@@ -290,7 +288,7 @@ function ProjectDetail() {
       <ButtonContainer>
         <Button onClick={handleCommentPost}>답변하기</Button>
       </ButtonContainer>
-      <GoToAnswer ref={moveRef} onClick={handleBottomClick}>Move</GoToAnswer>
+      <GoToAnswer ref={moveRef} onClick={handlePageView}>Move</GoToAnswer>
     </ProjectDetailContainer>
   );
 }

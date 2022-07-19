@@ -190,7 +190,6 @@ export default function Card({
 
   const handleClick = ():void => {
     if (type === 'project') {
-      console.log('프로젝트 디테일 페이지 이동', `/project?projectId=${projectId}`);
       navigate(`/projects/detail?projectId=${projectId}`);
     } else if (type === 'mentoring') {
       console.log('멘토링 디테일 모달 띄우기');

@@ -51,9 +51,9 @@ export interface IArticleProps {
 export interface IArticleGetProps {
     [index: string]: any;
     articleType: IArticleTypes;
-    filter: string;
-    page: string;
-    perPage: string;
+    filter?: string;
+    page?: string;
+    perPage?: string;
 }
 
 export interface IArticleGetByIdProps {
@@ -219,7 +219,7 @@ export interface ISearchProjectsByAuthorProps {
 
 export interface IProjectGetParamsProps {
     [index: string]: any;
-    filter: string;
+    filter?: string;
     page: string;
     perPage: string;
 }
@@ -234,12 +234,12 @@ export interface IProjectPostParamsProps {
 }
 
 export interface IProjectPutParamsProps {
-    author: string;
-    title: string;
-    shortDescription: string;
-    description: string;
-    thumbnail: string;
-    tags: ITagsProps[];
+    author?: string;
+    title?: string;
+    shortDescription?: string;
+    description?: string;
+    thumbnail?: string;
+    tags?: ITagsProps[];
 }
 
 export interface IUserPUTProps {
