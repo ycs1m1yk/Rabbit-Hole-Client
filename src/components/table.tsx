@@ -91,7 +91,7 @@ export default function Table({ type, items }:TableProps) {
     });
   };
 
-  // 전체 삭제
+  // 해당 테이블 요소 전체 삭제
   const handleAllItemDelete = () => {
     const allItems = items.map((item) => item._id); // 모든 아이템의 id
     let flag = true; // 요청 성공 실패 여부

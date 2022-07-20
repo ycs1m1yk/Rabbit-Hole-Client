@@ -176,12 +176,14 @@ function ProjectDetail() {
   if (projectId) {
     const { data } = useQuery<any>(['projectDetail', projectId], () => getProjectById(projectId), {
       refetchOnWindowFocus: false,
+      suspense: true,
     });
 
     if (data) {
       project = data.projectInfo;
       comments = data.commentList;
       authorId = data.projectInfo.authorId;
+      window.scrollTo(0, 0);
     }
   }
 

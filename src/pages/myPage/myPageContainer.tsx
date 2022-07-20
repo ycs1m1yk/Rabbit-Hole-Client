@@ -16,9 +16,9 @@ interface IMyPageTypeProps {
 function MyPageContainer({ type }: IMyPageTypeProps): any {
   const { authInfo } = useToken();
   const [articlePage, setArticlePage] = useState<number>(0);
-  const [articlePerPage, setArticlePerPage] = useState<number>(5);
+  const [articlePerPage, setArticlePerPage] = useState<number>(10);
   const [projectPage, setProjectPage] = useState<number>(0);
-  const [projectPerPage, setProjectPerPage] = useState<number>(5);
+  const [projectPerPage, setProjectPerPage] = useState<number>(10);
 
   // 페이지네이션 params
   const articleParams = { page: articlePage + 1, perPage: articlePerPage };
