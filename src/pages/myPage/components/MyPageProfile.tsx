@@ -6,7 +6,7 @@ import Button from '@/components/button';
 import { useSetRecoilState } from 'recoil';
 import modalAtom from '@/recoil/modal/modalAtom';
 import { ModalTypes } from '@/interfaces/type';
-import { updateUserProfile } from '@/lib/userApi';
+import { deleteUser, updateUserProfile } from '@/lib/userApi';
 import useToken from '@/hooks/useToken';
 import { IUserProps } from '@/interfaces/interface';
 import { FaCarrot } from 'react-icons/fa';
@@ -57,6 +57,8 @@ const ProfileImage = styled.img`
 
 const ButtonConatiner = styled.div`
   margin: 2rem 0;
+  display: flex;
+  gap: 2rem;
 `;
 
 interface IForm {
@@ -90,6 +92,15 @@ function MyPageProfile({ data }: {data: IUserProps}) {
     setModal(modalType);
   };
 
+  const handleUserDelete = async () => {
+    const response = await deleteUser(authInfo!.token);
+    if (response.status !== 200) {
+      alert('회원 탈퇴에 성공했습니다. 다음에 다시 만나요:)');
+    } else {
+      alert('회원 탈퇴에 실패했습니다. 다시 시도해주세요:(');
+    }
+  };
+
   return (
     <Container>
       <InputForm>
@@ -107,6 +118,7 @@ function MyPageProfile({ data }: {data: IUserProps}) {
         <InputValue {...register('githubProfileUrl')} defaultValue={data.githubProfileUrl} />
         <ButtonConatiner>
           <Button onClick={handleSubmit(onValid)}>정보 수정</Button>
+          <Button onClick={handleUserDelete}>회원 탈퇴</Button>
         </ButtonConatiner>
       </InputForm>
       <ImageContainer>

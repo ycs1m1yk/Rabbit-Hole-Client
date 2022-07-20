@@ -137,7 +137,6 @@ export default function Projects() {
 
   const { data, refetch } = useQuery(['projectList', query], () => getAllProjects(query), {
     suspense: true,
-    staleTime: 180000,
   });
 
   useEffect(() => {

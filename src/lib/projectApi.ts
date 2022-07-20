@@ -47,3 +47,11 @@ export const deleteProjectById = (token: string, projectId: string) => fetch(`${
     Authorization: `Bearer ${token}`,
   },
 }).then((res) => ({ status: res.status, data: res.json() }));
+
+// 프로젝트 좋아요
+export const increaseProjectLikes = (token: string, projectId: string) => fetch(`${BASE_URL}/projects/${projectId}/heart`, {
+  method: 'PUT',
+  headers: {
+    Authorization: `Bearer ${token}`,
+  },
+}).then((res) => ({ status: res.status, result: res.json() }));

@@ -111,8 +111,8 @@ function RegisterForm() {
           {...register('name', {
             required: '이름은 필수 입력사항입니다:)',
             maxLength: {
-              value: 5,
-              message: '이름은 5글자를 넘길 수 없습니다:)',
+              value: 10,
+              message: '이름은 10글자를 넘길 수 없습니다:)',
             },
           })}
           placeholder="ex:설재혁"
