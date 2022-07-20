@@ -3,8 +3,8 @@ import {
   AiOutlineEdit, AiOutlineUser, AiOutlineTeam, AiOutlineProject,
 } from 'react-icons/ai';
 import styled from 'styled-components';
-import SideBar from '@/components/sideBar';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import SideBar from '@/components/sideBar';
 import useToken from '@/hooks/useToken';
 
 import AdminUser from './user';
