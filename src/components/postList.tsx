@@ -109,7 +109,7 @@ export default function PostList({
             profile={post.author}
             title={post.title}
             content={post.content}
-            date={post.createdAt}
+            date={post.createdAt.slice(0, 10)}
             comment={post.comments?.length || 0}
             heart={post.likes.length}
             type={type}
