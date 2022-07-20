@@ -170,7 +170,6 @@ export default function PostItem({
 }:IPostItemProps) {
   const navigate = useNavigate();
   const clickHandler = ():void => {
-    console.log(`게시물 디테일로 이동 : /board?${articleType}=${articleId}`);
     navigate(`/board/detail?id=${articleId}`);
   };
 
