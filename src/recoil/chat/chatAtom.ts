@@ -1,4 +1,4 @@
-import { atom, selector } from 'recoil';
+import { atom } from 'recoil';
 import { newUserMessage } from '@/hooks/useSocket';
 
 export interface ChatProps {
