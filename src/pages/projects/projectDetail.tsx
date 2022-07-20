@@ -23,6 +23,7 @@ import modalAtom from '@/recoil/modal/modalAtom';
 import { useSetRecoilState } from 'recoil';
 import { ModalTypes } from '@/interfaces/type';
 import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
+import { lighten } from 'polished';
 
 const ProjectDetailContainer = styled.div`
   padding: 5rem;
@@ -102,7 +103,7 @@ const ReplyContainer = styled.div<{isMyComment: boolean}>`
   border-radius: 20px;
   width: 50%;
   align-self: ${(props) => (props.isMyComment ? 'flex-end' : 'flex-start')};
-  background-color: ${(props) => (props.isMyComment ? props.theme.palette.kakaoYellow : props.theme.palette.borderGray)};
+  background-color: ${(props) => (props.isMyComment ? lighten(0.5, props.theme.palette.eliceViolet) : props.theme.palette.borderGray)};
 `;
 
 const ReplyHeader = styled.div`
@@ -289,7 +290,7 @@ function ProjectDetail() {
             {
               authInfo?.userId === comment.authorId && (
               <ButtonContainer>
-                <Button size="small" style={{ backgroundColor: 'black' }} onClick={() => handleCommentDelete(comment._id)}>삭제</Button>
+                <Button size="small" onClick={() => handleCommentDelete(comment._id)}>삭제</Button>
               </ButtonContainer>
               )
             }
