@@ -122,11 +122,6 @@ export default function ArticleEditForm() {
     })();
   }, [tags]);
 
-  // Form 데이터가 유효하지 않은 경우 호출되는 함수
-  const onInvalid = useCallback(() => {
-    console.log(errors);
-  }, [errors]);
-
   return (
     <>
       <ModalHeader>
@@ -164,7 +159,7 @@ export default function ArticleEditForm() {
             <MarkdownEditor initialValue={data.article?.content} ref={editorRef} />
           </MarkdownEditorWrapper>
         </InputWrapper>
-        <Button className="button-post-submit" onClick={handleSubmit(onValid, onInvalid)}>수정하기</Button>
+        <Button className="button-post-submit" onClick={handleSubmit(onValid)}>수정하기</Button>
       </StyledArticleForm>
     </>
   );

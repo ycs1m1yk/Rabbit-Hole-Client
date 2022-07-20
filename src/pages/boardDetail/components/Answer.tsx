@@ -63,7 +63,6 @@ export default function Answer({ comment, setToggleAnswerBox, toggleAnswerBox }:
   const handleDelete = React.useCallback(async () => {
     if (confirm('정말 삭제하시겠습니까?')) {
       const res = await deleteCommentById(authInfo!.token, comment._id as string);
-      console.log(res);
       if (res.status === 200) {
         queryClient.invalidateQueries();
       } else {
@@ -90,7 +89,6 @@ export default function Answer({ comment, setToggleAnswerBox, toggleAnswerBox }:
     }
     if (confirm('채택은 1회만 가능합니다. 채택하시겠습니까?')) {
       const res = await adoptComment(authInfo!.token, comment._id);
-      console.log(res);
       if (res.result === 'Conflict') {
         alert(res.reason);
       }

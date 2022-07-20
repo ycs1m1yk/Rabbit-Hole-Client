@@ -49,7 +49,6 @@ export default function Article({ article, comments }: ArticleProps) {
   const handleDelete = React.useCallback(async () => {
     if (confirm('정말 삭제하시겠습니까?')) {
       const res = await deleteArticleById(authInfo!.token, articleId as string);
-      console.log(res);
       if (res.status === 200) {
         alert('삭제되었습니다.');
         navigate('/board');
