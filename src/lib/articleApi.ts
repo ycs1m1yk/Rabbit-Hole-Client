@@ -20,7 +20,7 @@ export const updateArticleById = (token: string, articleId: string, bodyData: in
     Authorization: `Bearer ${token}`,
     'Content-Type': 'application/json',
   },
-  body: bodyData,
+  body: JSON.stringify(bodyData),
 }).then((res) => res.json());
 
 // Article - DEL 게시글 삭제

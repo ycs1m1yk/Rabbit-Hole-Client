@@ -241,15 +241,6 @@ export default function Table({ type, items }:TableProps) {
               <HeadItem scope="col">작성 날짜</HeadItem>
             </tr>
           )}
-          {items[0].type === 'particleAdmin' && (
-            <tr>
-              <HeadItem scope="col"><Checkbox type="checkbox" name="selectAll" id="" /></HeadItem>
-              <HeadItem scope="col">작성자</HeadItem>
-              <HeadItem scope="col">게시판</HeadItem>
-              <HeadItem scope="col">제목</HeadItem>
-              <HeadItem scope="col">작성 날짜</HeadItem>
-            </tr>
-          )}
         </TableHead>
         <TableBody>
           {
