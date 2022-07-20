@@ -277,13 +277,27 @@ export default function AdminTable({ items, setItems }:TableProps) {
                   return (
                     <TableRow>
                       <TableItem><NormalCheck type="checkbox" name="user" checked={item.selected} value={item._id} onChange={checkHandler} /></TableItem>
-                      <TableItem><Avatar src={item.avatar} /></TableItem>
-                      <TableItem>{item.name}</TableItem>
-                      <TableItem>{item.email}</TableItem>
-                      <TableItem>{item.track}</TableItem>
-                      <TableItem>{item.trackCardinalNumber}</TableItem>
-                      <TableItem>{item.position}</TableItem>
-                      <TableItem>{item.role}</TableItem>
+                      <TableItem onClick={(e) => { detailHandler(e, item.path); }}>
+                        <Avatar src={item.avatar} />
+                      </TableItem>
+                      <TableItem onClick={(e) => { detailHandler(e, item.path); }}>
+                        {item.name}
+                      </TableItem>
+                      <TableItem onClick={(e) => { detailHandler(e, item.path); }}>
+                        {item.email}
+                      </TableItem>
+                      <TableItem onClick={(e) => { detailHandler(e, item.path); }}>
+                        {item.track}
+                      </TableItem>
+                      <TableItem onClick={(e) => { detailHandler(e, item.path); }}>
+                        {item.trackCardinalNumber}
+                      </TableItem>
+                      <TableItem onClick={(e) => { detailHandler(e, item.path); }}>
+                        {item.position}
+                      </TableItem>
+                      <TableItem onClick={(e) => { detailHandler(e, item.path); }}>
+                        {item.role}
+                      </TableItem>
                       {item.role === 'guest' && <TableItem><Button size="small" onClick={() => { modalHandler(item.authImage, item._id); }}>이미지</Button></TableItem>}
                     </TableRow>
                   );

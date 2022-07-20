@@ -98,6 +98,7 @@ export default function AdminUser() {
         trackCardinalNumber,
         position,
         role,
+        path: `/profile?id=${_id}`,
         createdAt: new Date(createdAt),
         selected: false,
       }));
@@ -112,6 +113,7 @@ export default function AdminUser() {
     },
   });
 
+  // 유저 역할군 필터링
   useEffect(() => {
     navigate(`/admin?type=users&role=${selectedOption}&page=1&perPage=10`);
   }, [selectedOption]);
@@ -135,6 +137,7 @@ export default function AdminUser() {
     }
   }, [selectedOption, authInfo, userState]);
 
+  // 페이지네이션
   const paginationHandler = useCallback((pageNumber:number) => {
     navigate(`/admin?type=users&role=${selectedOption}&page=${Number(pageNumber) + 1}&perPage=10`);
   }, [selectedOption]);

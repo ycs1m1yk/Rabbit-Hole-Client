@@ -1,14 +1,13 @@
 /* eslint-disable no-shadow */
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import styled from 'styled-components';
 import AdminTable from '@/components/adminTable';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useQuery } from 'react-query';
-import { deleteProject, deleteUser, getAllProjects } from '@/lib/adminApi';
+import { deleteProject, getAllProjects } from '@/lib/adminApi';
 import useToken from '@/hooks/useToken';
 import Pagination from '@components/pagination';
 import Button from '@/components/button';
-import SelectBox from '@/components/selectBox';
 
 const Settings = styled.div`
   display: flex;
@@ -94,7 +93,7 @@ export default function AdmiProject() {
 
   const deleteHandler = useCallback(async () => {
     if (authInfo && projectState) {
-      if (confirm('정말 삭제하시겠습니까?')) {
+      if (confirm('정말 삭제하시겠습니까?')) { // 삭제 재확인
         try {
           const res = await Promise.all(projectState.map(async (project) => {
             if (project.selected) await deleteProject(authInfo?.token, project._id);
@@ -110,6 +109,7 @@ export default function AdmiProject() {
     }
   }, [authInfo, projectState]);
 
+  // 페이지네이션
   const paginationHandler = useCallback((pageNumber:number) => {
     navigate(`/admin?type=projects&page=${Number(pageNumber) + 1}&perPage=10`);
   }, []);

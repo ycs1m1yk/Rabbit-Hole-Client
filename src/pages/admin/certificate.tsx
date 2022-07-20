@@ -27,6 +27,7 @@ export default function Certificate() {
   const image = query.get('image');
   const userId = query.get('userId');
 
+  // guest => racer로 변경
   const clickHandler = () => {
     if (authInfo && userId) {
       try {
