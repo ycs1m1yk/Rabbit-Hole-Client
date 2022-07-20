@@ -65,7 +65,6 @@ export default function AdminUser() {
     let newUsers;
     if (authInfo && queryParams) {
       newUsers = await getAllUsers(authInfo.token, queryParams);
-      console.log(newUsers);
       newUsers.userList = newUsers.userList.map(({
         _id,
         githubAvatar,
@@ -103,11 +102,9 @@ export default function AdminUser() {
         selected: false,
       }));
     }
-    console.log(newUsers);
     return newUsers;
   }, {
     onSuccess(data) {
-      console.log(data);
       setUserState(data.userList);
       setTotalPageState(data.totalPage);
     },

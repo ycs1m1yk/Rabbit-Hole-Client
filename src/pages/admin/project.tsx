@@ -81,11 +81,9 @@ export default function AdmiProject() {
         path: `/projects/detail?projectId=${_id}`,
       }));
     }
-    console.log(newProjects);
     return newProjects;
   }, {
     onSuccess(data) {
-      console.log(data);
       setProjectState(data.projectList);
       setTotalPageState(data.totalPage);
     },
