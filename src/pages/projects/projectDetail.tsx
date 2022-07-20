@@ -7,7 +7,7 @@ import React, {
   useRef, useState,
 } from 'react';
 import { useQuery } from 'react-query';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import LogoImage from '@assets/images/rabbit-hole-logo-300.jpg';
 import { isEmptyArray } from '@utils/func';
@@ -82,6 +82,8 @@ const ProjectAuthor = styled.div`
   font-size: 1.5rem;
   margin-left: 1rem;
 `;
+
+const AuthorLink = styled(Link)``;
 
 const ProjectTagConatiner = styled.div`
 `;
@@ -274,7 +276,7 @@ function ProjectDetail() {
           <ProjectInfoTitle>제목</ProjectInfoTitle>
           <ProjectTitle>{project.title}</ProjectTitle>
           <ProjectInfoTitle>작성자</ProjectInfoTitle>
-          <ProjectAuthor>{project.author}</ProjectAuthor>
+          <ProjectAuthor><AuthorLink to={`/profile?id=${project.authorId}`}>{project.author}</AuthorLink></ProjectAuthor>
           {
             isEmptyArray(project.tags) ? null : (
               <ProjectTagConatiner>
@@ -310,7 +312,7 @@ function ProjectDetail() {
               <ReplyAuthor>
                 작성자:
                 {' '}
-                {comment.author}
+                <AuthorLink to={`/profile?id=${comment.authorId}`}>{comment.author}</AuthorLink>
               </ReplyAuthor>
               <ReplyDate>
                 {comment.createdAt.slice(0, 10)}
