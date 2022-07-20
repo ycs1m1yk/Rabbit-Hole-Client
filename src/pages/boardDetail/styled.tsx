@@ -186,3 +186,13 @@ export const CarrotBox = styled.div`
   gap: 1rem;
   color: orange;
 `;
+
+export const ViewBox = styled.div`
+  font-size: 1.3rem;
+  display: flex;
+  gap: 1rem;
+  color: ${({ theme }) => theme.palette.black};
+`;
+
+export const View = styled.span`
+`;

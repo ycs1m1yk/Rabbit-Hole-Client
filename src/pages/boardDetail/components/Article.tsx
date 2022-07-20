@@ -4,7 +4,7 @@
 // eslint-disable-next-line no-alert
 import React from 'react';
 import { FaQuestion, FaCarrot } from 'react-icons/fa';
-import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
+import { AiOutlineHeart, AiFillHeart, AiOutlineEye, AiFillEye } from 'react-icons/ai';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { useQueryClient } from 'react-query';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -80,6 +80,10 @@ export default function Article({ article, comments }: ArticleProps) {
           </styles.TitleBox>
           <styles.InfoBox>
             <styles.Author>{article.author}</styles.Author>
+            <styles.ViewBox>
+              <AiFillEye />
+              <styles.View>{`${article.views}회`}</styles.View>
+            </styles.ViewBox>
             {article.articleType === 'question' && (
               <styles.CarrotBox>
                 <FaCarrot />
