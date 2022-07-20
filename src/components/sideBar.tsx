@@ -76,7 +76,7 @@ export default function SideBar({ type, contentsList = [] }:SideBarProps) {
   const navigate = useNavigate(); // 라우팅
 
   const [contents, setContents] = useState<ContentProps[]>(contentsList); // 리스트의 선택 상태 관리
-  
+
   // 리스트 선택 시 selected상태 변경 및 라우팅
   const itemClickHandler = (event: React.MouseEvent<HTMLLIElement>, id: number, path: string) => {
     setContents(

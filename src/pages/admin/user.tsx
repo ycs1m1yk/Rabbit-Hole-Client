@@ -65,14 +65,21 @@ export default function AdminUser() {
     let newUsers;
     if (authInfo && queryParams) {
       newUsers = await getAllUsers(authInfo.token, queryParams);
-      console.log(newUsers);
       newUsers.userList = newUsers.userList.map(({
-        _id, avatar, name, email, track, trackCardinalNumber, position, createdAt, authImage,
+        _id,
+        githubAvatar,
+        name,
+        githubEmail,
+        track,
+        trackCardinalNumber,
+        position,
+        createdAt,
+        authImage,
       }:{
         _id: string,
-        avatar: string,
+        githubAvatar: string,
         name: string,
-        email: string,
+        githubEmail: string,
         track: string,
         trackCardinalNumber:number,
         position:string,
@@ -83,27 +90,27 @@ export default function AdminUser() {
         type: 'user',
         _id,
         authImage,
-        avatar,
+        avatar: githubAvatar,
         name,
-        email,
+        email: githubEmail,
         track,
         trackCardinalNumber,
         position,
         role,
+        path: `/profile?id=${_id}`,
         createdAt: new Date(createdAt),
         selected: false,
       }));
     }
-    console.log(newUsers);
     return newUsers;
   }, {
     onSuccess(data) {
-      console.log(data);
       setUserState(data.userList);
       setTotalPageState(data.totalPage);
     },
   });
 
+  // 유저 역할군 필터링
   useEffect(() => {
     navigate(`/admin?type=users&role=${selectedOption}&page=1&perPage=10`);
   }, [selectedOption]);
@@ -127,6 +134,7 @@ export default function AdminUser() {
     }
   }, [selectedOption, authInfo, userState]);
 
+  // 페이지네이션
   const paginationHandler = useCallback((pageNumber:number) => {
     navigate(`/admin?type=users&role=${selectedOption}&page=${Number(pageNumber) + 1}&perPage=10`);
   }, [selectedOption]);

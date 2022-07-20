@@ -74,7 +74,7 @@ export default function AdminArticle() {
         title,
         createdAt: new Date(createdAt),
         selected: false,
-        path: `/board?${articleType}=${_id}`,
+        path: `/board/detail?id=${_id}`,
       }));
     }
     return newArticles;
@@ -86,13 +86,14 @@ export default function AdminArticle() {
     },
   });
 
+  // seletbox(게시판 타입 이동)
   useEffect(() => {
     navigate(`/admin?type=articles&articleType=${selectedOption}&page=1&perPage=10`, { replace: true });
   }, [selectedOption]);
 
   const deleteHandler = useCallback(async () => {
     if (authInfo && articleState) {
-      if (confirm('정말 삭제하시겠습니까?')) {
+      if (confirm('정말 삭제하시겠습니까?')) { // 삭제 재확인
         try {
           await Promise.all(articleState.map(async (article) => {
             if (article.selected) await deleteArticle(authInfo?.token, article._id);
@@ -101,7 +102,6 @@ export default function AdminArticle() {
           alert('게시글 삭제가 실패했습니다. 다시 시도해주세요:(');
         }
         navigate(`/admin?type=articles&articleType=${selectedOption}&page=1&perPage=10`);
-        window.location.reload();
       }
     } else {
       alert('관리자 권한이 없습니다.');
@@ -109,6 +109,7 @@ export default function AdminArticle() {
     }
   }, [articleState, authInfo, selectedOption]);
 
+  // 페이지네이션
   const paginationHandler = useCallback((pageNumber:number) => {
     navigate(`/admin?type=articles&articleType=${selectedOption}&page=${Number(pageNumber) + 1}&perPage=10`);
   }, [selectedOption]);
