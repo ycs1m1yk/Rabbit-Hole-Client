@@ -24,7 +24,7 @@ interface EditorProps{
 const defaultProps = {
   height: '300px',
   initialValue: '',
-  isVisible: true,
+  isVisible: false,
 };
 
 /**
