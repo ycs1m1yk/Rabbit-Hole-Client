@@ -124,10 +124,14 @@ function ProjectForm() {
           })}
         />
         <ErrorMessage>{errors?.title?.message}</ErrorMessage>
-        <InputTitle>작성자</InputTitle>
+        <InputTitle>작성자 또는 팀명</InputTitle>
         <ProjectInput
           {...register('author', {
-            required: '이름은 필수 입력사항입니다:)',
+            required: '작성자 또는 팀명은 필수 입력사항입니다:)',
+            maxLength: {
+              value: 20,
+              message: '작성자 또는 팀명은 50자 이내로 입력해주세요',
+            },
           })}
         />
         <ErrorMessage>{errors?.author?.message}</ErrorMessage>
