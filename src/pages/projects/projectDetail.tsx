@@ -22,7 +22,9 @@ import { deleteCommentById, postComment } from '@/lib/commentApi';
 import modalAtom from '@/recoil/modal/modalAtom';
 import { useSetRecoilState } from 'recoil';
 import { ModalTypes } from '@/interfaces/type';
-import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
+import {
+  AiFillHeart, AiOutlineEye, AiOutlineHeart,
+} from 'react-icons/ai';
 import { lighten } from 'polished';
 
 const ProjectDetailContainer = styled.div`
@@ -37,6 +39,11 @@ const HeaderContainer = styled.div`
   display: flex;
   justify-content: space-between;
   flex: 1;
+`;
+
+const ProjectDataContainer = styled.div`
+  display: flex;
+  justify-content: center;
 `;
 
 const EditButtonContainer = styled.div`
@@ -141,6 +148,17 @@ const LikeCount = styled.span`
   vertical-align: middle;
 `;
 
+const ViewContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin-left: 1rem;
+`;
+
+const ViewCount = styled.span`
+  font-size: 1.8rem;
+  margin-left: 0.5rem;
+`;
+
 function ProjectDetail() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -158,6 +176,7 @@ function ProjectDetail() {
   if (projectId) {
     const { data } = useQuery<any>(['projectDetail', projectId], () => getProjectById(projectId), {
       staleTime: 5000,
+      refetchOnWindowFocus: false,
     });
 
     if (data) {
@@ -226,19 +245,24 @@ function ProjectDetail() {
       <ProjectDetailHeader>
         <HeaderContainer>
           {project.title}
-          <LikeBox isClicked={clicked} onClick={handleToggleLike}>
-            {authInfo && matchLike()
-              ? <AiFillHeart color="red" size={20} />
-              : <AiOutlineHeart size={20} /> }
-            <LikeCount>{project.likes ? project.likes.length : 0}</LikeCount>
-          </LikeBox>
+          <ProjectDataContainer>
+            <LikeBox isClicked={clicked} onClick={handleToggleLike}>
+              {authInfo && matchLike()
+                ? <AiFillHeart color="red" size={20} />
+                : <AiOutlineHeart size={20} /> }
+              <LikeCount>{project.likes ? project.likes.length : 0}</LikeCount>
+            </LikeBox>
+            <ViewContainer>
+              <AiOutlineEye size={30} />
+              <ViewCount>{project.views}</ViewCount>
+            </ViewContainer>
+          </ProjectDataContainer>
         </HeaderContainer>
       </ProjectDetailHeader>
       <ProjectContentContainer>
         {project.thumbnail.includes(S3URL)
           ? <ProjectImage src={project.thumbnail} />
           : <ProjectImage width={300} height={300} src={LogoImage} />}
-
         <ProjectInfo>
           <ProjectInfoTitle>제목</ProjectInfoTitle>
           <ProjectTitle>{project.title}</ProjectTitle>
