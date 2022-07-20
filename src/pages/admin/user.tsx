@@ -1,12 +1,12 @@
 /* eslint-disable no-shadow */
 import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import AdminTable from '@/components/adminTable';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useQuery } from 'react-query';
+import Pagination from '@components/pagination';
+import AdminTable from '@/components/adminTable';
 import { deleteUser, getAllUsers } from '@/lib/adminApi';
 import useToken from '@/hooks/useToken';
-import Pagination from '@components/pagination';
 import Button from '@/components/button';
 import SelectBox from '@/components/selectBox';
 
