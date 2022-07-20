@@ -1,6 +1,5 @@
+/* eslint-disable no-alert */
 /* eslint-disable no-underscore-dangle */
-// eslint-disable-next-line no-underscore-dangle
-// eslint-disable-next-line no-alert
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
@@ -8,7 +7,6 @@ import * as styles from '@pages/boardDetail/styled';
 import { useQuery, useQueryClient } from 'react-query';
 import { Editor } from '@toast-ui/react-editor';
 import authAtom from '@/recoil/auth/authAtom';
-// import { getArticleById } from '@/lib/api';
 import MarkdownEditor from '@/components/markdownEditor';
 import Button from '@/components/button';
 import Article from '@/pages/boardDetail/components/Article';
@@ -32,14 +30,13 @@ export default function BoardDetail() {
   }
   const { authInfo } = useToken();
 
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
-
   const { data, isError } = useQuery<any>(['boardDetail', articleId], () => getArticleById(articleId), {
     enabled: !!articleId,
     select: (fetchData) => ({ article: fetchData.articleInfo, comments: fetchData.commentList }),
     refetchInterval: 30000,
+    onSuccess: () => {
+      window.scrollTo(0, 0);
+    },
   });
   const handleAnswer = React.useCallback(async (articleType: string) => {
     try {
