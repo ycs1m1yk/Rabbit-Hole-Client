@@ -1,10 +1,8 @@
-/* eslint-disable no-console */
 /* eslint-disable no-alert */
 /* eslint-disable no-restricted-globals */
-// eslint-disable-next-line no-alert
 import React from 'react';
 import { FaQuestion, FaCarrot } from 'react-icons/fa';
-import { AiOutlineHeart, AiFillHeart, AiOutlineEye, AiFillEye } from 'react-icons/ai';
+import { AiOutlineHeart, AiFillHeart, AiFillEye } from 'react-icons/ai';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { useQueryClient } from 'react-query';
 import { useNavigate, useSearchParams } from 'react-router-dom';
