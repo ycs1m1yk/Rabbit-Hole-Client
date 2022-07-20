@@ -83,7 +83,11 @@ const ProjectAuthor = styled.div`
   margin-left: 1rem;
 `;
 
-const AuthorLink = styled(Link)``;
+const AuthorLink = styled(Link)`
+  &:hover {
+    color: ${({ theme }) => theme.palette.lightViolet}
+  }
+`;
 
 const ProjectTagConatiner = styled.div`
 `;

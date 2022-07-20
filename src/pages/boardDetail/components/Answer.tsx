@@ -19,11 +19,6 @@ import {
 import useToken from '@/hooks/useToken';
 import MarkdownEditor from '@/components/markdownEditor';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
-
-const AuthorLink = styled(Link)`
-  
-`;
 
 interface AnswerProps{
   comment: ICommentProps;
@@ -117,7 +112,9 @@ export default function Answer({
                   <BsBookmarkCheck size={30} onClick={handleAdopted} />
                 </styles.AdoptedBox>
                 ))}
-            <styles.Profile><AuthorLink to={`/profile?id=${comment.authorId}`}>{comment.author}</AuthorLink></styles.Profile>
+            <styles.Profile>
+              <Link to={`/profile?id=${comment.authorId}`}>{comment.author}</Link>
+            </styles.Profile>
           </styles.ProfileBox>
           <styles.CreateDate>{comment.createdAt.slice(0, 10)}</styles.CreateDate>
         </styles.InfoHeadBox>
