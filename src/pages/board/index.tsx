@@ -20,7 +20,7 @@ import useToken from '@hooks/useToken';
 const BoardContainer = styled.div`
   display: flex;
   align-items: baseline;
-  margin-top: 3rem;
+  margin: 3rem 0;
   padding: 0 5rem;
 `;
 

@@ -75,7 +75,7 @@ export default function Article({ article, comments }: ArticleProps) {
         <styles.InfoHead>
           <styles.TitleBox>
             <styles.ArticleIconBox>
-              <FaQuestion size={30} />
+              {article.articleType === 'question' && <FaQuestion size={30} />}
             </styles.ArticleIconBox>
             <styles.Title>{article.title}</styles.Title>
           </styles.TitleBox>
