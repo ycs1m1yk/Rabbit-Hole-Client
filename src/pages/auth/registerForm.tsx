@@ -68,9 +68,9 @@ function RegisterForm() {
   const { register, handleSubmit, formState: errors } = useForm<IForm>();
   const [selectedTrack, setSelectedTrack] = useState<string>('SW 엔지니어 트랙');
   const [selectedTrackNum, setSelectedTrackNum] = useState<number>(1);
+
   // Form 데이터가 유효한 경우 호출되는 함수
   const onValid = async (data: any) => {
-    // console.log('Valid', data);
     const githubProfileUrl = queries.get('githubProfileUrl');
     const githubEmail = queries.get('githubEmail');
     const githubAvatar = queries.get('githubAvatar');
@@ -98,16 +98,14 @@ function RegisterForm() {
   };
 
   // Form 데이터가 유효하지 않은 경우 호출되는 함수
-  const onInvalid = () => {
-    console.log(errors);
-  };
+  const onInvalid = () => {};
 
   return (
     <>
       <ModalTitle>추가 정보 입력</ModalTitle>
       <h2 style={{ marginBottom: '2rem' }}>회원가입을 위해 추가정보가 필요합니다.</h2>
       <StyledRegisterForm encType="multipart/form-data">
-        <InputTitle>이름</InputTitle>
+        <InputTitle>이름(필수)</InputTitle>
         <StyledRegisterInput
           {...register('name', {
             required: '이름은 필수 입력사항입니다:)',
@@ -119,11 +117,11 @@ function RegisterForm() {
           placeholder="ex:설재혁"
         />
         <ErrorMessage>{errors?.errors?.name?.message}</ErrorMessage>
-        <InputTitle>엘리스 트랙명</InputTitle>
+        <InputTitle>엘리스 트랙명(필수)</InputTitle>
         <SelectBox options={['SW', 'AI']} defaultValue="트랙명" selectedOption={selectedTrack} setSelectedOption={setSelectedTrack} width={200} type="register" />
-        <InputTitle>엘리스 기수</InputTitle>
+        <InputTitle>엘리스 기수(필수)</InputTitle>
         <SelectBox options={[1, 2, 3, 4, 5]} defaultValue="기수" selectedOption={selectedTrackNum} setSelectedOption={setSelectedTrackNum} width={200} type="register" />
-        <InputTitle>전화번호</InputTitle>
+        <InputTitle>전화번호(필수)</InputTitle>
         <StyledRegisterInput
           {...register('phoneNumber', {
             required: '전화번호는 필수 입력사항입니다:)',
@@ -135,9 +133,9 @@ function RegisterForm() {
           placeholder="ex:01012345678"
         />
         <ErrorMessage>{errors?.errors?.phoneNumber?.message}</ErrorMessage>
-        <InputTitle>희망 포지션</InputTitle>
+        <InputTitle>희망 포지션(선택)</InputTitle>
         <StyledRegisterInput {...register('position')} placeholder="ex:프론트엔드" />
-        <InputTitle>블로그 주소</InputTitle>
+        <InputTitle>블로그 주소(선택)</InputTitle>
         <StyledRegisterInput
           {...register('blogAddress', {
             pattern: {
@@ -147,7 +145,7 @@ function RegisterForm() {
           })}
           placeholder="ex:https://myblog.com"
         />
-        <InputTitle>Discord 인증 이미지</InputTitle>
+        <InputTitle>Discord 인증 이미지(필수)</InputTitle>
         <DiscordDescription>본인이 속해 있는 트랙의 디스코드 채널을 캡처해서 업로드 해주세요:)</DiscordDescription>
         <DiscordImageInput {...register('authImage', { required: '인증 이미지는 필수 입력사항입니다:)' })} type="file" />
         <ErrorMessage>{errors?.errors?.authImage?.message}</ErrorMessage>

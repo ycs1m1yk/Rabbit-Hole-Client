@@ -3,6 +3,7 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable max-len */
 import React, {
+  useEffect,
   useRef, useState,
 } from 'react';
 import { useQuery } from 'react-query';
@@ -166,6 +167,7 @@ function ProjectDetail() {
   const editorRef = useRef<Editor>(null);
   const setModal = useSetRecoilState(modalAtom);
   const [clicked, setClicked] = useState<boolean>(false);
+  const [isVisible, setIsVisible] = useState<boolean>(true);
 
   const projectId = searchParams.get('projectId');
   let project: any;
@@ -239,6 +241,12 @@ function ProjectDetail() {
     }
   }, [clicked]);
 
+  useEffect(() => {
+    setTimeout(() => {
+      setIsVisible(false);
+    }, 200);
+  }, []);
+
   return project && (
     <ProjectDetailContainer>
       <ProjectDetailHeader>
@@ -283,17 +291,18 @@ function ProjectDetail() {
           </ProjectDescription>
         </ProjectInfo>
       </ProjectContentContainer>
-      {authorId === authInfo?.userId && (
-      <EditButtonContainer>
-        <Button onClick={() => handleProjectEdit('ProjectEdit')}>수정하기</Button>
-        <Button onClick={handleProjectDelete}>삭제하기</Button>
-      </EditButtonContainer>
-      )}
+        {authorId === authInfo?.userId && (
+          <EditButtonContainer>
+            <Button onClick={() => handleProjectEdit('ProjectEdit')}>수정하기</Button>
+            <Button onClick={handleProjectDelete}>삭제하기</Button>
+          </EditButtonContainer>
+        )}
       <ProjectDetailHeader>
         답글(
         {comments.length}
         개)
       </ProjectDetailHeader>
+      {!isVisible && (
       <ReplyWrapper>
         {comments.map((comment: ICommentProps) => (
           <ReplyContainer isMyComment={authInfo?.userId === comment.authorId} key={comment._id}>
@@ -309,16 +318,18 @@ function ProjectDetail() {
             </ReplyHeader>
             <MarkdownViewer text={comment.content} />
             {
-              authInfo?.userId === comment.authorId && (
-              <ButtonContainer>
-                <Button size="small" onClick={() => handleCommentDelete(comment._id)}>삭제</Button>
-              </ButtonContainer>
-              )
-            }
+                  authInfo?.userId === comment.authorId && (
+                  <ButtonContainer>
+                    <Button size="small" onClick={() => handleCommentDelete(comment._id)}>삭제</Button>
+                  </ButtonContainer>
+                  )
+                }
           </ReplyContainer>
         ))}
       </ReplyWrapper>
-      <MarkdownEditor ref={editorRef} />
+      )}
+
+      <MarkdownEditor isVisible={isVisible} ref={editorRef} />
       <ButtonContainer>
         <Button onClick={handleCommentPost}>답변하기</Button>
       </ButtonContainer>

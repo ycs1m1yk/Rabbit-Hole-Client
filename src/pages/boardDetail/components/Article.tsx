@@ -6,7 +6,7 @@ import { AiOutlineHeart, AiFillHeart, AiFillEye } from 'react-icons/ai';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { useQueryClient } from 'react-query';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import * as styles from '@pages/boardDetail/styled'
+import * as styles from '@pages/boardDetail/styled';
 import authAtom from '@/recoil/auth/authAtom';
 import MarkdownViewer from '@/components/markdownViewer';
 import Button from '@/components/button';

@@ -1,9 +1,9 @@
 import React from 'react';
-import modalAtom from '@/recoil/modal/modalAtom';
+import { AiFillGithub } from 'react-icons/ai';
 import { useSetRecoilState } from 'recoil';
+import modalAtom from '@/recoil/modal/modalAtom';
 import Logo from '@/components/logo';
 import Button from '@/components/button';
-import { AiFillGithub } from 'react-icons/ai';
 import { getUserLogin } from '@/lib/userApi';
 
 export default function Login() {

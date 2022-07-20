@@ -39,7 +39,7 @@ export default function Profile({
       <Avatar src={avatar} />
       <div>
         <Name>{name}</Name>
-        <Description>{`${track} ${trackCardinalNumber}` + '기'}</Description>
+        <Description>{`${track} ${trackCardinalNumber} 기`}</Description>
       </div>
     </ProfileContainer>
   );

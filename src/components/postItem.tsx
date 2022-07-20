@@ -16,7 +16,6 @@ type IPostItemProps = {
   comment:number;
   heart:number;
   articleId: string;
-  articleType: string;
   type?: string;
   likeThis: boolean;
   views: number;
@@ -174,7 +173,6 @@ export default function PostItem({
   comment,
   heart,
   articleId,
-  articleType,
   type,
   likeThis,
   views,

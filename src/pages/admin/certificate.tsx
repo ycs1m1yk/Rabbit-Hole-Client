@@ -1,12 +1,11 @@
-import Button from '@/components/button';
-import useToken from '@/hooks/useToken';
-import { approveUser } from '@/lib/adminApi';
-import modalAtom from '@/recoil/modal/modalAtom';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
-import { useMutation } from 'react-query';
+import useToken from '@/hooks/useToken';
+import { approveUser } from '@/lib/adminApi';
+import Button from '@/components/button';
+import modalAtom from '@/recoil/modal/modalAtom';
 
 const EmptyField = styled.p`
   text-align: center;
