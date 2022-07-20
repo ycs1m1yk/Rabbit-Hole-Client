@@ -4,12 +4,14 @@ import { lighten } from 'polished';
 import styled from 'styled-components';
 import Logo from '@components/logo';
 
-import modalAtom from '@/recoil/modal/modalAtom';
 import { useSetRecoilState } from 'recoil';
+import modalAtom from '@/recoil/modal/modalAtom';
 
 import useToken from '@/hooks/useToken';
 
 const StyledHeader = styled.header`
+  width: 100vw;
+  min-width: 1000px;
   display: flex;
   align-items: center;
   flex-wrap: nowrap;

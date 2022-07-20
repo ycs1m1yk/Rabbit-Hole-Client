@@ -17,7 +17,7 @@ const Select = styled.select<{type: string}>`
   width: 100%;
   outline: none;
   border: none;
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid ${({ theme }) => theme.palette.gray};
   border-radius: 4px;
   cursor: pointer;
   font-size: ${({ type }) => (type === 'register' ? '1.5rem' : '2rem')};
@@ -25,7 +25,7 @@ const Select = styled.select<{type: string}>`
 
 const SelectItemContainer = styled.div<{type: string}>`
   margin-top: 0.5rem;
-  border: 1px solid black;
+  border: 1px solid ${({ theme }) => theme.palette.gray};
   border-radius: 5px;
   box-shadow: 0px 4px 13px rgba(0, 0, 0, 0.25);
   position: ${({ type }) => (type === 'register' ? 'absolute' : null)};
@@ -50,7 +50,7 @@ const SelectItem = styled.option<{type:string}>`
   height: ${({ type }) => (type === 'register' ? '1.5rem' : '2.5rem')};
   font-size: ${({ type }) => (type === 'register' ? '1.5rem' : '2rem')};
   cursor: pointer;
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid ${({ theme }) => theme.palette.gray};
   padding: 0rem 1rem;
   :not(:last-child) {
     margin: 1rem 0rem;
