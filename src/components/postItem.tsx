@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { lighten } from 'polished';
 
 const defaultProps = {
   type: '',
@@ -16,6 +17,7 @@ type IPostItemProps = {
   articleType: string;
   type?: string;
   likeThis: boolean;
+  views: number;
 } & typeof defaultProps;
 
 const Post = styled.div<{type: string}>`
@@ -32,9 +34,12 @@ const Post = styled.div<{type: string}>`
   }
   border-bottom: 1px solid ${({ theme }) => theme.palette.borderGray};
 
-  & * > * > *:hover {
+  &:hover {
     opacity: 80%;
     cursor: pointer;
+    background-color: ${({ theme }) => lighten(0.5, theme.palette.eliceViolet)};
+
+    transition: all 0.3s ease-in-out;
   }
 `;
 
@@ -166,6 +171,7 @@ export default function PostItem({
   articleType,
   type,
   likeThis,
+  views,
 }:IPostItemProps) {
   const clickHandler = ():void => {
     console.log(`게시물 디테일로 이동 : /board?${articleType}=${articleId}`);

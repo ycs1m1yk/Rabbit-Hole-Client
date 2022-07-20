@@ -116,6 +116,7 @@ export default function PostList({
             articleId={post._id}
             articleType={post.articleType}
             likeThis={!!post.likes.find((el) => el.userId === userId)}
+            views={post.views}
           />
         ))}
       </Posts>
