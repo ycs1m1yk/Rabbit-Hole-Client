@@ -8,6 +8,9 @@ import MyPageBoard from './components/MyPageBoard';
 import MyPageProjects from './components/MyPageProjects';
 import MyPageProfile from './components/MyPageProfile';
 
+const articlePerPage = 10;
+const projectPerPage = 10;
+
 interface IMyPageTypeProps {
   [index: string] : any;
   type: string;
@@ -16,9 +19,7 @@ interface IMyPageTypeProps {
 function MyPageContainer({ type }: IMyPageTypeProps): any {
   const { authInfo } = useToken();
   const [articlePage, setArticlePage] = useState<number>(0);
-  const [articlePerPage, setArticlePerPage] = useState<number>(5);
   const [projectPage, setProjectPage] = useState<number>(0);
-  const [projectPerPage, setProjectPerPage] = useState<number>(5);
 
   // 페이지네이션 params
   const articleParams = { page: articlePage + 1, perPage: articlePerPage };
@@ -43,9 +44,9 @@ function MyPageContainer({ type }: IMyPageTypeProps): any {
     case 'profile':
       return profileData && <MyPageProfile data={profileData} />;
     case 'articles':
-      return articleData && <MyPageBoard page={articlePage} setPage={setArticlePage} setPerPage={setArticlePerPage} data={articleData} />;
+      return articleData && <MyPageBoard setPage={setArticlePage} data={articleData} />;
     case 'projects':
-      return projectsData && <MyPageProjects setPage={setProjectPage} setPerPage={setProjectPerPage} data={projectsData} />;
+      return projectsData && <MyPageProjects setPage={setProjectPage} data={projectsData} />;
     default:
       return <div>Default</div>;
   }

@@ -114,7 +114,6 @@ export default function PostList({
             heart={post.likes.length}
             type={type}
             articleId={post._id}
-            articleType={post.articleType}
             likeThis={!!post.likes.find((el) => el.userId === userId)}
             views={post.views}
           />

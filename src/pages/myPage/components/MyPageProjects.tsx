@@ -35,11 +35,10 @@ const EmptyField = styled.p`
 interface IMyPageProjectProps {
   data: {projectList: IProjectProps[], totalPage: number};
   setPage: Dispatch<SetStateAction<number>>;
-  setPerPage: Dispatch<SetStateAction<number>>;
 }
 
 function MyPageProjects({
-  data, setPage, setPerPage,
+  data, setPage,
 }: IMyPageProjectProps) {
   return data.projectList && (
     <Container>

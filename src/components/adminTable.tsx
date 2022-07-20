@@ -129,8 +129,6 @@ export default function AdminTable({ items, setItems }:TableProps) {
   }, [items]);
 
   const modalHandler = useCallback((image:string, userId:string) => {
-    // setQuery({ image }, { replace: false });
-    // setQuery({ userId }, { replace: false });
     const newQuery:{[index:string]:string} = { image, userId };
     // eslint-disable-next-line no-restricted-syntax
     for (const [name, value] of query.entries()) {

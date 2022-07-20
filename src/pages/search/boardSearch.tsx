@@ -10,7 +10,6 @@ import PostList from '@components/postList';
 import Pagination from '@components/pagination';
 
 import * as searchApi from '@lib/searchApi';
-import { IArticleGetProps, IArticleProps } from '@interfaces/interface';
 
 const BoardContainer = styled.div`
   display: flex;
