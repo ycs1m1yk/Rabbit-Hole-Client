@@ -175,7 +175,6 @@ function ProjectDetail() {
   // data fetching and initializing
   if (projectId) {
     const { data } = useQuery<any>(['projectDetail', projectId], () => getProjectById(projectId), {
-      staleTime: 5000,
       refetchOnWindowFocus: false,
     });
 

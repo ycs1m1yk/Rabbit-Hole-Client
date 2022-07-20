@@ -103,7 +103,6 @@ export default function Projects() {
 
   const { isSuccess, data: projects, refetch } = useQuery(['project', 'gallery', query], () => getAllProjects(query), {
     enabled: !isSearchPage,
-    staleTime: 180000,
     onSuccess: ({ totalPage: tp }) => setTotalPage(tp),
   });
 
