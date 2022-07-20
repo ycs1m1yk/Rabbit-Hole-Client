@@ -131,9 +131,7 @@ const LikeBox = styled.button<{ isClicked:boolean }>`
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background-color: #FFFF;
-  color: ${({ isClicked, theme }) => (isClicked ? '#ED4956' : theme.palette.gray)};
-  border: 1px solid ${({ isClicked, theme }) => (isClicked ? '#ED4956' : theme.palette.borderGray)};
+  border: 1px solid ${({ theme }) => theme.palette.borderGray};
   border-radius: 10px;
   padding: 0.5rem 1rem ;
 `;
@@ -230,7 +228,7 @@ function ProjectDetail() {
           {project.title}
           <LikeBox isClicked={clicked} onClick={handleToggleLike}>
             {authInfo && matchLike()
-              ? <AiFillHeart size={20} />
+              ? <AiFillHeart color="red" size={20} />
               : <AiOutlineHeart size={20} /> }
             <LikeCount>{project.likes ? project.likes.length : 0}</LikeCount>
           </LikeBox>
