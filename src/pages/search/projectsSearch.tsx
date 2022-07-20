@@ -1,22 +1,17 @@
 /* eslint-disable no-underscore-dangle */
-import React, {
-  MouseEvent, useCallback, useEffect, useRef, useState,
-} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { useSetRecoilState } from 'recoil';
 import { useSearchParams } from 'react-router-dom';
 import { useQuery } from 'react-query';
 
-import Button from '@/components/button';
 import Search from '@/components/search';
 import Card from '@/components/card';
 import Pagination from '@/components/pagination';
-import useToken from '@/hooks/useToken';
 import SelectBox from '@/components/selectBox';
 
-import modalAtom from '@/recoil/modal/modalAtom';
-import { IProjectGetParamsProps, IProjectProps } from '@/interfaces/interface';
-import { getAllProjects } from '@/lib/projectApi';
+import * as searchApi from '@lib/searchApi';
+import { IProjectProps } from '@/interfaces/interface';
+import { isEmptyArray } from '@/utils/func';
 
 const ProjectContainer = styled.div`
   padding: 3rem;
@@ -26,26 +21,23 @@ const Alignments = styled.ul`
   width: 100%;
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 4rem;
+  & :hover{
+    font-weight: 700;
+    color: ${({ theme }) => theme.palette.eliceViolet};
+  }
   position: relative;
   margin: 1rem 0;
 `;
 
 const Alignment = styled.li`
-  vertical-align: middle;
-  margin-left: 2rem;
+  cursor: pointer;
   list-style-type: disc;
-  color: ${({ theme }) => theme.palette.gray};
   font-size: 1.5rem;
   font-weight: 500;
   line-height: 26px;
-  cursor: pointer;
-
-  &[selected],
-  &:hover{
-    font-weight: 700;
-    color: ${({ theme }) => theme.palette.eliceViolet};
-  }  
+  vertical-align: middle;
+  margin-left: 2rem;
 `;
 
 const ProjectHeader = styled.div`
@@ -62,13 +54,6 @@ const SearchContainer = styled.div`
   position: absolute;
   right: 20%;
   top: -10%;
-`;
-
-const ButtonContainer = styled.div`
-  position: absolute;
-  right: 0%;
-  top: -10%;
-  min-height: 45px;
 `;
 
 const Content = styled.div`
@@ -92,31 +77,27 @@ const SelectBoxWrapper = styled.div`
   }
 `;
 
-export default function Projects() {
-  const setModal = useSetRecoilState(modalAtom);
-  const { authInfo } = useToken();
-  const sortRef = useRef<HTMLLIElement | null>(null);
+const EmptyField = styled.p`
+  width: 70rem;
+  text-align: center;
+  margin: 20rem 0 20rem 43rem;
+  color: ${({ theme }) => theme.palette.black};
+  opacity: 0.5;
+  font-size: 4rem;
+  font-weight: 700;
+`;
+
+export default function ProjectsSearch() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [inputType, setInputType] = useState<string>('title');
   const [perPage, setPerPage] = useState<string>('8');
-  const [query, setQuery] = useState<IProjectGetParamsProps>({
+  const [query, setQuery] = useState<any>({
     filter: 'date', page: '1', perPage: '8',
   });
 
-  // Modal Control
-  const handleProjectEnrollment = useCallback((modalType: any) => {
-    setModal(modalType);
-  }, []);
-
   // 프로젝트 정렬
-  const handleSort = useCallback((e: MouseEvent<HTMLLIElement>, sortType: string) => {
-    if (sortRef.current) {
-      sortRef.current.removeAttribute('selected');
-    }
-    sortRef.current = e.target as HTMLLIElement;
-    sortRef.current.setAttribute('selected', '');
-
+  const handleSort = useCallback((sortType: string) => {
     searchParams.set('filter', sortType);
     searchParams.set('page', '1');
     setSearchParams(searchParams);
@@ -135,15 +116,29 @@ export default function Projects() {
     setSearchParams(searchParams);
   }, []);
 
-  const { data, refetch } = useQuery(['projectList', query], () => getAllProjects(query), {
-    suspense: true,
-    staleTime: 180000,
-  });
+  const { data, refetch } = useQuery<any, Error>(
+    ['projectList', query],
+    () => {
+      if (inputType === 'title') {
+        return searchApi.searchProjectsByTitle({ ...query });
+      }
+      return searchApi.searchProjectsByAuthor({ ...query });
+    },
+    {
+      suspense: true,
+      staleTime: 180000,
+      onError: (err) => console.log(err),
+    },
+  );
 
   useEffect(() => {
     searchParams.forEach((v, k) => setQuery((q) => ({ ...q, [k]: v })));
     refetch();
   }, [searchParams]);
+
+  useEffect(() => {
+    console.log('프로젝트: ', data);
+  }, [data]);
 
   return (
     <ProjectContainer>
@@ -152,36 +147,33 @@ export default function Projects() {
         <SearchContainer>
           <Search projectQuery={query} setInputType={setInputType} />
         </SearchContainer>
-        {authInfo?.token && (
-        <ButtonContainer>
-          <Button size="small" onClick={() => handleProjectEnrollment('ProjectRegister')}>프로젝트 등록</Button>
-        </ButtonContainer>
-        )}
       </ProjectHeader>
       <Alignments>
-        <Alignment onClick={(e) => handleSort(e, 'date')}>최신순</Alignment>
-        <Alignment onClick={(e) => handleSort(e, 'views')}>조회순</Alignment>
+        <Alignment onClick={() => handleSort('date')}>최신순</Alignment>
+        <Alignment onClick={() => handleSort('views')}>조회순</Alignment>
         <SelectBoxWrapper className="selectbox-perpage">
           <SelectBox options={['4', '8', '12', '16']} defaultValue="페이지당 개수" selectedOption={perPage} setSelectedOption={setPerPage} requestFunc={handlePerPage} width={70} type="register" />
         </SelectBoxWrapper>
       </Alignments>
       <Content>
-        {(data.projectList).map((project: IProjectProps) => (
-          <Card
-            key={project._id}
-            projectId={project._id}
-            title={project.title}
-            author={project.author}
-            shortDescription={project.shortDescription}
-            description={project.description}
-            thumbnail={project.thumbnail}
-            likes={project.likes.length}
-            tags={project.tags}
-            date={project.createdAt}
-            views={project.views}
-            type="project"
-          />
-        ))}
+        {isEmptyArray(data.projectList)
+          ? <EmptyField>일치하는 게시글이 없습니다.</EmptyField>
+          : data.projectList.map((project: IProjectProps) => (
+            <Card
+              key={project._id}
+              projectId={project._id}
+              title={project.title}
+              author={project.author}
+              shortDescription={project.shortDescription}
+              description={project.description}
+              thumbnail={project.thumbnail}
+              likes={project.likes.length}
+              tags={project.tags}
+              date={project.createdAt}
+              views={project.views}
+              type="project"
+            />
+          ))}
       </Content>
       <PaginationContainer>
         <Pagination

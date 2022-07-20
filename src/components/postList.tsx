@@ -1,6 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-/* eslint-disable no-nested-ternary */
-import React from 'react';
+import React, { MouseEvent, useRef } from 'react';
 import styled from 'styled-components';
 import PostItem from '@components/postItem';
 import { IArticleProps } from '@/interfaces/interface';
@@ -24,23 +23,24 @@ const Alignments = styled.ul`
   width: 100%;
   display: flex;
   align-items: center;
-  gap: 1rem;
-  & :hover{
-    font-weight: 700;
-    color: ${({ theme }) => theme.palette.eliceViolet};
-  }
+  gap: 1.5rem;
 `;
 
 const Alignment = styled.li`
-  cursor: pointer;
+  vertical-align: middle;
+  margin-left: 2rem;
   list-style-type: disc;
+  color: ${({ theme }) => theme.palette.gray};
   font-size: 1.5rem;
   font-weight: 500;
   line-height: 26px;
-  vertical-align: middle;
-  margin-left: 2rem;
+  cursor: pointer;
 
-  
+  &[selected],
+  &:hover{
+    font-weight: 700;
+    color: ${({ theme }) => theme.palette.eliceViolet};
+  }  
 `;
 
 const Posts = styled.div`
@@ -79,8 +79,16 @@ interface postList {
 export default function PostList({
   type, title, posts, userId, sortHandler,
 } : postList) {
+  const sortRef = useRef<HTMLLIElement | null>(null);
+
   // 기준에 맞춰 정렬된 데이터 불러오기
-  const handleClick = (sortType: string) => {
+  const handleClick = (e: MouseEvent<HTMLLIElement>, sortType: string) => {
+    if (sortRef.current) {
+      sortRef.current.removeAttribute('selected');
+    }
+    sortRef.current = e.target as HTMLLIElement;
+    sortRef.current.setAttribute('selected', '');
+
     if (typeof sortHandler === 'function') { sortHandler(sortType); }
   };
 
@@ -90,8 +98,8 @@ export default function PostList({
       {type !== 'main'
         ? (
           <Alignments>
-            <Alignment onClick={() => handleClick('date')}>최신순</Alignment>
-            <Alignment onClick={() => handleClick('views')}>조회순</Alignment>
+            <Alignment onClick={(e) => handleClick(e, 'date')}>최신순</Alignment>
+            <Alignment onClick={(e) => handleClick(e, 'views')}>조회순</Alignment>
           </Alignments>
         ) : null}
       <Posts>
@@ -101,13 +109,14 @@ export default function PostList({
             profile={post.author}
             title={post.title}
             content={post.content}
-            date={post.createdAt}
+            date={post.createdAt.slice(0, 10)}
             comment={post.comments?.length || 0}
             heart={post.likes.length}
             type={type}
             articleId={post._id}
             articleType={post.articleType}
             likeThis={!!post.likes.find((el) => el.userId === userId)}
+            views={post.views}
           />
         ))}
       </Posts>
