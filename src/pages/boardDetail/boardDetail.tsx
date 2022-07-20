@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 // eslint-disable-next-line no-underscore-dangle
 // eslint-disable-next-line no-alert
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import * as styles from '@pages/boardDetail/styled';
@@ -25,6 +25,8 @@ export default function BoardDetail() {
   const [query] = useSearchParams();
   const articleId = query.get('id');
   const [toggleAnswerBox, setToggleAnswerBox] = React.useState<boolean>(false);
+  const [isVisible, setIsVisible] = useState<boolean>(true);
+
   if (!articleId) {
     return (<styles.EmptyField>일치하는 게시글이 없습니다.</styles.EmptyField>);
   }
@@ -53,6 +55,12 @@ export default function BoardDetail() {
   if (isError || (data && typeof data.article === 'undefined')) {
     return (<styles.EmptyField>일치하는 게시글이 없습니다.</styles.EmptyField>);
   }
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsVisible(false);
+    }, 100);
+  }, []);
   return (
     <styles.Container>
       {data && (
@@ -63,13 +71,13 @@ export default function BoardDetail() {
       )}
       { data && (data.comments.length > 0 || auth) && (
         <styles.AnswerSection>
-          {data && data.comments.map((comment:ICommentProps) => (
-            <Answer
-              key={comment._id}
-              comment={comment}
-              setToggleAnswerBox={setToggleAnswerBox}
-              toggleAnswerBox={toggleAnswerBox}
-            />
+          {data && data.comments.map((comment:ICommentProps) => !isVisible && (
+          <Answer
+            key={comment._id}
+            comment={comment}
+            setToggleAnswerBox={setToggleAnswerBox}
+            toggleAnswerBox={toggleAnswerBox}
+          />
           ))}
             {!toggleAnswerBox && auth && (
               <styles.AnswerBox>
@@ -81,7 +89,7 @@ export default function BoardDetail() {
                   </styles.InfoHeadBox>
                 </styles.InfoHead>
                 <styles.Main>
-                  <MarkdownEditor ref={editor} />
+                  <MarkdownEditor isVisible={isVisible} ref={editor} />
                 </styles.Main>
                 <styles.SubInfo>
                   <Button onClick={() => handleAnswer(data.article.articleType)}>답변하기</Button>
