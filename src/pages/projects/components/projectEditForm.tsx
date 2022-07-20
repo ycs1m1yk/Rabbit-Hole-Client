@@ -14,7 +14,7 @@ import useToken from '@/hooks/useToken';
 import modalAtom from '@/recoil/modal/modalAtom';
 import { useSetRecoilState } from 'recoil';
 import { useSearchParams } from 'react-router-dom';
-import { IProjectProps } from '@/interfaces/interface';
+import { IProjectPostParamsProps, IProjectProps } from '@/interfaces/interface';
 import MarkdownEditor from '../../../components/markdownEditor';
 import Button from '../../../components/button';
 import TagsInput from '../../../components/tagsInput';
@@ -62,12 +62,8 @@ const ProjectImageInput = styled.input`
   border-radius: 5px;
 `;
 
-interface IForm {
-  title: string;
-  author: string;
-  shortDescription: string;
-  description: string;
-  thumbnail: string;
+interface IForm extends IProjectPostParamsProps {
+  tags: any;
 }
 
 function ProjectEditForm() {
@@ -89,7 +85,7 @@ function ProjectEditForm() {
 
   // Form Data PUT 요청
   const onValid = async (data: IForm) => {
-    const formData = {
+    const formData: IForm = {
       ...data,
       thumbnail: data.thumbnail[0],
       description: editorRef.current?.getInstance().getMarkdown(),

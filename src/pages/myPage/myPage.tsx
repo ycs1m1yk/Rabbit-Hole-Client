@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import SideBar from '@/components/sideBar';
 import useToken from '@/hooks/useToken';
 import {
-  AiOutlineEdit, AiOutlineUser, AiOutlineTeam, AiOutlineProject,
+  AiOutlineEdit, AiOutlineUser, AiOutlineTeam, AiOutlineProject, AiOutlineLock,
 } from 'react-icons/ai';
 import MyPageContent from './myPageContainer';
 
@@ -54,6 +54,14 @@ const mypageList = [
   },
 ];
 
+const adminPage = {
+  id: 5,
+  name: '관리자 모드',
+  path: '/admin?type=users&role=guest&page=1&perPage=10',
+  selected: false,
+  icon: <AiOutlineLock />,
+};
+
 function MyPage() {
   const [searchParams] = useSearchParams();
   const myPageType = searchParams.get('type');
@@ -63,7 +71,7 @@ function MyPage() {
     <MyPageContainer>
       <SidebarContainer>
         {/* role에 따라 동적으로 */}
-        <SideBar type="myPage" contentsList={mypageList} />
+        <SideBar type="myPage" contentsList={authInfo && authInfo.role === 'admin' ? [...mypageList, adminPage] : mypageList} />
       </SidebarContainer>
       <VerticalDivider />
       {myPageType !== null && authInfo !== null

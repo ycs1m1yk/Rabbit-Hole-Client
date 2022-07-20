@@ -155,6 +155,7 @@ export interface IMentoringProps {
 }
 
 export interface IRegisterFormProps {
+    [index: string]: any;
     name: string;
     track: string;
     trackCardinalNumber: string;
@@ -214,6 +215,7 @@ export interface IProjectGetParamsProps {
 }
 
 export interface IProjectPostParamsProps {
+    [index: string]: any;
     author: string;
     title: string;
     shortDescription: string;

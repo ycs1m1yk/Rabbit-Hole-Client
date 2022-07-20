@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable guard-for-in */
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState } from 'react';
 import styled from 'styled-components';
@@ -87,7 +89,6 @@ function RegisterForm() {
 
     for (const key in formData) {
       fd.append(key, formData[key]);
-      console.log(fd.get(key));
     }
 
     const newUser = await postRegister(fd);

@@ -16,6 +16,7 @@ import { useSetRecoilState } from 'recoil';
 import MarkdownEditor from '@components/markdownEditor';
 import Button from '@components/button';
 import TagsInput from '@components/tagsInput';
+import { IProjectPostParamsProps } from '@/interfaces/interface';
 
 const ModalTitle = styled.h1`
   text-align: center;
@@ -60,12 +61,8 @@ const ProjectImageInput = styled.input`
   border-radius: 5px;
 `;
 
-interface IForm {
-  title: string;
-  author: string;
-  shortDescription: string;
-  description: string;
-  thumbnail: string;
+interface IForm extends IProjectPostParamsProps {
+  tags: any;
 }
 
 function ProjectForm() {
@@ -84,7 +81,7 @@ function ProjectForm() {
 
   // FormData POST 요청
   const onValid = async (data: IForm) => {
-    const formData = {
+    const formData: IForm = {
       ...data,
       thumbnail: data.thumbnail[0],
       description: editorRef.current?.getInstance().getMarkdown(),

@@ -112,7 +112,7 @@ export default function BoardSearch() {
   );
 
   useEffect(() => {
-    searchParams.forEach((v, k) => setQuery((q) => ({ ...q, [k]: v })));
+    searchParams.forEach((v, k) => setQuery((q: any) => ({ ...q, [k]: v })));
     refetch();
   }, [searchParams]);
 
