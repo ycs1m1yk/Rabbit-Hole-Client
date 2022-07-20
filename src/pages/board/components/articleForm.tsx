@@ -87,15 +87,26 @@ const ToolTipText = styled.span`
     padding: 0.5rem;
     font-size: 0.8rem;
     color: white;
-    background: ${({ theme }) => theme.palette.lightViolet};
-  }
-  :hover span {
     width: 14rem;
     white-space: normal;
     word-break: break-word;
-    display: block;
-    top: 2.2rem;
+    top: 2.4rem;
     right: -1rem;
+    background: ${({ theme }) => theme.palette.lightViolet};
+
+    ::after {
+        content: "";
+        position: absolute;
+        top: -1.05rem;
+        left: 11.9rem;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: transparent transparent ${({ theme }) => theme.palette.lightViolet} transparent;
+    }
+  }
+  :hover span {
+    display: block;
 
     -webkit-animation: 0.3s linear normal slide_down;
           animation: 0.3s linear normal slide_down;

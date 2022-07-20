@@ -94,7 +94,7 @@ const ProjectAuthor = styled.div`
 
 const AuthorLink = styled(Link)`
   &:hover {
-    color: ${({ theme }) => theme.palette.eliceViolet}
+    color: ${({ theme }) => theme.palette.lightViolet}
   }
 `;
 

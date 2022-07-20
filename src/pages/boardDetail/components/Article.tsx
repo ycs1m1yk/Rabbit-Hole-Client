@@ -1,7 +1,6 @@
 /* eslint-disable no-alert */
 /* eslint-disable no-restricted-globals */
 import React from 'react';
-import styled from 'styled-components';
 import { FaQuestion, FaCarrot } from 'react-icons/fa';
 import { AiOutlineHeart, AiFillHeart, AiFillEye } from 'react-icons/ai';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
@@ -15,8 +14,6 @@ import { IArticleProps, ICommentProps } from '@/interfaces/interface';
 import useToken from '@/hooks/useToken';
 import { deleteArticleById, increaseArticleLikes } from '@/lib/articleApi';
 import modalAtom from '@/recoil/modal/modalAtom';
-
-const AuthorLink = styled(Link)``;
 
 export interface ArticleProps{
   article: IArticleProps;
@@ -80,7 +77,7 @@ export default function Article({ article, comments }: ArticleProps) {
             <styles.Title>{article.title}</styles.Title>
           </styles.TitleBox>
           <styles.InfoBox>
-            <styles.Author><AuthorLink to={`/profile?id=${article.authorId}`}>{article.author}</AuthorLink></styles.Author>
+            <styles.Author><Link to={`/profile?id=${article.authorId}`}>{article.author}</Link></styles.Author>
             <styles.ViewBox>
               <AiFillEye />
               <styles.View>{`${article.views}회`}</styles.View>

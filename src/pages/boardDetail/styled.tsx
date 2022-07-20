@@ -28,6 +28,10 @@ export const AnswerBox = styled.div`
 export const Author = styled.span`
   font-size: 1.3rem;
   color: ${({ theme }) => theme.palette.black};
+
+  &:hover {
+    color: ${({ theme }) => theme.palette.lightViolet}
+  }
 `;
 export const DateField = styled.span`
   font-size: 1.3rem;
@@ -49,8 +53,14 @@ export const ProfileBox = styled.div`
 `;
 
 export const Profile = styled(Author)`
+  display: flex;
+  align-items: center;
   font-size: 18px;
   font-weight: 700;
+  
+  &:hover {
+    color: ${({ theme }) => theme.palette.lightViolet}
+  }
 `;
 export const ButtonBox = styled.div`
   display: flex;
