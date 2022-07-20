@@ -254,7 +254,7 @@ function ProjectDetail() {
             </LikeBox>
             <ViewContainer>
               <AiOutlineEye size={30} />
-              <ViewCount>{project.views}</ViewCount>
+              <ViewCount>{project.views.toLocaleString()}</ViewCount>
             </ViewContainer>
           </ProjectDataContainer>
         </HeaderContainer>
