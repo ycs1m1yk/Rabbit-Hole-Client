@@ -96,14 +96,15 @@ export default function AdminArticle() {
   const deleteHandler = useCallback(async () => {
     if (authInfo && articleState) {
       if (confirm('정말 삭제하시겠습니까?')) {
-        const res = await Promise.all(articleState.map(async (article) => {
-          if (article.selected) await deleteArticle(authInfo?.token, article._id);
-        }));
-        // 요청 실패하는 경우
-        if (res.status >= 400) {
-          alert('프로젝트 삭제가 실패했습니다. 다시 시도해주세요:(');
+        try {
+          await Promise.all(articleState.map(async (article) => {
+            if (article.selected) await deleteArticle(authInfo?.token, article._id);
+          }));
+        } catch (error) {
+          alert('게시글 삭제가 실패했습니다. 다시 시도해주세요:(');
         }
         navigate(`/admin?type=articles&articleType=${selectedOption}&page=1&perPage=10`);
+        window.location.reload();
       }
     } else {
       alert('관리자 권한이 없습니다.');

@@ -67,7 +67,7 @@ export default function AdminUser() {
       newUsers = await getAllUsers(authInfo.token, queryParams);
       console.log(newUsers);
       newUsers.userList = newUsers.userList.map(({
-        _id, avatar, name, email, track, trackCardinalNumber, position, createdAt, authImage
+        _id, avatar, name, email, track, trackCardinalNumber, position, createdAt, authImage,
       }:{
         _id: string,
         avatar: string,
@@ -111,11 +111,11 @@ export default function AdminUser() {
   const deleteHandler = useCallback(async () => {
     if (authInfo && userState) {
       if (confirm('정말 삭제하시겠습니까?')) {
-        const res = await Promise.all(userState.map(async (user) => {
-          if (user.selected) await deleteUser(authInfo?.token, user._id);
-        }));
-        // 요청 실패하는 경우
-        if (res.status >= 400) {
+        try {
+          const res = await Promise.all(userState.map(async (user) => {
+            if (user.selected) await deleteUser(authInfo?.token, user._id);
+          }));
+        } catch (error) {
           alert('유저 삭제가 실패했습니다. 다시 시도해주세요:(');
         }
         navigate(`/admin?type=users&role=${selectedOption}&page=1&perPage=10`);
