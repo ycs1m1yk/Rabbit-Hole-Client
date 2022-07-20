@@ -140,6 +140,7 @@ const InfoBox = styled.div<{type: string, likeThis: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  margin-right: ${({ type }) => (type === 'main' ? '0.6rem' : '1rem')};
 
   font-size: ${({ type }) => (type === 'main' ? '1.1rem' : '1.4rem')};
   line-height: 16px;
