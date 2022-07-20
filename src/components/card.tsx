@@ -126,7 +126,9 @@ const Info = styled.div`
 const SubInfo = styled.div`
   display: flex;
   justify-content: space-between;
-  margin: 2rem 1rem;
+  margin: 2rem 0;
+  padding: 0px 16px;
+  color: ${({ theme }) => theme.palette.gray};
 `;
 
 const ViewCount = styled.span`

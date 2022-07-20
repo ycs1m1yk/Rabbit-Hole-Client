@@ -9,7 +9,7 @@ export const Container = styled.main`
 
 export const AnswerSection = styled.section`
   width: 100vw;
-  min-width: 800px;
+  min-width: 1440px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -143,7 +143,7 @@ export const InfoBox = styled.div`
 
 export const ArticleSection = styled.section`
   width: 100vw;
-  min-width: 800px;
+  min-width: 1440px;
   display: flex;
   flex-direction: column;
   align-items: center;

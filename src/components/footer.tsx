@@ -4,6 +4,7 @@ import styled from 'styled-components';
 const Container = styled.footer`
   background: linear-gradient(to right, #582A72, #9775AA);
   width: 100%;
+  min-width: 1000px;
   height: 7.5rem;
   display: flex;
   position: absolute;

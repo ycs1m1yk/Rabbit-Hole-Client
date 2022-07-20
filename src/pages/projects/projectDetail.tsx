@@ -11,25 +11,28 @@ import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import LogoImage from '@assets/images/rabbit-hole-logo-300.jpg';
 import { isEmptyArray } from '@utils/func';
+import { S3URL } from '@utils/regex';
+import { Editor } from '@toast-ui/react-editor';
+import { useSetRecoilState } from 'recoil';
+import {
+  AiFillHeart, AiOutlineEye, AiOutlineHeart,
+} from 'react-icons/ai';
+import { lighten } from 'polished';
 import MarkdownViewer from '@/components/markdownViewer';
 import { deleteProjectById, getProjectById, increaseProjectLikes } from '@/lib/projectApi';
 import { ICommentProps, ITagsProps } from '@/interfaces/interface';
 import MarkdownEditor from '@/components/markdownEditor';
 import Button from '@/components/button';
-import { S3URL } from '@utils/regex';
 import useToken from '@/hooks/useToken';
-import { Editor } from '@toast-ui/react-editor';
 import { deleteCommentById, postComment } from '@/lib/commentApi';
 import modalAtom from '@/recoil/modal/modalAtom';
-import { useSetRecoilState } from 'recoil';
 import { ModalTypes } from '@/interfaces/type';
-import {
-  AiFillHeart, AiOutlineEye, AiOutlineHeart,
-} from 'react-icons/ai';
-import { lighten } from 'polished';
 
 const ProjectDetailContainer = styled.div`
+  max-width: 1000px;
   padding: 5rem;
+  margin-left: auto;
+  margin-right: auto;
 `;
 
 const ProjectDetailHeader = styled.h1`
@@ -55,14 +58,21 @@ const EditButtonContainer = styled.div`
 
 const ProjectContentContainer = styled.div`
   width: 100%;
-  height: 50rem;
+  height: 35rem;
   margin: 2rem 0;
   display: grid;
-  grid-template-columns: 30% 70%;
+  grid-template-columns: 40% 60%;
+`;
+
+const ProjectImageBox = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const ProjectImage = styled.img`
   width: 80%;
+  max-height: 350px;
 `;
 
 const ProjectInfo = styled.div`
@@ -164,6 +174,14 @@ const ViewContainer = styled.div`
 const ViewCount = styled.span`
   font-size: 1.8rem;
   margin-left: 0.5rem;
+`;
+
+const ProjectDescriptionBox = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin-bottom: 4rem;
 `;
 
 function ProjectDetail() {
@@ -274,8 +292,16 @@ function ProjectDetail() {
       </ProjectDetailHeader>
       <ProjectContentContainer>
         {project.thumbnail.includes(S3URL)
-          ? <ProjectImage src={project.thumbnail} />
-          : <ProjectImage width={300} height={300} src={LogoImage} />}
+          ? (
+            <ProjectImageBox>
+              <ProjectImage src={project.thumbnail} />
+            </ProjectImageBox>
+          )
+          : (
+            <ProjectImageBox>
+              <ProjectImage width={300} height={300} src={LogoImage} />
+            </ProjectImageBox>
+          )}
         <ProjectInfo>
           <ProjectInfoTitle>제목</ProjectInfoTitle>
           <ProjectTitle>{project.title}</ProjectTitle>
@@ -291,12 +317,14 @@ function ProjectDetail() {
           }
           <ProjectInfoTitle>프로젝트 한 줄 소개</ProjectInfoTitle>
           <ProjectAuthor>{project.shortDescription}</ProjectAuthor>
-          <ProjectInfoTitle>프로젝트 상세</ProjectInfoTitle>
-          <ProjectDescription>
-            <MarkdownViewer text={project.description} />
-          </ProjectDescription>
         </ProjectInfo>
       </ProjectContentContainer>
+      <ProjectDescriptionBox>
+        <ProjectInfoTitle>프로젝트 상세</ProjectInfoTitle>
+        <ProjectDescription>
+          <MarkdownViewer text={project.description} />
+        </ProjectDescription>
+      </ProjectDescriptionBox>
         {authorId === authInfo?.userId && (
           <EditButtonContainer>
             <Button onClick={() => handleProjectEdit('ProjectEdit')}>수정하기</Button>

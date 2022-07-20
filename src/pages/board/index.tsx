@@ -18,10 +18,14 @@ import { getAllArticle } from '@lib/articleApi';
 import useToken from '@hooks/useToken';
 
 const BoardContainer = styled.div`
+  min-width: 1440px;
   display: flex;
+  justify-content: center;
   align-items: baseline;
   margin: 3rem 0;
-  padding: 0 5rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding-right: 300px;
 `;
 
 const BoardWrapper = styled.div`

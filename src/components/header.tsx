@@ -4,12 +4,17 @@ import { lighten } from 'polished';
 import styled from 'styled-components';
 import Logo from '@components/logo';
 
-import modalAtom from '@/recoil/modal/modalAtom';
 import { useSetRecoilState } from 'recoil';
+import modalAtom from '@/recoil/modal/modalAtom';
 
 import useToken from '@/hooks/useToken';
 
 const StyledHeader = styled.header`
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  width: 100vw;
+  min-width: 1000px;
   display: flex;
   align-items: center;
   flex-wrap: nowrap;
@@ -18,7 +23,7 @@ const StyledHeader = styled.header`
   border-bottom: 1px solid ${(props) => props.theme.palette.borderGray};
   
   color: ${(props) => props.theme.palette.gray};
-
+  background-color: #FFFF;
   line-height: 1.5;
 `;
 
@@ -53,10 +58,10 @@ const StyledLink = styled(Link)`
     margin-left: 2rem;
   }
   &.active {
-    color: ${(props) => props.theme.palette.eliceViolet}
+    color: ${({ theme }) => theme.palette.eliceViolet};
   }
   :hover {
-    background-color: ${(props) => lighten(0.5, props.theme.palette.eliceViolet)};;
+    color: ${({ theme }) => theme.palette.eliceViolet};
   }
 `;
 

@@ -14,7 +14,10 @@ import { getAllArticle } from '@/lib/articleApi';
 import { IProjectProps } from '@/interfaces/interface';
 import { getAllProjects } from '@/lib/projectApi';
 
-const Container = styled.div``;
+const Container = styled.div`
+  width: 100vw;
+  min-width: 1440px;
+`;
 
 const MainSliderContainer = styled.div`
   width: 1000px;
@@ -39,9 +42,10 @@ const ProjectSliderContainer = styled.div`
 
 const ContentContainer = styled.div`
   margin-top: 10rem;
-  place-items: center;
-  display: grid;
-  grid-template-columns: 50% 50%;
+  display: flex;
+  gap: 5rem;
+  justify-content: center;
+  align-items: center;
   margin: 10rem auto; 
 `;
 
