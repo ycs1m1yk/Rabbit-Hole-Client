@@ -122,7 +122,7 @@ export default function name() {
         <ProfileBox>
           <ProfileInfoBox>
             <ProfileImgBox>
-              <ProfileImg src="https://velog.velcdn.com/images/develeep/profile/e6f062b1-eb39-4f51-8cdf-badcb45b2b2d/1038.jpg" />
+              <ProfileImg src={data.githubAvatar} />
             </ProfileImgBox>
             <ProfileInfo>
               <ProfileName>{data.name}</ProfileName>
