@@ -92,9 +92,13 @@ function MyPageProfile({ data }: {data: IUserProps}) {
     setModal(modalType);
   };
 
-  const handleUserDelete = () => {
-    const url = deleteUser;
-    console.log(url);
+  const handleUserDelete = async () => {
+    const response = await deleteUser(authInfo!.token);
+    if (response.status !== 200) {
+      alert('회원 탈퇴에 성공했습니다. 다음에 다시 만나요:)');
+    } else {
+      alert('회원 탈퇴에 실패했습니다. 다시 시도해주세요:(');
+    }
   };
 
   return (
