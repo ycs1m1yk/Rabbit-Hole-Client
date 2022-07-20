@@ -1,6 +1,6 @@
 import Pagination from '@/components/pagination';
 import Table from '@/components/table';
-import React, { Dispatch, SetStateAction, useEffect } from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import styled from 'styled-components';
 import { IArticleProps } from '@interfaces/interface';
 
@@ -34,17 +34,12 @@ const EmptyField = styled.p`
 
 interface IMyPageArticleProps {
   data: {articleList: IArticleProps[], totalPage: number};
-  page: number;
   setPage: Dispatch<SetStateAction<number>>;
-  setPerPage: Dispatch<SetStateAction<number>>;
 }
 
 function MyPageBoard({
-  data, page, setPage, setPerPage,
+  data, setPage,
 }: IMyPageArticleProps) {
-  useEffect(() => {
-
-  }, [page]);
   return data.articleList && (
     <Container>
       <Title>내 게시글 관리</Title>

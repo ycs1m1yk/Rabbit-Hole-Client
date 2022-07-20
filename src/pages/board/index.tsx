@@ -84,7 +84,6 @@ export default function Board() {
   const { authInfo } = useToken();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [inputType, setInputType] = useState<string>('title');
   const [perPage, setPerPage] = useState<string>('10');
   const [query, setQuery] = useState<IArticleGetProps>({
     articleType: 'question', filter: 'date', page: '1', perPage: '10',
@@ -137,7 +136,7 @@ export default function Board() {
     <BoardContainer>
       <SideBar type="board" contentsList={boardList} />
       <BoardWrapper>
-        <Search articleQuery={query} setInputType={setInputType} />
+        <Search articleQuery={query} />
         <SelectBoxWrapper className="selectbox-perpage" data-user-loged-in={!!authInfo}>
           <SelectBox
             options={['5', '10', '15', '20']}

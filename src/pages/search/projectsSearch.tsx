@@ -136,10 +136,6 @@ export default function ProjectsSearch() {
     refetch();
   }, [searchParams]);
 
-  useEffect(() => {
-    console.log('프로젝트: ', data);
-  }, [data]);
-
   return (
     <ProjectContainer>
       <ProjectHeader>

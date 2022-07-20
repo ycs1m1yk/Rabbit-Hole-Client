@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import SideBar from '@/components/sideBar';
 import useToken from '@/hooks/useToken';
 import {
-  AiOutlineEdit, AiOutlineUser, AiOutlineTeam, AiOutlineProject, AiOutlineLock,
+  AiOutlineEdit, AiOutlineUser, AiOutlineProject, AiOutlineLock,
 } from 'react-icons/ai';
 import MyPageContent from './myPageContainer';
 
@@ -40,13 +40,6 @@ const mypageList = [
   },
   {
     id: 3,
-    name: '멘토링 관리',
-    path: '?type=mentoring',
-    selected: false,
-    icon: <AiOutlineTeam />,
-  },
-  {
-    id: 4,
     name: '프로젝트 관리',
     path: '?type=projects',
     selected: false,

@@ -66,7 +66,6 @@ const defaultProps = {
   height: 45,
   articleQuery: {},
   projectQuery: {},
-  setInputType: null,
 };
 
 interface SearchProps {
@@ -74,7 +73,6 @@ interface SearchProps {
   height?: number;
   articleQuery?: IArticleGetProps | {};
   projectQuery?: IProjectGetParamsProps | {};
-  setInputType?: Dispatch<SetStateAction<string>>;
 }
 
 export default function Search({
@@ -82,7 +80,6 @@ export default function Search({
   height = 45,
   articleQuery = {},
   projectQuery,
-  setInputType,
 }: SearchProps) {
   const inputTypeMap: {[index: string] : string} = {
     제목: 'title',
@@ -113,12 +110,6 @@ export default function Search({
   const handleChange = ({ target: { value } }: {target: HTMLInputElement}) => {
     setInput(value);
   };
-
-  useEffect(() => {
-    if (setInputType) {
-      setInputType(inputTypeMap[selectedinputType]);
-    }
-  }, [selectedinputType]);
 
   return (
     <SearchInputContainer width={width} height={height}>
