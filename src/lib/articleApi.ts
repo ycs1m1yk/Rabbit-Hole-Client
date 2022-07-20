@@ -14,7 +14,7 @@ export const createArticle = (token: string, bodyData: interfaces.IArticlePostPr
 }).then((res) => res.json());
 
 // Article - PUT 게시글 수정
-export const updateArticleById = (token: string, articleId: string, bodyData: interfaces.IArticlePutProps) => fetch(`${BASE_URL}/articles?=${articleId}`, {
+export const updateArticleById = (token: string, articleId: string, bodyData: interfaces.IArticlePutProps) => fetch(`${BASE_URL}/articles/${articleId}`, {
   method: 'PUT',
   headers: {
     Authorization: `Bearer ${token}`,
@@ -49,10 +49,9 @@ export const getAllArticle = (params: interfaces.IArticleGetProps) => {
 };
 
 // 게시글 좋아요
-export const increaseArticleLikes = (token: string, articleId: string) => fetch(`${BASE_URL}/${articleId}`, {
-  method: 'POST',
+export const increaseArticleLikes = (token: string, articleId: string) => fetch(`${BASE_URL}/articles/${articleId}/heart`, {
+  method: 'PUT',
   headers: {
     Authorization: `Bearer ${token}`,
-    'Content-Type': 'application/json',
   },
 }).then((res) => res.json());

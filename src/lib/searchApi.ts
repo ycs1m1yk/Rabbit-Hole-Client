@@ -12,15 +12,6 @@ export const searchArticlesByTitle = (params: interfaces.ISearchArticlesByTitleP
     .then((res) => res.json());
 };
 
-// Serach - GET Article - 작성자 아이디 검색
-export const searchArticlesByUserId = (params: interfaces.ISearchArticlesByUserIdProps) => {
-  const param = new URLSearchParams(params);
-  const par = param.toString();
-
-  return fetch(`${BASE_URL}/search/articles?${par}`)
-    .then((res) => res.json());
-};
-
 // Serach - GET Article - 작성자 검색
 export const searchArticlesByAuthor = (params: interfaces.ISearchArticlesByAuthorProps) => {
   const param = new URLSearchParams(params);
@@ -32,15 +23,6 @@ export const searchArticlesByAuthor = (params: interfaces.ISearchArticlesByAutho
 
 // Serach - GET Project - 글 제목 검색
 export const searchProjectsByTitle = (params: interfaces.ISearchProjectsByTitleProps) => {
-  const param = new URLSearchParams(params);
-  const par = param.toString();
-
-  return fetch(`${BASE_URL}/search/projects?${par}`)
-    .then((res) => res.json());
-};
-
-// Serach - GET Project - 작성자 아이디 검색
-export const searchProjectsByUserId = (params: interfaces.ISearchProjectsByUserIdProps) => {
   const param = new URLSearchParams(params);
   const par = param.toString();
 

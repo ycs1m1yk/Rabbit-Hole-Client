@@ -1,17 +1,14 @@
-/* eslint-disable consistent-return */
 import React, {
   Dispatch, FormEvent, SetStateAction, useCallback, useEffect, useState,
 } from 'react';
 import styled from 'styled-components';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useQuery } from 'react-query';
 import { AiOutlineSearch } from 'react-icons/ai';
 
-import * as searchApi from '@lib/searchApi';
 import {
-  IArticleGetProps, IArticleProps, IProjectGetParamsProps, IProjectProps,
+  IArticleGetProps, IProjectGetParamsProps,
 } from '@interfaces/interface';
-import { isEmptyObj } from '@utils/func';
+import { deletePropsFromObj, isEmptyObj } from '@utils/func';
 import useDebounce from '@/hooks/useDebounce';
 import SelectBox from './selectBox';
 
@@ -69,111 +66,59 @@ const defaultProps = {
   height: 45,
   articleQuery: {},
   projectQuery: {},
+  setInputType: null,
 };
 
-type SearchProps = {
-    width?: number;
-    height?: number;
-    articleQuery?: IArticleGetProps | {};
-    projectQuery?: IProjectGetParamsProps | {};
-    setSearchResult: Dispatch<SetStateAction<IArticleProps[] | []>>
-      | Dispatch<SetStateAction<IProjectProps[] | []>>;
-    setIsSearchPage: Dispatch<SetStateAction<boolean>>;
-    setTotalPage: Dispatch<SetStateAction<number>>;
-  } & typeof defaultProps
+interface SearchProps {
+  width?: number;
+  height?: number;
+  articleQuery?: IArticleGetProps | {};
+  projectQuery?: IProjectGetParamsProps | {};
+  setInputType?: Dispatch<SetStateAction<string>>;
+}
 
-// TODO:
-// - [x] 검색어 디바운스 적용
-// - [x] 제목 / 이름 검색 옵션 selectBox 추가
-// - [] 사이드바 게시판 연결
 export default function Search({
-  width,
-  height,
-  articleQuery,
+  width = 400,
+  height = 45,
+  articleQuery = {},
   projectQuery,
-  setSearchResult,
-  setIsSearchPage,
-  setTotalPage,
+  setInputType,
 }: SearchProps) {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const [selectedinputType, setSelectedInputType] = useState<string>('제목');
-  const [inputType, setInputType] = useState<string>('title');
-  const [input, setInput] = useState<string>('');
-  const debouncedInput: string = useDebounce<string>(input, 300);
-
   const inputTypeMap: {[index: string] : string} = {
     제목: 'title',
     작성자: 'author',
   };
-  useEffect(
-    () => setInputType(inputTypeMap[selectedinputType]),
-    [selectedinputType],
-  );
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [selectedinputType, setSelectedInputType] = useState<string>('제목');
+  const [input, setInput] = useState<string>('');
+  const debouncedInput: string = useDebounce<string>(input, 300);
 
   const handleSubmit = useCallback((e: FormEvent) => {
     e.preventDefault();
 
+    if (input === '') return;
+
     const query = isEmptyObj(articleQuery) ? projectQuery : articleQuery;
+    const queryWithoutInput = deletePropsFromObj(query as {}, 'title', 'author');
     const queryString = new URLSearchParams({
-      [inputType]: debouncedInput, ...query,
+      [inputTypeMap[selectedinputType]]: debouncedInput, ...queryWithoutInput,
     });
+
     const to = location.pathname.includes('search') ? `?${queryString}` : `search?${queryString}`;
-    navigate(to);
-    setIsSearchPage(true);
+    navigate(to, { replace: true, state: { from: location } });
+    setInput('');
   }, [debouncedInput, articleQuery, projectQuery]);
 
   const handleChange = ({ target: { value } }: {target: HTMLInputElement}) => {
     setInput(value);
   };
 
-  useQuery<any, Error>(
-    ['articleList', debouncedInput, articleQuery],
-    () => {
-      const query = articleQuery as IArticleGetProps;
-      switch (inputType) {
-        case 'title':
-          return searchApi.searchArticlesByTitle({ ...query, title: debouncedInput });
-        case 'author':
-          return searchApi.searchArticlesByAuthor({ ...query, author: debouncedInput });
-
-        default:
-          break;
-      }
-    },
-    {
-      enabled: !isEmptyObj(articleQuery) && debouncedInput !== '',
-      onSuccess: ({ articleList, totalPage }) => {
-        setSearchResult(articleList);
-        setTotalPage(totalPage);
-      },
-      onError: (err) => console.log(err),
-    },
-  );
-
-  useQuery<any, Error>(
-    ['articleList', debouncedInput, projectQuery],
-    () => {
-      const query = projectQuery as IProjectGetParamsProps;
-      switch (inputType) {
-        case 'title':
-          return searchApi.searchProjectsByTitle({ ...query, title: debouncedInput });
-        case 'author':
-          return searchApi.searchProjectsByAuthor({ ...query, author: debouncedInput });
-
-        default:
-          break;
-      }
-    },
-    {
-      enabled: !isEmptyObj(projectQuery) && debouncedInput !== '',
-      onSuccess: ({ articleList, totalPage }) => {
-        setSearchResult(articleList);
-        setTotalPage(totalPage);
-      },
-      onError: (err) => console.log(err),
-    },
-  );
+  useEffect(() => {
+    if (setInputType) {
+      setInputType(inputTypeMap[selectedinputType]);
+    }
+  }, [selectedinputType]);
 
   return (
     <SearchInputContainer width={width} height={height}>

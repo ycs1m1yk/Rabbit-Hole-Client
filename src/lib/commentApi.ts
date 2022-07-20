@@ -33,7 +33,7 @@ export const deleteCommentById = (token: string, commentId: string) => fetch(`${
 
 // Comment - POST 댓글 좋아요
 export const increaseCommentLikes = (token: string, commentId: string) => fetch(`${BASE_URL}/comments/${commentId}/heart`, {
-  method: 'POST',
+  method: 'PUT',
   headers: {
     Authorization: `Bearer ${token}`,
   },
@@ -41,8 +41,12 @@ export const increaseCommentLikes = (token: string, commentId: string) => fetch(
 
 // Comment - POST 댓글 채택
 export const adoptComment = (token: string, commentId: string) => fetch(`${BASE_URL}/comments/${commentId}/adoption`, {
-  method: 'POST',
+  method: 'PUT',
+  body: JSON.stringify({
+    isAdopted: true,
+  }),
   headers: {
     Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json',
   },
 }).then((res) => res.json());

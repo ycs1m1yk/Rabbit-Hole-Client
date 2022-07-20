@@ -1,7 +1,6 @@
-// sideBar
-import React, { ReactNode, useState, useEffect } from 'react';
+import React, { ReactNode, useState } from 'react';
 import styled from 'styled-components';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 interface ContentProps{
     id:number,
@@ -36,10 +35,11 @@ const BoardItem = styled.li<{selected: boolean}>`
     height: 1.6rem;
     width: 50%;
     cursor: pointer;
-    color: ${(props) => (props.selected ? props.theme.palette.eliceViolet : props.theme.palette.gray)};
+    font-weight: ${({ selected }) => (selected ? 700 : 500)};
+    color: ${({ selected, theme }) => (selected ? theme.palette.eliceViolet : theme.palette.gray)};
     &:hover{
         font-size:1.65rem;
-        color: ${(props) => props.theme.palette.eliceViolet};
+        color: ${({ theme }) => theme.palette.eliceViolet};
     }
 `;
 
@@ -53,10 +53,10 @@ const MyPageItem = styled.li<{selected: boolean}>`
     display: flex;
     justify-content: center;
     align-items: center;
-    color: ${(props) => (!props.selected ? props.theme.palette.black : 'white')};
-    background-color: ${(props) => (props.selected ? props.theme.palette.eliceViolet : 'white')};
+    color: ${({ selected, theme }) => (!selected ? theme.palette.black : 'white')};
+    background-color: ${({ selected, theme }) => (selected ? theme.palette.eliceViolet : 'white')};
     &:hover{
-        background-color: ${(props) => props.theme.palette.eliceViolet};
+        background-color: ${({ theme }) => theme.palette.eliceViolet};
         color: white;
     }
 `;
@@ -76,20 +76,6 @@ export default function SideBar({ type, contentsList = [] }:SideBarProps) {
   const navigate = useNavigate(); // 라우팅
 
   const [contents, setContents] = useState<ContentProps[]>(contentsList); // 리스트의 선택 상태 관리
-  const [queryString] = useSearchParams();
-
-  useEffect(() => {
-    const queryType = type === 'board' ? 'articleType=' : 'type=';
-    let queryStringType = queryString.get('articleType');
-    if (!queryStringType) {
-      queryStringType = queryString.get('type');
-    }
-    setContents(
-      contents.map((content) => (content.path.split(queryType)[1] === queryStringType
-        ? { ...content, selected: true }
-        : { ...content, selected: false })),
-    );
-  }, [queryString]);
 
   // 리스트 선택 시 selected상태 변경 및 라우팅
   const itemClickHandler = (event: React.MouseEvent<HTMLLIElement>, id: number, path: string) => {

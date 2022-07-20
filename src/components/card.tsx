@@ -16,6 +16,7 @@ const Container = styled.div`
 
   &:hover{
     opacity: 70%;
+    cursor: pointer;
   }
 `;
 
