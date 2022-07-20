@@ -23,7 +23,7 @@ const BoardContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: baseline;
-  margin-top: 3rem;
+  margin: 3rem 0;
 `;
 
 const BoardWrapper = styled.div`
