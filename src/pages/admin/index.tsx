@@ -67,7 +67,7 @@ export default function Admin() {
 
   useEffect(() => {
     if (authInfo?.role !== 'admin') {
-      alert('꺼지세요.');
+      alert('정석으로 갈까요 뒤집어볼까요 꺼지세요 말고 약간 이런거보다는 약간 들어가면은 약간 개발자느낌 뭔지알지 들어가면....들어가면 AWS과금 500만원 이렇게쓸까요? 이렇게들어가면 재밌긴하겠다 들어가면 뭐못한다고요? 취업못함 ㅇㅋ');
       navigate('/');
     }
   }, []);
@@ -95,16 +95,16 @@ export default function Admin() {
     }
   };
   return (
-    authInfo?.role === 'admin' && (
-    <AdminContainer>
-      <SidebarContainer>
-        <SideBar type="myPage" contentsList={mypageList} />
-      </SidebarContainer>
-      <VerticalDivider />
-      <Container>
-        {type && getPageByType(type)}
-      </Container>
-    </AdminContainer>
-    )
+    authInfo?.role === 'admin' ? (
+      <AdminContainer>
+        <SidebarContainer>
+          <SideBar type="myPage" contentsList={mypageList} />
+        </SidebarContainer>
+        <VerticalDivider />
+        <Container>
+          {type && getPageByType(type)}
+        </Container>
+      </AdminContainer>
+    ) : <AdminContainer />
   );
 }
