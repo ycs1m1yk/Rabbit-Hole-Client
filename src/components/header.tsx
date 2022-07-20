@@ -58,10 +58,10 @@ const StyledLink = styled(Link)`
     margin-left: 2rem;
   }
   &.active {
-    color: ${(props) => props.theme.palette.eliceViolet}
+    color: ${({ theme }) => theme.palette.eliceViolet};
   }
   :hover {
-    background-color: ${(props) => lighten(0.5, props.theme.palette.eliceViolet)};;
+    color: ${({ theme }) => theme.palette.eliceViolet};
   }
 `;
 

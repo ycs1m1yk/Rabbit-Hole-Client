@@ -12,10 +12,14 @@ import Pagination from '@components/pagination';
 import * as searchApi from '@lib/searchApi';
 
 const BoardContainer = styled.div`
+  min-width: 1440px;
   display: flex;
+  justify-content: center;
   align-items: baseline;
-  margin-top: 3rem;
-  padding: 0 5rem;
+  margin: 3rem 0;
+  margin-left: auto;
+  margin-right: auto;
+  padding-right: 300px;
 `;
 
 const BoardWrapper = styled.div`
@@ -28,7 +32,11 @@ const BoardWrapper = styled.div`
     align-self: flex-end;
     position: absolute;
     top: 8.2rem;
-    right: 1rem;
+    right: 11rem;
+
+    &[data-user-loged-in="false"] {
+      right: 1rem;    
+    }  
   }
   & .button-posting {
     align-self: flex-end;

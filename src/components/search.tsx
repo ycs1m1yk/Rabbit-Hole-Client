@@ -23,7 +23,6 @@ const SearchInputContainer = styled.div<{ width: number; height: number }>`
 
     border: 2px solid ${({ theme }) => theme.palette.borderGray};
     border-radius: 40px;
-
     & .icon-search {
         width: 1.8rem;
         height: 1.7rem;
@@ -40,6 +39,8 @@ const SelectBoxWrapper = styled.div`
 
 const SearchForm = styled.form`
     flex: 1 1 auto;
+    display: flex;
+    align-items: center;
 `;
 
 const SearchInput = styled.input`

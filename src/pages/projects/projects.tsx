@@ -19,7 +19,10 @@ import { IProjectGetParamsProps, IProjectProps } from '@/interfaces/interface';
 import { getAllProjects } from '@/lib/projectApi';
 
 const ProjectContainer = styled.div`
+  max-width: 1440px;
   padding: 3rem;
+  margin-left: auto;
+  margin-right: auto;
 `;
 
 const Alignments = styled.ul`
@@ -49,26 +52,30 @@ const Alignment = styled.li`
 `;
 
 const ProjectHeader = styled.div`
-  font-size: 2.5rem;
+  font-size: 3rem;
   margin: 2rem 0rem;
-  border-bottom: 1px solid black;
-  padding-bottom: 2rem;
+  border-bottom: 1px solid ${({ theme }) => theme.palette.borderGray};
+  padding-bottom: 4rem;
   display: flex;
   flex-direction: row;
   position: relative;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const RightHead = styled.div`
+  display: flex;
+  gap: 3rem;
+  flex-direction: row;
 `;
 
 const SearchContainer = styled.div`
-  position: absolute;
-  right: 20%;
-  top: -10%;
 `;
 
 const ButtonContainer = styled.div`
-  position: absolute;
-  right: 0%;
-  top: -10%;
   min-height: 45px;
+  display: flex;
+  align-items: center;
 `;
 
 const Content = styled.div`
@@ -147,14 +154,16 @@ export default function Projects() {
     <ProjectContainer>
       <ProjectHeader>
         프로젝트 갤러리
-        <SearchContainer>
-          <Search projectQuery={query} />
-        </SearchContainer>
-        {authInfo?.token && (
-        <ButtonContainer>
-          <Button size="small" onClick={() => handleProjectEnrollment('ProjectRegister')}>프로젝트 등록</Button>
-        </ButtonContainer>
-        )}
+        <RightHead>
+          <SearchContainer>
+            <Search projectQuery={query} />
+          </SearchContainer>
+          {authInfo?.token && (
+          <ButtonContainer>
+            <Button size="medium" onClick={() => handleProjectEnrollment('ProjectRegister')}>프로젝트 등록</Button>
+          </ButtonContainer>
+          )}
+        </RightHead>
       </ProjectHeader>
       <Alignments>
         <Alignment onClick={(e) => handleSort(e, 'date')}>최신순</Alignment>

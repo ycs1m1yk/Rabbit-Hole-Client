@@ -72,6 +72,7 @@ const ProjectImageBox = styled.div`
 
 const ProjectImage = styled.img`
   width: 80%;
+  max-height: 350px;
 `;
 
 const ProjectInfo = styled.div`
@@ -180,6 +181,7 @@ const ProjectDescriptionBox = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  margin-bottom: 4rem;
 `;
 
 function ProjectDetail() {

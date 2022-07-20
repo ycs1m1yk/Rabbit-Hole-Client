@@ -14,46 +14,51 @@ import { IProjectProps } from '@/interfaces/interface';
 import { isEmptyArray } from '@/utils/func';
 
 const ProjectContainer = styled.div`
+  max-width: 1440px;
   padding: 3rem;
+  margin-left: auto;
+  margin-right: auto;
 `;
 
 const Alignments = styled.ul`
   width: 100%;
   display: flex;
   align-items: center;
-  gap: 4rem;
-  & :hover{
-    font-weight: 700;
-    color: ${({ theme }) => theme.palette.eliceViolet};
-  }
+  gap: 1.5rem;
   position: relative;
   margin: 1rem 0;
 `;
 
 const Alignment = styled.li`
-  cursor: pointer;
+  vertical-align: middle;
+  margin-left: 2rem;
   list-style-type: disc;
+  color: ${({ theme }) => theme.palette.gray};
   font-size: 1.5rem;
   font-weight: 500;
   line-height: 26px;
-  vertical-align: middle;
-  margin-left: 2rem;
+  cursor: pointer;
+
+  &[selected],
+  &:hover{
+    font-weight: 700;
+    color: ${({ theme }) => theme.palette.eliceViolet};
+  }  
 `;
 
 const ProjectHeader = styled.div`
-  font-size: 2.5rem;
+  font-size: 3rem;
   margin: 2rem 0rem;
-  border-bottom: 1px solid black;
-  padding-bottom: 2rem;
+  border-bottom: 1px solid ${({ theme }) => theme.palette.borderGray};
+  padding-bottom: 4rem;
   display: flex;
   flex-direction: row;
   position: relative;
+  align-items: center;
+  justify-content: space-between;
 `;
 
 const SearchContainer = styled.div`
-  position: absolute;
-  right: 20%;
-  top: -10%;
 `;
 
 const Content = styled.div`
