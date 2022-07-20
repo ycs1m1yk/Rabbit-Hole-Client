@@ -24,6 +24,7 @@ const ProjectDetail = lazy(() => import('@pages/projects/projectDetail'));
 const NotFound = lazy(() => import('@pages/notFound'));
 const BoardSearch = lazy(() => import('@pages/search/boardSearch'));
 const ProjectsSearch = lazy(() => import('@pages/search/projectsSearch'));
+const Profile = lazy(() => import('@pages/profile/profile'));
 
 export const SocketDispatch = createContext<{
   siteSocket:Socket|null, chatSocket:Socket|null
@@ -48,6 +49,7 @@ function App() {
             <Route path="/projects/search" element={<ProjectsSearch />} />
             <Route path="/mypage" element={<Mypage />} />
             <Route path="/admin" element={<Admin />} />
+            <Route path="/profile" element={<Profile />} />
           </Route>
           <Route path="/github/register" element={<Register />} />
           <Route path="/github/login" element={<Token />} />
