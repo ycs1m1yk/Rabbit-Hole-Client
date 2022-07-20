@@ -82,7 +82,8 @@ export default function AdminArticle() {
     return newArticles;
   }, {
     onSuccess(data) {
-      setStart(page ? parseInt(page, 10) : 1 - 1);
+      console.log(page);
+      setStart(page ? parseInt(page, 10) - 1 : 0);
       setArticleState(data.articleList);
       setTotalPageState(data.totalPage);
     },
@@ -102,23 +103,22 @@ export default function AdminArticle() {
         if (res.status >= 400) {
           alert('프로젝트 삭제가 실패했습니다. 다시 시도해주세요:(');
         }
-        navigate(`/admin?type=articles&articleType=${articleType}&page=1&perPage=10`, { replace: true });
+        navigate(`/admin?type=articles&articleType=${selectedOption}&page=1&perPage=10`);
       }
     } else {
       alert('관리자 권한이 없습니다.');
       navigate('/');
     }
-  }, [articleState, authInfo]);
+  }, [articleState, authInfo, selectedOption]);
 
   const paginationHandler = useCallback((pageNumber:number) => {
-    navigate(`/admin?type=articles&articleType=${articleType}&page=${Number(pageNumber) + 1}&perPage=10`);
-  }, [articleType]);
+    navigate(`/admin?type=articles&articleType=${selectedOption}&page=${Number(pageNumber) + 1}&perPage=10`);
+  }, [selectedOption]);
 
-  if (page && perPage && articleState) {
-    return (
-      <>
-        <h1>게시글 관리</h1>
-        {(page && perPage && articleState) && (
+  return (
+    <>
+      <h1>게시글 관리</h1>
+      {(page && perPage && articleState) && (
         <>
           <Settings>
             <Button onClick={deleteHandler}>
@@ -160,8 +160,7 @@ export default function AdminArticle() {
               </>
             )}
         </>
-        )}
-      </>
-    );
-  }
+      )}
+    </>
+  );
 }

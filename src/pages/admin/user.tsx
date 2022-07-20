@@ -4,13 +4,13 @@ import styled from 'styled-components';
 import AdminTable from '@/components/adminTable';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useQuery } from 'react-query';
-import { deleteArticle, getAllArticle } from '@/lib/adminApi';
+import { deleteUser, getAllUsers } from '@/lib/adminApi';
 import useToken from '@/hooks/useToken';
 import Pagination from '@components/pagination';
 import Button from '@/components/button';
 import SelectBox from '@/components/selectBox';
 
-const userType = [
+const roleType = [
   'admin', 'racer', 'guest',
 ];
 
@@ -35,98 +35,116 @@ const EmptyField = styled.p`
   font-weight: 700;
 `;
 
-interface TableProps{
-    type:'article',
-    _id:string,
-    articleType:string,
-    author:string,
-    title:string
-    createdAt:Date,
-    selected:boolean,
-    path:string,
+interface UserProps{
+  type: 'user';
+  _id:string;
+  avatar: string;
+  name: string;
+  email:string;
+  track:string;
+  trackCardinalNumber:string;
+  position: string;
+  role: string;
+  createdAt:Date;
+  selected:boolean;
   }
 
 export default function AdminUser() {
   const { authInfo } = useToken();
   const navigate = useNavigate();
   const [query] = useSearchParams();
-  const page = query.get('page');
-  const perPage = query.get('perPage');
-  const articleType = query.get('articleType');
-  const queryParams = page && perPage && articleType ? { page, perPage, articleType } : { page: '1', perPage: '10', articleType: 'question' };
-  const [articleState, setArticleState] = useState<TableProps[]>();
+  const page = query.get('page') || '1';
+  const perPage = query.get('perPage') || '10';
+  const role = query.get('role') || 'guest';
+  const queryParams = page && perPage && role ? { page, perPage, role } : { page: '1', perPage: '10', role: 'guest' };
+  const [userState, setUserState] = useState<UserProps[]>();
   const [totalPageState, setTotalPageState] = useState<string>();
-  const [selectedOption, setSelectedOption] = useState(articleType || 'question');
+  const [selectedOption, setSelectedOption] = useState(role);
 
-  const { data } = useQuery(['admin', page, perPage, articleType], async () => {
-    let newArticles;
+  const { data } = useQuery(['admin', 'users', page, perPage, role], async () => {
+    let newUsers;
     if (authInfo && queryParams) {
-      newArticles = await getAllArticle(authInfo.token, queryParams);
-      newArticles.articleList = newArticles.articleList.map(({
-        _id, articleType, author, title, createdAt,
+      newUsers = await getAllUsers(authInfo.token, queryParams);
+      console.log(newUsers);
+      newUsers.userList = newUsers.userList.map(({
+        _id, avatar, name, email, track, trackCardinalNumber, position, createdAt, authImage
       }:{
-        _id: string, articleType: string, author: string, title: string, createdAt: string,
+        _id: string,
+        avatar: string,
+        name: string,
+        email: string,
+        track: string,
+        trackCardinalNumber:number,
+        position:string,
+        role:string,
+        createdAt:string,
+        authImage: string,
       }) => ({
-        type: 'article',
+        type: 'user',
         _id,
-        articleType,
-        author,
-        title,
+        authImage,
+        avatar,
+        name,
+        email,
+        track,
+        trackCardinalNumber,
+        position,
+        role,
         createdAt: new Date(createdAt),
         selected: false,
-        path: `/board?${articleType}=${_id}`,
       }));
     }
-    return newArticles;
+    console.log(newUsers);
+    return newUsers;
   }, {
     onSuccess(data) {
-      console.log(data.totalPage);
-      setArticleState(data.articleList);
+      console.log(data);
+      setUserState(data.userList);
       setTotalPageState(data.totalPage);
     },
   });
 
   useEffect(() => {
-    navigate(`/admin?type=articles&articleType=${selectedOption}&page=${page}&perPage=10`);
+    navigate(`/admin?type=users&role=${selectedOption}&page=1&perPage=10`);
   }, [selectedOption]);
 
   const deleteHandler = useCallback(async () => {
-    if (authInfo && articleState) {
+    if (authInfo && userState) {
       if (confirm('정말 삭제하시겠습니까?')) {
-        const res = await Promise.all(articleState.map(async (article) => {
-          if (article.selected) await deleteArticle(authInfo?.token, article._id);
+        const res = await Promise.all(userState.map(async (user) => {
+          if (user.selected) await deleteUser(authInfo?.token, user._id);
         }));
         // 요청 실패하는 경우
         if (res.status >= 400) {
-          alert('프로젝트 삭제가 실패했습니다. 다시 시도해주세요:(');
+          alert('유저 삭제가 실패했습니다. 다시 시도해주세요:(');
         }
-        navigate(`/admin?type=articles&articleType=${articleType}&page=1&perPage=10`, { replace: true });
+        navigate(`/admin?type=users&role=${selectedOption}&page=1&perPage=10`);
+        window.location.reload();
       }
     } else {
       alert('관리자 권한이 없습니다.');
       navigate('/');
     }
-  }, [articleState, authInfo]);
+  }, [selectedOption, authInfo, userState]);
 
   const paginationHandler = useCallback((pageNumber:number) => {
-    navigate(`/admin?type=articles&articleType=question&page=${Number(pageNumber) + 1}&perPage=10`);
-  }, []);
+    navigate(`/admin?type=users&role=${selectedOption}&page=${Number(pageNumber) + 1}&perPage=10`);
+  }, [selectedOption]);
 
-  if (page && perPage && articleState && totalPageState) {
-    return (
-      <>
-        <h1>게시글 관리</h1>
-        {(page && perPage && articleState && totalPageState) && (
+  return (
+    <>
+      <h1>유저 관리</h1>
+      {(page && perPage && userState) && (
         <>
           <Settings>
             <Button onClick={deleteHandler}>
               삭제하기
             </Button>
-            {articleType
+            {role
           && (
           <SelectBox
-            options={boardType}
-            defaultValue={articleType}
+            options={roleType}
+            defaultValue={role}
             selectedOption={selectedOption}
             setSelectedOption={setSelectedOption}
             width="20rem"
@@ -134,33 +152,32 @@ export default function AdminUser() {
           />
           )}
           </Settings>
-          <AdminTable
-            items={articleState}
-            setItems={setArticleState}
-          />
-          <div style={{
-            margin: 'auto', display: 'flex', justifyContent: 'center', maxWidth: '90rem',
-          }}
-          >
-            <Pagination
-              start={Number(page) - 1}
-              handler={paginationHandler}
-              length={Number(totalPageState)}
-              show={Number(perPage)}
-            />
-          </div>
+          {
+            !totalPageState || !userState ? (
+              <EmptyField>등록된 게시글이 없습니다.</EmptyField>
+            )
+              : (
+                <>
+                  <AdminTable
+                    items={userState}
+                    setItems={setUserState}
+                  />
+                  <div style={{
+                    margin: 'auto', display: 'flex', justifyContent: 'center', maxWidth: '90rem',
+                  }}
+                  >
+                    <Pagination
+                      start={Number(page) - 1}
+                      handler={paginationHandler}
+                      length={Number(totalPageState)}
+                      show={Number(perPage)}
+                    />
+                  </div>
+                </>
+              )
+}
         </>
-        )}
-      </>
-    );
-  }
-  if (articleState && !articleState.length) {
-    return (
-      <>
-        <h1>게시글 관리</h1>
-        <EmptyField>등록된 게시글이 없습니다.</EmptyField>
-        ;
-      </>
-    );
-  }
+      )}
+    </>
+  );
 }

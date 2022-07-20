@@ -15,12 +15,13 @@ export default function Token() {
       const userId = query.get('userId');
       const userName = query.get('userName');
       const expireTime = query.get('expire');
+      const role = query.get('role');
       const carrots = +(query.get('carrots') as string);
       const date = new Date();
-      if (token && userName && expireTime && userId) {
+      if (token && userName && expireTime && userId && role) {
         const expire = date.getTime() + parseInt(expireTime, 10) * 1000;
         setAuthState({
-          token, userName, expire: expire.toString(), userId, carrots,
+          token, userName, expire: expire.toString(), userId, carrots, role,
         });
       }
     } catch (error) {

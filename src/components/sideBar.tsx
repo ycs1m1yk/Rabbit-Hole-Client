@@ -80,10 +80,7 @@ export default function SideBar({ type, contentsList = [] }:SideBarProps) {
 
   useEffect(() => {
     const queryType = type === 'board' ? 'articleType' : 'type';
-    let queryStringType = queryString.get('type');
-    if (!queryStringType) {
-      queryStringType = queryString.get('articleType');
-    }
+    const queryStringType = queryString.get(queryType);
     setContents(
       contents.map((content) => (new URLSearchParams(content.path.split('?')[1]).get(queryType) === queryStringType
         ? { ...content, selected: true }

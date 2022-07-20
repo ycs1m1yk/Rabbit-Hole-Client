@@ -26,7 +26,6 @@ const defaultProps = {
  */
 const MarkdownEditor = forwardRef<Editor, EditorProps>((props, ref) => {
   const { authInfo } = useToken();
-
   useEffect(
     () => {
       const bug = document.querySelectorAll('.ProseMirror');

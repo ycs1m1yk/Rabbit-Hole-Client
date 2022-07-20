@@ -9,7 +9,7 @@ import ProjectForm from '@/pages/projects/components/projectForm';
 import ArticleForm from '@/pages/board/components/articleForm';
 import EditProfileForm from '@/pages/myPage/components/EditProfileForm';
 import ProjectEditForm from '@/pages/projects/components/projectEditForm';
-
+import Certificate from '@pages/admin/certificate';
 export default function useModal() {
   const getModalPage = () => {
     const modalState = useRecoilValue(modalAtom);
@@ -44,6 +44,12 @@ export default function useModal() {
         return (
           <Modal>
             <EditProfileForm />
+          </Modal>
+        );
+      case 'CertificateImage':
+        return (
+          <Modal>
+            <Certificate />
           </Modal>
         );
       default:

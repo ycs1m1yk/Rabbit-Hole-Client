@@ -33,7 +33,7 @@ const mypageList = [
   {
     id: 1,
     name: '유저 관리',
-    path: '?type=user',
+    path: '?type=users&role=guest&page=1&perPage=10',
     selected: true,
     icon: <AiOutlineEdit />,
   },
@@ -74,7 +74,7 @@ export default function Admin() {
 
   const getPageByType = (pageType:string) => {
     switch (pageType) {
-      case 'user':
+      case 'users':
         return (
           <AdminUser />
         );

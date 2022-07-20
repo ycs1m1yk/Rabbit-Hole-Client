@@ -57,7 +57,7 @@ const mypageList = [
 const adminPage = {
   id: 5,
   name: '관리자 모드',
-  path: '/admin?type=user',
+  path: '/admin?type=users&role=guest&page=1&perPage=10',
   selected: false,
   icon: <AiOutlineLock />,
 };

@@ -1,9 +1,12 @@
 /* eslint no-underscore-dangle: 0 */
+import modalAtom from '@/recoil/modal/modalAtom';
 import React, {
-  ChangeEvent,
+  ChangeEvent, useCallback,
 } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
+import Button from './button';
 
 // table
 const TableContainer = styled.table`
@@ -42,13 +45,13 @@ const TableRow = styled.tr`
 `;
 const TableItem = styled.td`
   position: relative;
-  padding: 10px 0;
+  padding: 10px 5px;
   text-align: center;
   vertical-align: middle;
-
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  max-width: 10rem;
 `;
 const Checkbox = styled.input`
   color: #E1CFFF;
@@ -56,6 +59,10 @@ const Checkbox = styled.input`
 const NormalCheck = styled.input`
   z-index: 1;
   position: relative;
+`;
+
+const Avatar = styled.img`
+  height: 100%;
 `;
 interface articleObj{
   type: 'article';
@@ -80,6 +87,7 @@ interface userObj{
   role: string;
   createdAt:Date;
   selected:boolean;
+  authImage?:string;
 }
 
 interface projectObj{
@@ -97,25 +105,41 @@ interface TableProps{
 }
 
 export default function AdminTable({ items, setItems }:TableProps) {
-  const [query] = useSearchParams();
+  const setModal = useSetRecoilState(modalAtom);
+  const [query, setQuery] = useSearchParams();
   const navigate = useNavigate();
   const page = Number(query.get('page'));
   const perPage = Number(query.get('perPage'));
-  const detailHandler = (e:any, path:string) => {
-    navigate(path);
-  };
 
-  const checkHandler = (e:ChangeEvent<HTMLInputElement>) => {
+  const detailHandler = useCallback((e:any, path:string) => {
+    navigate(path);
+  }, []);
+
+  const checkHandler = useCallback((e:ChangeEvent<HTMLInputElement>) => {
     setItems(items.map((item) => {
       if (item._id === e.target.value) {
         return { ...item, selected: e.target.checked };
       }
       return item;
     }));
-  };
-  const checkAllHandler = (e:ChangeEvent<HTMLInputElement>) => {
+  }, [items]);
+
+  const checkAllHandler = useCallback((e:ChangeEvent<HTMLInputElement>) => {
     setItems(items.map((item) => ({ ...item, selected: e.target.checked })));
-  };
+  }, [items]);
+
+  const modalHandler = useCallback((image:string, userId:string) => {
+    // setQuery({ image }, { replace: false });
+    // setQuery({ userId }, { replace: false });
+    const newQuery:{[index:string]:string} = { image, userId };
+    // eslint-disable-next-line no-restricted-syntax
+    for (const [name, value] of query.entries()) {
+      newQuery[name] = value;
+    }
+    setQuery(newQuery, { replace: false });
+    setModal('CertificateImage');
+  }, []);
+
   const padTo2Digits = (num: number):string => num.toString().padStart(2, '0');
 
   const formatDate = (date: Date):string => (
@@ -145,17 +169,30 @@ export default function AdminTable({ items, setItems }:TableProps) {
           <col width="15%" />
         </colgroup>
         )}
-        {items[0].type === 'user' && (
-        <colgroup>
-          <col width="5%" />
-          <col width="11%" />
-          <col width="14%" />
-          <col width="14%" />
-          <col width="14%" />
-          <col width="14%" />
-          <col width="14%" />
-          <col width="14%" />
-        </colgroup>
+        {(items[0].type === 'user' && items[0].role === 'guest') && (
+          <colgroup>
+            <col width="5%" />
+            <col width="11%" />
+            <col width="13%" />
+            <col width="13%" />
+            <col width="13%" />
+            <col width="13%" />
+            <col width="13%" />
+            <col width="13%" />
+            <col width="6%" />
+          </colgroup>
+        )}
+        {(items[0].type === 'user' && items[0].role !== 'guest') && (
+          <colgroup>
+            <col width="5%" />
+            <col width="11%" />
+            <col width="14%" />
+            <col width="14%" />
+            <col width="14%" />
+            <col width="14%" />
+            <col width="14%" />
+            <col width="14%" />
+          </colgroup>
         )}
         {items[0].type === 'project' && (
         <colgroup>
@@ -176,7 +213,20 @@ export default function AdminTable({ items, setItems }:TableProps) {
               <HeadItem scope="col">작성 날짜</HeadItem>
             </tr>
           )}
-          {items[0].type === 'user' && (
+          {(items[0].type === 'user' && items[0].role === 'guest') && (
+            <tr>
+              <HeadItem scope="col"><Checkbox type="checkbox" name="selectAll" id="" onChange={checkAllHandler} /></HeadItem>
+              <HeadItem scope="col">프로필</HeadItem>
+              <HeadItem scope="col">이름</HeadItem>
+              <HeadItem scope="col">이메일</HeadItem>
+              <HeadItem scope="col">트랙</HeadItem>
+              <HeadItem scope="col">기수</HeadItem>
+              <HeadItem scope="col">포지션</HeadItem>
+              <HeadItem scope="col">역할</HeadItem>
+              <HeadItem scope="col">인증</HeadItem>
+            </tr>
+          )}
+          {(items[0].type === 'user' && items[0].role !== 'guest') && (
             <tr>
               <HeadItem scope="col"><Checkbox type="checkbox" name="selectAll" id="" onChange={checkAllHandler} /></HeadItem>
               <HeadItem scope="col">프로필</HeadItem>
@@ -224,14 +274,15 @@ export default function AdminTable({ items, setItems }:TableProps) {
                 if (item.type === 'user') {
                   return (
                     <TableRow>
-                      <TableItem><NormalCheck type="checkbox" name="user" checked={item.selected} value={item._id} /></TableItem>
-                      <TableItem>{item.avatar}</TableItem>
+                      <TableItem><NormalCheck type="checkbox" name="user" checked={item.selected} value={item._id} onChange={checkHandler} /></TableItem>
+                      <TableItem><Avatar src={item.avatar} /></TableItem>
                       <TableItem>{item.name}</TableItem>
                       <TableItem>{item.email}</TableItem>
                       <TableItem>{item.track}</TableItem>
                       <TableItem>{item.trackCardinalNumber}</TableItem>
                       <TableItem>{item.position}</TableItem>
                       <TableItem>{item.role}</TableItem>
+                      {item.role === 'guest' && <TableItem><Button size="small" onClick={() => { modalHandler(item.authImage, item._id); }}>이미지</Button></TableItem>}
                     </TableRow>
                   );
                 }

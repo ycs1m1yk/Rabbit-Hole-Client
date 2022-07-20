@@ -25,7 +25,6 @@ const BASE_URL = `${import.meta.env.VITE_API_BASE_URL}`;
 export const getAllUsers = (token: string, params: IUserProps) => {
   const param = new URLSearchParams(params);
   const query = param.toString();
-
   return fetch(`${BASE_URL}/admin/users?${query}`, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -36,18 +35,19 @@ export const getAllUsers = (token: string, params: IUserProps) => {
 };
 
 // Admin - PUT 유저 승인
-export const approveUser = (token: string, userId: string) => fetch(`${BASE_URL}/admin/users/${userId}`, {
+export const approveUser = (token: string, userId: string, bodyData: { role: string }) => fetch(`${BASE_URL}/admin/users/${userId}`, {
   method: 'PUT',
   headers: {
     Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json',
   },
+  body: JSON.stringify(bodyData),
 }).then((res) => res.json());
 
 // Admin - GET 게시글 목록 조회
 export const getAllArticle = (token: string, params: IArticleProps) => {
   const queryString = new URLSearchParams(params);
   const param = queryString.toString();
-  console.log(`${BASE_URL}/admin/articles?${param}`)
   return fetch(`${BASE_URL}/admin/articles?${param}`, {
     headers: {
       Authorization: `Bearer ${token}`,
