@@ -6,16 +6,11 @@ import { useSearchParams } from 'react-router-dom';
 import SideBar from '@components/sideBar';
 import Search from '@components/search';
 import SelectBox from '@components/selectBox';
-import Button from '@components/button';
 import PostList from '@components/postList';
 import Pagination from '@components/pagination';
 
-import modalAtom from '@recoil/modal/modalAtom';
-import { useSetRecoilState } from 'recoil';
-
-import { IArticleGetProps } from '@interfaces/interface';
-import { getAllArticle } from '@lib/articleApi';
-import useToken from '@hooks/useToken';
+import * as searchApi from '@lib/searchApi';
+import { IArticleGetProps, IArticleProps } from '@interfaces/interface';
 
 const BoardContainer = styled.div`
   display: flex;
@@ -34,11 +29,7 @@ const BoardWrapper = styled.div`
     align-self: flex-end;
     position: absolute;
     top: 8.2rem;
-    right: 11rem;
-
-    &[data-user-loged-in="false"] {
-      right: 1rem;    
-    }  
+    right: 1rem;
   }
   & .button-posting {
     align-self: flex-end;
@@ -79,20 +70,14 @@ const boardList = [
   },
 ];
 
-export default function Board() {
-  const setModalState = useSetRecoilState(modalAtom);
-  const { authInfo } = useToken();
+export default function BoardSearch() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [inputType, setInputType] = useState<string>('title');
   const [perPage, setPerPage] = useState<string>('10');
-  const [query, setQuery] = useState<IArticleGetProps>({
+  const [query, setQuery] = useState<any>({
     articleType: 'question', filter: 'date', page: '1', perPage: '10',
   });
-
-  const handleModalOpen = useCallback(() => {
-    setModalState('Posting');
-  }, []);
 
   const handleSort = useCallback((sortType: string) => {
     searchParams.set('filter', sortType);
@@ -108,17 +93,21 @@ export default function Board() {
   const handlePerPage = useCallback((perPageValue: string) => {
     searchParams.set('perPage', perPageValue);
     searchParams.set('page', '1');
-    setSearchParams(searchParams);
+    setSearchParams(searchParams, { replace: true });
   }, []);
 
-  const {
-    isError, data, error, refetch,
-  } = useQuery<any, Error>(
+  const { data, refetch } = useQuery<any, Error>(
     ['articleList', query],
-    () => getAllArticle(query),
+    () => {
+      if (inputType === 'title') {
+        return searchApi.searchArticlesByTitle({ ...query });
+      }
+      return searchApi.searchArticlesByAuthor({ ...query });
+    },
     {
       suspense: true,
       staleTime: 180000,
+      onError: (err) => console.log(err),
     },
   );
 
@@ -127,18 +116,12 @@ export default function Board() {
     refetch();
   }, [searchParams]);
 
-  if (isError) {
-    return (
-      <span>{`Error: ${error.message}`}</span>
-    );
-  }
-
   return (
     <BoardContainer>
       <SideBar type="board" contentsList={boardList} />
       <BoardWrapper>
         <Search articleQuery={query} setInputType={setInputType} />
-        <SelectBoxWrapper className="selectbox-perpage" data-user-loged-in={!!authInfo}>
+        <SelectBoxWrapper className="selectbox-perpage">
           <SelectBox
             options={['5', '10', '15', '20']}
             defaultValue="페이지당 개수"
@@ -149,8 +132,6 @@ export default function Board() {
             type="register"
           />
         </SelectBoxWrapper>
-        {authInfo
-      && <Button className="button-posting" size="medium" onClick={handleModalOpen}>게시글 등록</Button>}
         <PostList posts={data.articleList} sortHandler={handleSort} />
         <Pagination
           length={data.totalPage}

@@ -16,6 +16,7 @@ const Container = styled.div`
 
   &:hover{
     opacity: 70%;
+    cursor: pointer;
   }
 `;
 
@@ -191,8 +192,6 @@ export default function Card({
   const handleClick = ():void => {
     if (type === 'project') {
       navigate(`/projects/detail?projectId=${projectId}`);
-    } else if (type === 'mentoring') {
-      console.log('멘토링 디테일 모달 띄우기');
     }
   };
 

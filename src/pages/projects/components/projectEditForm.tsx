@@ -80,13 +80,7 @@ function ProjectEditForm() {
   const projectId = searchParams.get('projectId');
   const {
     register, handleSubmit, formState: { errors },
-  } = useForm<IForm>({
-    defaultValues: {
-      title: prevData?.title,
-      author: prevData?.author,
-      shortDescription: prevData?.shortDescription,
-    },
-  });
+  } = useForm<IForm>();
 
   // Tag 입력하고 Enter 시 Form Submit 방지
   const handleEnterSubmit = useCallback((e: KeyboardEvent) => {
@@ -101,6 +95,16 @@ function ProjectEditForm() {
       description: editorRef.current?.getInstance().getMarkdown(),
       tags: JSON.stringify(tags),
     };
+
+    if (data.author === '') {
+      formData.author = prevData!.author;
+    }
+    if (data.title === '') {
+      formData.title = prevData!.title;
+    }
+    if (data.shortDescription === '') {
+      formData.shortDescription = prevData!.shortDescription;
+    }
 
     const fd: any = new FormData();
 
@@ -140,25 +144,19 @@ function ProjectEditForm() {
         <InputTitle>Title</InputTitle>
         <ProjectInput
           defaultValue={prevData?.title}
-          {...register('title', {
-            required: '제목은 필수 입력사항입니다:)',
-          })}
+          {...register('title')}
         />
         <ErrorMessage>{errors?.title?.message}</ErrorMessage>
         <InputTitle>작성자</InputTitle>
         <ProjectInput
           defaultValue={prevData?.author}
-          {...register('author', {
-            required: '이름은 필수 입력사항입니다:)',
-          })}
+          {...register('author')}
         />
         <ErrorMessage>{errors?.author?.message}</ErrorMessage>
         <InputTitle>한 줄 소개</InputTitle>
         <ProjectInput
           defaultValue={prevData?.shortDescription}
-          {...register('shortDescription', {
-            required: '한 줄 소개는 필수 입력사항입니다:)',
-          })}
+          {...register('shortDescription')}
         />
         <ErrorMessage>{errors?.shortDescription?.message}</ErrorMessage>
         <InputTitle>태그</InputTitle>
@@ -171,9 +169,7 @@ function ProjectEditForm() {
         </EditorContainer>
         <InputTitle style={{ margin: '1rem 0' }}>프로젝트 이미지</InputTitle>
         <ProjectImageInput
-          {...register('thumbnail', {
-            required: '프로젝트 사진은 필수 입력사항입니다:)',
-          })}
+          {...register('thumbnail')}
           type="file"
         />
         <ErrorMessage>{errors?.thumbnail?.message}</ErrorMessage>

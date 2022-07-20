@@ -117,13 +117,21 @@ function ProjectForm() {
         <ProjectInput
           {...register('title', {
             required: '제목은 필수 입력사항입니다:)',
+            maxLength: {
+              value: 50,
+              message: '제목은 50자 이내로 입력해주세요',
+            },
           })}
         />
         <ErrorMessage>{errors?.title?.message}</ErrorMessage>
-        <InputTitle>작성자</InputTitle>
+        <InputTitle>작성자 또는 팀명</InputTitle>
         <ProjectInput
           {...register('author', {
-            required: '이름은 필수 입력사항입니다:)',
+            required: '작성자 또는 팀명은 필수 입력사항입니다:)',
+            maxLength: {
+              value: 20,
+              message: '작성자 또는 팀명은 50자 이내로 입력해주세요',
+            },
           })}
         />
         <ErrorMessage>{errors?.author?.message}</ErrorMessage>
@@ -131,6 +139,10 @@ function ProjectForm() {
         <ProjectInput
           {...register('shortDescription', {
             required: '한 줄 소개는 필수 입력사항입니다:)',
+            maxLength: {
+              value: 50,
+              message: '한 줄 소개는 50자 이내로 입력해주세요',
+            },
           })}
         />
         <ErrorMessage>{errors?.shortDescription?.message}</ErrorMessage>

@@ -3,7 +3,7 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable max-len */
 import React, {
-  MouseEvent, useEffect, useRef,
+  useRef, useState,
 } from 'react';
 import { useQuery } from 'react-query';
 import { useSearchParams, useNavigate } from 'react-router-dom';
@@ -11,7 +11,7 @@ import styled from 'styled-components';
 import LogoImage from '@assets/images/rabbit-hole-logo-300.jpg';
 import { isEmptyArray } from '@utils/func';
 import MarkdownViewer from '@/components/markdownViewer';
-import { deleteProjectById, getProjectById } from '@/lib/projectApi';
+import { deleteProjectById, getProjectById, increaseProjectLikes } from '@/lib/projectApi';
 import { ICommentProps, ITagsProps } from '@/interfaces/interface';
 import MarkdownEditor from '@/components/markdownEditor';
 import Button from '@/components/button';
@@ -22,13 +22,28 @@ import { deleteCommentById, postComment } from '@/lib/commentApi';
 import modalAtom from '@/recoil/modal/modalAtom';
 import { useSetRecoilState } from 'recoil';
 import { ModalTypes } from '@/interfaces/type';
+import {
+  AiFillHeart, AiOutlineEye, AiOutlineHeart,
+} from 'react-icons/ai';
+import { lighten } from 'polished';
 
 const ProjectDetailContainer = styled.div`
-  padding: 3rem;
+  padding: 5rem;
 `;
 
 const ProjectDetailHeader = styled.h1`
   font-size: 2.5rem;
+`;
+
+const HeaderContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  flex: 1;
+`;
+
+const ProjectDataContainer = styled.div`
+  display: flex;
+  justify-content: center;
 `;
 
 const EditButtonContainer = styled.div`
@@ -95,9 +110,7 @@ const ReplyContainer = styled.div<{isMyComment: boolean}>`
   border-radius: 20px;
   width: 50%;
   align-self: ${(props) => (props.isMyComment ? 'flex-end' : 'flex-start')};
-  /* background-color: ${(props) => (props.isMyComment ? props.theme.palette.lightViolet : props.theme.palette.borderGray)}; */
-  /* color: ${(props) => (props.isMyComment ? 'white' : 'black')}; */
-  background-color: ${(props) => (props.theme.palette.borderGray)};
+  background-color: ${(props) => (props.isMyComment ? lighten(0.5, props.theme.palette.eliceViolet) : props.theme.palette.borderGray)};
 `;
 
 const ReplyHeader = styled.div`
@@ -120,20 +133,30 @@ const ButtonContainer = styled.div`
   margin-top: 1rem;
 `;
 
-const GoToAnswer = styled.div`
-  background-color: ${({ theme }) => theme.palette.gray};
-  border-radius: 50%;
-  position: fixed;
-  width: 5rem;
-  height: 5rem;
-  bottom: 50%;
-  right: 3%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: white;
+const LikeBox = styled.button<{ isClicked:boolean }>`
   cursor: pointer;
-  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid ${({ theme }) => theme.palette.borderGray};
+  border-radius: 10px;
+  padding: 0.5rem 1rem ;
+`;
+
+const LikeCount = styled.span`
+  font-size: 14px;
+  vertical-align: middle;
+`;
+
+const ViewContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin-left: 1rem;
+`;
+
+const ViewCount = styled.span`
+  font-size: 1.8rem;
+  margin-left: 0.5rem;
 `;
 
 function ProjectDetail() {
@@ -141,18 +164,18 @@ function ProjectDetail() {
   const navigate = useNavigate();
   const { authInfo } = useToken();
   const editorRef = useRef<Editor>(null);
-  const moveRef = useRef<null | HTMLDivElement>(null);
-  const scrollRef = useRef<null | HTMLDivElement>(null);
   const setModal = useSetRecoilState(modalAtom);
+  const [clicked, setClicked] = useState<boolean>(false);
 
   const projectId = searchParams.get('projectId');
-  let project;
+  let project: any;
   let comments;
   let authorId;
 
+  // data fetching and initializing
   if (projectId) {
     const { data } = useQuery<any>(['projectDetail', projectId], () => getProjectById(projectId), {
-      staleTime: 5000,
+      refetchOnWindowFocus: false,
     });
 
     if (data) {
@@ -161,19 +184,6 @@ function ProjectDetail() {
       authorId = data.projectInfo.authorId;
     }
   }
-
-  // Page view 맨 아래, 맨 위로 이동
-  const handlePageView = (e: MouseEvent) => {
-    if (e.pageY > 1000) {
-      // 맨 위로 이동
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      moveRef.current!.innerText = 'Down';
-    } else {
-      // 맨 아래로 이동
-      scrollRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' });
-      moveRef.current!.innerText = 'Up';
-    }
-  };
 
   // 댓글 POST
   const handleCommentPost = async () => {
@@ -215,14 +225,38 @@ function ProjectDetail() {
     window.location.reload();
   };
 
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [searchParams]);
+  // 좋아요 눌렀는지 체크
+  const matchLike = React.useCallback(() => {
+    const Likes = project.likes?.find((like: any) => like.userId === authInfo?.userId);
+    return Likes;
+  }, [project, authInfo]);
+
+  const handleToggleLike = React.useCallback(async () => {
+    setClicked((prev) => !prev);
+    const response = await increaseProjectLikes(authInfo!.token, projectId as string);
+    if (response.status !== 200) {
+      alert('좋아할 수 없어요.. 다시 시도해주세요:(');
+    }
+  }, [clicked]);
 
   return project && (
-    <ProjectDetailContainer ref={scrollRef}>
+    <ProjectDetailContainer>
       <ProjectDetailHeader>
-        프로젝트 상세
+        <HeaderContainer>
+          {project.title}
+          <ProjectDataContainer>
+            <LikeBox isClicked={clicked} onClick={handleToggleLike}>
+              {authInfo && matchLike()
+                ? <AiFillHeart color="red" size={20} />
+                : <AiOutlineHeart size={20} /> }
+              <LikeCount>{project.likes ? project.likes.length : 0}</LikeCount>
+            </LikeBox>
+            <ViewContainer>
+              <AiOutlineEye size={30} />
+              <ViewCount>{project.views.toLocaleString()}</ViewCount>
+            </ViewContainer>
+          </ProjectDataContainer>
+        </HeaderContainer>
       </ProjectDetailHeader>
       <ProjectContentContainer>
         {project.thumbnail.includes(S3URL)
@@ -288,7 +322,6 @@ function ProjectDetail() {
       <ButtonContainer>
         <Button onClick={handleCommentPost}>답변하기</Button>
       </ButtonContainer>
-      <GoToAnswer ref={moveRef} onClick={handlePageView}>Move</GoToAnswer>
     </ProjectDetailContainer>
   );
 }

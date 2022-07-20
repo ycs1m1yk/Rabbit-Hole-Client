@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import SideBar from '@/components/sideBar';
 import useToken from '@/hooks/useToken';
 import {
-  AiOutlineEdit, AiOutlineUser, AiOutlineTeam, AiOutlineProject, AiOutlineLock
+  AiOutlineEdit, AiOutlineUser, AiOutlineTeam, AiOutlineProject, AiOutlineLock,
 } from 'react-icons/ai';
 import MyPageContent from './myPageContainer';
 
@@ -71,7 +71,7 @@ function MyPage() {
     <MyPageContainer>
       <SidebarContainer>
         {/* role에 따라 동적으로 */}
-        <SideBar type="myPage" contentsList={[...mypageList, adminPage]} />
+        <SideBar type="myPage" contentsList={authInfo && authInfo.role === 'admin' ? [...mypageList, adminPage] : mypageList} />
       </SidebarContainer>
       <VerticalDivider />
       {myPageType !== null && authInfo !== null

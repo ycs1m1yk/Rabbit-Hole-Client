@@ -181,15 +181,6 @@ export interface ISearchArticlesByTitleProps {
     perPage: string;
 }
 
-export interface ISearchArticlesByUserIdProps {
-    [index: string]: IArticleTypes;
-    userId: string;
-    articleType: IArticleTypes;
-    filter: string;
-    page: string;
-    perPage: string;
-}
-
 export interface ISearchArticlesByAuthorProps {
     [index: string]: IArticleTypes;
     author: string;
@@ -202,14 +193,6 @@ export interface ISearchArticlesByAuthorProps {
 export interface ISearchProjectsByTitleProps {
     [index: string]: string;
     title: string;
-    filter: string;
-    page: string;
-    perPage: string;
-}
-
-export interface ISearchProjectsByUserIdProps {
-    [index: string]: string;
-    userId: string;
     filter: string;
     page: string;
     perPage: string;

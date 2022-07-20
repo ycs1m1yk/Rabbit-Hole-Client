@@ -10,6 +10,8 @@ import ArticleForm from '@/pages/board/components/articleForm';
 import EditProfileForm from '@/pages/myPage/components/EditProfileForm';
 import ProjectEditForm from '@/pages/projects/components/projectEditForm';
 import Certificate from '@pages/admin/certificate';
+import ArticleEditForm from '@/pages/boardDetail/components/ArticleEditForm';
+
 export default function useModal() {
   const getModalPage = () => {
     const modalState = useRecoilValue(modalAtom);
@@ -50,6 +52,12 @@ export default function useModal() {
         return (
           <Modal>
             <Certificate />
+          </Modal>
+        );
+      case 'ArticleEdit':
+        return (
+          <Modal>
+            <ArticleEditForm />
           </Modal>
         );
       default:
