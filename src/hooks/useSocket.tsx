@@ -39,19 +39,10 @@ export default function useSocket() {
   }, []);
 
   useEffect(() => {
-    if (siteSocket) {
-      siteSocket.on('connect', () => { console.log('siteSocket connected'); });
-    }
-  }, [siteSocket]);
-
-  useEffect(() => {
     if (chatSocket) {
-      chatSocket.on('connect', () => {
-        console.log('chatSocket connected');
-      });
+      chatSocket.on('connect', () => {});
       // 채팅방 목록 fetch
       chatSocket.on('showRoomList', (data) => {
-        console.log(data);
         if (data.length === 0) {
           setRoom([{ roomName: 'Room-전체', participants: [] }]);
         } else {

@@ -107,7 +107,6 @@ export default function BoardSearch() {
     {
       suspense: true,
       staleTime: 180000,
-      onError: (err) => console.log(err),
     },
   );
 

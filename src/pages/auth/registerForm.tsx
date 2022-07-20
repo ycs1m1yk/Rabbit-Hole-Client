@@ -68,9 +68,9 @@ function RegisterForm() {
   const { register, handleSubmit, formState: errors } = useForm<IForm>();
   const [selectedTrack, setSelectedTrack] = useState<string>('SW 엔지니어 트랙');
   const [selectedTrackNum, setSelectedTrackNum] = useState<number>(1);
+
   // Form 데이터가 유효한 경우 호출되는 함수
   const onValid = async (data: any) => {
-    // console.log('Valid', data);
     const githubProfileUrl = queries.get('githubProfileUrl');
     const githubEmail = queries.get('githubEmail');
     const githubAvatar = queries.get('githubAvatar');
@@ -98,9 +98,7 @@ function RegisterForm() {
   };
 
   // Form 데이터가 유효하지 않은 경우 호출되는 함수
-  const onInvalid = () => {
-    console.log(errors);
-  };
+  const onInvalid = () => {};
 
   return (
     <>
