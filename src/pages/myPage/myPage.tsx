@@ -1,5 +1,5 @@
-import React from 'react';
-import { useSearchParams } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 import SideBar from '@/components/sideBar';
@@ -59,8 +59,16 @@ function MyPage() {
   const [searchParams] = useSearchParams();
   const myPageType = searchParams.get('type');
   const { authInfo } = useToken(); // login url에서 role 요청
+  const navigate = useNavigate();
 
-  return (
+  useEffect(() => {
+    if (!authInfo) {
+      alert('접근 권한이 없습니다.');
+      navigate('/');
+    }
+  }, []);
+
+  return authInfo && (
     <MyPageContainer>
       <SidebarContainer>
         {/* role에 따라 동적으로 */}
