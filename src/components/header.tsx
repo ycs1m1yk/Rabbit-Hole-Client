@@ -10,6 +10,9 @@ import modalAtom from '@/recoil/modal/modalAtom';
 import useToken from '@/hooks/useToken';
 
 const StyledHeader = styled.header`
+  position: sticky;
+  top: 0;
+  z-index: 50;
   width: 100vw;
   min-width: 1000px;
   display: flex;
@@ -20,7 +23,7 @@ const StyledHeader = styled.header`
   border-bottom: 1px solid ${(props) => props.theme.palette.borderGray};
   
   color: ${(props) => props.theme.palette.gray};
-
+  background-color: #FFFF;
   line-height: 1.5;
 `;
 

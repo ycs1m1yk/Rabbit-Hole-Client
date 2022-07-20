@@ -22,6 +22,8 @@ const Container = styled.aside`
     height: 100%;
     display: flex;
     justify-content: center;
+    position: sticky;
+    top: 12rem;
 `;
 
 const List = styled.ul`
