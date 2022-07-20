@@ -18,6 +18,12 @@ import {
 } from '@/lib/commentApi';
 import useToken from '@/hooks/useToken';
 import MarkdownEditor from '@/components/markdownEditor';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+
+const AuthorLink = styled(Link)`
+  
+`;
 
 interface AnswerProps{
   comment: ICommentProps;
@@ -25,7 +31,9 @@ interface AnswerProps{
   setToggleAnswerBox: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function Answer({ comment, setToggleAnswerBox, toggleAnswerBox }: AnswerProps) {
+export default function Answer({
+  comment, setToggleAnswerBox, toggleAnswerBox,
+}: AnswerProps) {
   // const auth = React.useMemo(() => useRecoilValue(authAtom), [useRecoilValue(authAtom)]);
   const auth = useRecoilValue(authAtom);
   const { authInfo } = useToken();
@@ -109,7 +117,7 @@ export default function Answer({ comment, setToggleAnswerBox, toggleAnswerBox }:
                   <BsBookmarkCheck size={30} onClick={handleAdopted} />
                 </styles.AdoptedBox>
                 ))}
-            <styles.Profile>{comment.author}</styles.Profile>
+            <styles.Profile><AuthorLink to={`/profile?id=${comment.authorId}`}>{comment.author}</AuthorLink></styles.Profile>
           </styles.ProfileBox>
           <styles.CreateDate>{comment.createdAt.slice(0, 10)}</styles.CreateDate>
         </styles.InfoHeadBox>

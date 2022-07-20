@@ -47,14 +47,14 @@ const mypageList = [
   {
     id: 3,
     name: '멘토링 관리',
-    path: '?type=mentoring',
+    path: '/',
     selected: false,
     icon: <AiOutlineTeam />,
   },
   {
     id: 4,
     name: '프로젝트 관리',
-    path: '?type=projects',
+    path: '?type=projects&page=1&perPage=10',
     selected: false,
     icon: <AiOutlineProject />,
   },
