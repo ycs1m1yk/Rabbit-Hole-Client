@@ -1,5 +1,5 @@
 import React from 'react';
-import styled, { withTheme } from 'styled-components';
+import styled from 'styled-components';
 import Profile from './profileBlock';
 
 const Block = styled.div<{mychat:boolean, content:boolean}>`

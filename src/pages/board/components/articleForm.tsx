@@ -214,13 +214,6 @@ function ArticleForm() {
     console.log(errors);
   }, [errors]);
 
-  // TODO:
-  /**
-   * - [x] 게시판 선택 selextBox 추가
-   * - [] 게시글 5000자 제한 처리
-   * - [x] postArticle api
-   * - [x] 질문답변 선택하면 당근걸기
-   */
   return (
     <>
       <ModalHeader>

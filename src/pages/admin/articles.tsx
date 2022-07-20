@@ -80,7 +80,6 @@ export default function AdminArticle() {
     return newArticles;
   }, {
     onSuccess(data) {
-      console.log(page);
       setStart(page ? parseInt(page, 10) - 1 : 0);
       setArticleState(data.articleList);
       setTotalPageState(data.totalPage);

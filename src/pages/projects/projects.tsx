@@ -98,7 +98,6 @@ export default function Projects() {
   const sortRef = useRef<HTMLLIElement | null>(null);
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [inputType, setInputType] = useState<string>('title');
   const [perPage, setPerPage] = useState<string>('8');
   const [query, setQuery] = useState<IProjectGetParamsProps>({
     filter: 'date', page: '1', perPage: '8',
@@ -149,7 +148,7 @@ export default function Projects() {
       <ProjectHeader>
         프로젝트 갤러리
         <SearchContainer>
-          <Search projectQuery={query} setInputType={setInputType} />
+          <Search projectQuery={query} />
         </SearchContainer>
         {authInfo?.token && (
         <ButtonContainer>

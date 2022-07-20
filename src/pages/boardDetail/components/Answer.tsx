@@ -11,7 +11,7 @@ import { Editor } from '@toast-ui/react-editor';
 import authAtom from '@/recoil/auth/authAtom';
 import MarkdownViewer from '@/components/markdownViewer';
 import Button from '@/components/button';
-import * as styles from '@/pages/boardDetail/styled'
+import * as styles from '@/pages/boardDetail/styled';
 import { ICommentProps } from '@/interfaces/interface';
 import {
   adoptComment, deleteCommentById, increaseCommentLikes, updateCommentById,
@@ -51,7 +51,7 @@ export default function Answer({ comment, setToggleAnswerBox, toggleAnswerBox }:
       if (confirm('정말 수정하시겠습니까?')) {
         const res = await updateCommentById(authInfo!.token, comment._id as string, body);
         if (res) {
-          alert('수정되었습니다.')
+          alert('수정되었습니다.');
           setToggleAnswerBox((c) => !c);
           setUpdate((c) => !c);
           window.location.reload();

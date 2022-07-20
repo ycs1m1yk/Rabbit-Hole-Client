@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
-import roomAtom, { ParticipantProps, RoomProps } from '@/recoil/chat/roomAtom';
+import roomAtom, { ParticipantProps } from '@/recoil/chat/roomAtom';
 import chatAtom, { ChatProps } from '@/recoil/chat/chatAtom';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
@@ -39,19 +39,10 @@ export default function useSocket() {
   }, []);
 
   useEffect(() => {
-    if (siteSocket) {
-      siteSocket.on('connect', () => { console.log('siteSocket connected'); });
-    }
-  }, [siteSocket]);
-
-  useEffect(() => {
     if (chatSocket) {
-      chatSocket.on('connect', () => {
-        console.log('chatSocket connected');
-      });
+      chatSocket.on('connect', () => {});
       // 채팅방 목록 fetch
       chatSocket.on('showRoomList', (data) => {
-        console.log(data);
         if (data.length === 0) {
           setRoom([{ roomName: 'Room-전체', participants: [] }]);
         } else {

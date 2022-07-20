@@ -13,7 +13,7 @@ import Button from '@/components/button';
 
 import { useRecoilState, useRecoilValue } from 'recoil';
 import chatAtom, { ChatProps } from '@/recoil/chat/chatAtom';
-import roomAtom, { RoomProps, ParticipantProps } from '@/recoil/chat/roomAtom';
+import roomAtom, { ParticipantProps } from '@/recoil/chat/roomAtom';
 
 import participantAtom from '@/recoil/chat/participantAtom';
 import { newUserMessage } from '@/hooks/useSocket';
