@@ -66,8 +66,8 @@ export default function Admin() {
   const type = query.get('type');
 
   useEffect(() => {
-    if (!authInfo) {
-      alert('관리자 유저만 사용할 수 있습니다.');
+    if (authInfo?.role !== 'admin') {
+      alert('꺼지세요.');
       navigate('/');
     }
   }, []);
@@ -95,7 +95,7 @@ export default function Admin() {
     }
   };
   return (
-    authInfo && (
+    authInfo?.role === 'admin' && (
     <AdminContainer>
       <SidebarContainer>
         <SideBar type="myPage" contentsList={mypageList} />
