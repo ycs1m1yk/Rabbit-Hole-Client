@@ -76,7 +76,7 @@ export default function AdminArticle() {
         title,
         createdAt: new Date(createdAt),
         selected: false,
-        path: `/board?${articleType}=${_id}`,
+        path: `/board/detail?id=${_id}`,
       }));
     }
     return newArticles;

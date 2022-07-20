@@ -99,6 +99,7 @@ interface projectObj{
   createdAt: Date;
   selected: boolean;
   path: string;
+  thumbnail:string;
 }
 interface TableProps{
   items: articleObj[] | projectObj[] | userObj[];
@@ -197,8 +198,9 @@ export default function AdminTable({ items, setItems }:TableProps) {
         <colgroup>
           <col width="5%" />
           <col width="10%" />
+          <col width="15%" />
+          <col width="40%" />
           <col width="10%" />
-          <col width="55%" />
           <col width="20%" />
         </colgroup>
         )}
@@ -240,7 +242,8 @@ export default function AdminTable({ items, setItems }:TableProps) {
           {items[0].type === 'project' && (
             <tr>
               <HeadItem scope="col"><Checkbox type="checkbox" name="selectAll" id="" onChange={checkAllHandler} /></HeadItem>
-              <HeadItem scope="col">프로젝트 번호</HeadItem>
+              <HeadItem scope="col">번호</HeadItem>
+              <HeadItem scope="col">썸네일</HeadItem>
               <HeadItem scope="col">제목</HeadItem>
               <HeadItem scope="col">작성자</HeadItem>
               <HeadItem scope="col">작성 날짜</HeadItem>
@@ -287,12 +290,23 @@ export default function AdminTable({ items, setItems }:TableProps) {
                 }
                 if (item.type === 'project') {
                   return (
-                    <TableRow onClick={(e) => { detailHandler(e, item.path); }}>
-                      <TableItem><NormalCheck type="checkbox" name="project" checked={item.selected} value={item._id} /></TableItem>
-                      <TableItem>{item._id}</TableItem>
-                      <TableItem>{item.title}</TableItem>
-                      <TableItem>{item.author}</TableItem>
-                      <TableItem>{formatDate(item.createdAt)}</TableItem>
+                    <TableRow>
+                      <TableItem><NormalCheck type="checkbox" name="project" checked={item.selected} value={item._id} onChange={checkHandler} /></TableItem>
+                      <TableItem onClick={(e) => { detailHandler(e, item.path); }}>
+                        {(page - 1) * perPage + 1 + index}
+                      </TableItem>
+                      <TableItem onClick={(e) => { detailHandler(e, item.path); }}>
+                        <Avatar src={item.thumbnail} />
+                      </TableItem>
+                      <TableItem onClick={(e) => { detailHandler(e, item.path); }}>
+                        {item.title}
+                      </TableItem>
+                      <TableItem onClick={(e) => { detailHandler(e, item.path); }}>
+                        {item.author}
+                      </TableItem>
+                      <TableItem onClick={(e) => { detailHandler(e, item.path); }}>
+                        {formatDate(item.createdAt)}
+                      </TableItem>
                     </TableRow>
                   );
                 }
