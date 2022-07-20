@@ -117,6 +117,10 @@ function ProjectForm() {
         <ProjectInput
           {...register('title', {
             required: '제목은 필수 입력사항입니다:)',
+            maxLength: {
+              value: 50,
+              message: '제목은 50자 이내로 입력해주세요',
+            },
           })}
         />
         <ErrorMessage>{errors?.title?.message}</ErrorMessage>
@@ -131,6 +135,10 @@ function ProjectForm() {
         <ProjectInput
           {...register('shortDescription', {
             required: '한 줄 소개는 필수 입력사항입니다:)',
+            maxLength: {
+              value: 50,
+              message: '한 줄 소개는 50자 이내로 입력해주세요',
+            },
           })}
         />
         <ErrorMessage>{errors?.shortDescription?.message}</ErrorMessage>
