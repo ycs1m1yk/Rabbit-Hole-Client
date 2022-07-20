@@ -3,7 +3,7 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable max-len */
 import React, {
-  useRef, useState,
+  lazy, Suspense, useEffect, useRef, useState,
 } from 'react';
 import { useQuery } from 'react-query';
 import { useSearchParams, useNavigate } from 'react-router-dom';
@@ -13,7 +13,6 @@ import { isEmptyArray } from '@utils/func';
 import MarkdownViewer from '@/components/markdownViewer';
 import { deleteProjectById, getProjectById, increaseProjectLikes } from '@/lib/projectApi';
 import { ICommentProps, ITagsProps } from '@/interfaces/interface';
-import MarkdownEditor from '@/components/markdownEditor';
 import Button from '@/components/button';
 import { S3URL } from '@utils/regex';
 import useToken from '@/hooks/useToken';
@@ -26,6 +25,8 @@ import {
   AiFillHeart, AiOutlineEye, AiOutlineHeart,
 } from 'react-icons/ai';
 import { lighten } from 'polished';
+
+const MarkdownEditor = lazy(() => import('@components/markdownEditor'));
 
 const ProjectDetailContainer = styled.div`
   padding: 5rem;
@@ -239,6 +240,10 @@ function ProjectDetail() {
     }
   }, [clicked]);
 
+  useEffect(() => {
+    setTimeout(() => document.body.scrollIntoView(), 0);
+  }, []);
+
   return project && (
     <ProjectDetailContainer>
       <ProjectDetailHeader>
@@ -318,7 +323,9 @@ function ProjectDetail() {
           </ReplyContainer>
         ))}
       </ReplyWrapper>
-      <MarkdownEditor ref={editorRef} />
+      <Suspense fallback={<p>마크다운 에디터...</p>}>
+        <MarkdownEditor ref={editorRef} />
+      </Suspense>
       <ButtonContainer>
         <Button onClick={handleCommentPost}>답변하기</Button>
       </ButtonContainer>
