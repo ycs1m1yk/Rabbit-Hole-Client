@@ -41,7 +41,7 @@ export const getMyPage = (token: string) => fetch(`${BASE_URL}/users/mypage`, {
 }).then((res) => res.json());
 
 // User - GET 다른 사람 정보 보기
-export const getOtherPage = (token: string, githubEmail: string) => fetch(`${BASE_URL}/users/${githubEmail}`, {
+export const getOtherPage = (token: string, userId: string) => fetch(`${BASE_URL}/users/profile/${userId}`, {
   headers: { Authorization: `Bearer ${token}` },
 }).then((res) => res.json());
 
