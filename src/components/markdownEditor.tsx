@@ -11,8 +11,8 @@ import postImage from '@lib/imageApi';
 import useToken from '@/hooks/useToken';
 
 interface EditorProps{
-  height?:string
-  initialValue?: string
+  height?:string;
+  initialValue?:string;
 }
 
 const defaultProps = {
@@ -26,7 +26,6 @@ const defaultProps = {
  */
 const MarkdownEditor = forwardRef<Editor, EditorProps>((props, ref) => {
   const { authInfo } = useToken();
-
   useEffect(
     () => {
       const bug = document.querySelectorAll('.ProseMirror');
