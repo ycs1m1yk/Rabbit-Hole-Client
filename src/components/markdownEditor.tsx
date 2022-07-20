@@ -11,19 +11,20 @@ import Prism from 'prismjs';
 import postImage from '@lib/imageApi';
 import useToken from '@/hooks/useToken';
 
-const EditorWrapper = styled.div<{isVisible: boolean}>`
+const EditorWrapper = styled.div<{isVisible?: boolean}>`
   visibility: ${(props) => (props.isVisible ? 'hidden' : 'visible')};
 `;
 
 interface EditorProps{
   height?:string;
   initialValue?:string;
-  isVisible: boolean;
+  isVisible?: boolean;
 }
 
 const defaultProps = {
   height: '300px',
   initialValue: '',
+  isVisible: true,
 };
 
 /**
