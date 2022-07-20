@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import {
   AiOutlineDoubleLeft, AiOutlineDoubleRight, AiOutlineLeft, AiOutlineRight,
@@ -59,6 +59,10 @@ export default function Pagination({
 }:PaginationProps) {
   const initArray = Array.from({ length }, (_, i) => i);
   const [pageKey, setPageKey] = useState(start);
+
+  useEffect(() => {
+    setPageKey(start);
+  }, [start]);
 
   // 버튼(Card) 클릭 시 페이지 상태관리 및 props의 handler(maybe routing) 실행
   const numberingHandler = (e:React.MouseEvent<HTMLDivElement>, pageNumber: number) => {

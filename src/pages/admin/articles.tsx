@@ -52,15 +52,15 @@ export default function AdminArticle() {
   const { authInfo } = useToken();
   const navigate = useNavigate();
   const [query] = useSearchParams();
-  const page = query.get('page');
-  const perPage = query.get('perPage');
-  const articleType = query.get('articleType');
+  const page = query.get('page') || '1';
+  const perPage = query.get('perPage') || '10';
+  const articleType = query.get('articleType') || 'question';
   const queryParams = page && perPage && articleType ? { page, perPage, articleType } : { page: '1', perPage: '10', articleType: 'question' };
   const [articleState, setArticleState] = useState<TableProps[]>();
   const [totalPageState, setTotalPageState] = useState<string>();
-  const [selectedOption, setSelectedOption] = useState(articleType || 'question');
-
-  const { data } = useQuery(['admin', page, perPage, articleType], async () => {
+  const [selectedOption, setSelectedOption] = useState(articleType);
+  const [start, setStart] = useState(parseInt(query.get('page') || '1', 10) - 1);
+  const { data } = useQuery(['admin', articleType, page, perPage], async () => {
     let newArticles;
     if (authInfo && queryParams) {
       newArticles = await getAllArticle(authInfo.token, queryParams);
@@ -82,14 +82,14 @@ export default function AdminArticle() {
     return newArticles;
   }, {
     onSuccess(data) {
-      console.log(data.totalPage);
+      setStart(page ? parseInt(page, 10) : 1 - 1);
       setArticleState(data.articleList);
       setTotalPageState(data.totalPage);
     },
   });
 
   useEffect(() => {
-    navigate(`/admin?type=articles&articleType=${selectedOption}&page=${page}&perPage=10`);
+    navigate(`/admin?type=articles&articleType=${selectedOption}&page=1&perPage=10`, { replace: true });
   }, [selectedOption]);
 
   const deleteHandler = useCallback(async () => {
@@ -111,14 +111,14 @@ export default function AdminArticle() {
   }, [articleState, authInfo]);
 
   const paginationHandler = useCallback((pageNumber:number) => {
-    navigate(`/admin?type=articles&articleType=question&page=${Number(pageNumber) + 1}&perPage=10`);
-  }, []);
+    navigate(`/admin?type=articles&articleType=${articleType}&page=${Number(pageNumber) + 1}&perPage=10`);
+  }, [articleType]);
 
-  if (page && perPage && articleState && totalPageState) {
+  if (page && perPage && articleState) {
     return (
       <>
         <h1>게시글 관리</h1>
-        {(page && perPage && articleState && totalPageState) && (
+        {(page && perPage && articleState) && (
         <>
           <Settings>
             <Button onClick={deleteHandler}>
@@ -136,32 +136,31 @@ export default function AdminArticle() {
           />
           )}
           </Settings>
-          <AdminTable
-            items={articleState}
-            setItems={setArticleState}
-          />
-          <div style={{
-            margin: 'auto', display: 'flex', justifyContent: 'center', maxWidth: '90rem',
-          }}
-          >
-            <Pagination
-              start={Number(page) - 1}
-              handler={paginationHandler}
-              length={Number(totalPageState)}
-              show={Number(perPage)}
-            />
-          </div>
+          {!totalPageState || !articleState
+            ? (
+              <EmptyField>등록된 게시글이 없습니다.</EmptyField>
+            )
+            : (
+              <>
+                <AdminTable
+                  items={articleState}
+                  setItems={setArticleState}
+                />
+                <div style={{
+                  margin: 'auto', display: 'flex', justifyContent: 'center', maxWidth: '90rem',
+                }}
+                >
+                  <Pagination
+                    start={start}
+                    handler={paginationHandler}
+                    length={Number(totalPageState)}
+                    show={Number(perPage)}
+                  />
+                </div>
+              </>
+            )}
         </>
         )}
-      </>
-    );
-  }
-  if (articleState && !articleState.length) {
-    return (
-      <>
-        <h1>게시글 관리</h1>
-        <EmptyField>등록된 게시글이 없습니다.</EmptyField>
-        ;
       </>
     );
   }
