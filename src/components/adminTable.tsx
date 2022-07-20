@@ -52,6 +52,7 @@ const TableItem = styled.td`
   text-overflow: ellipsis;
   white-space: nowrap;
   max-width: 10rem;
+  height: 40px;
 `;
 const Checkbox = styled.input`
   color: #E1CFFF;
