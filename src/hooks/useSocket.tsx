@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
-import roomAtom, { ParticipantProps, RoomProps } from '@/recoil/chat/roomAtom';
+import roomAtom, { ParticipantProps } from '@/recoil/chat/roomAtom';
 import chatAtom, { ChatProps } from '@/recoil/chat/chatAtom';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 

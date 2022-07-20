@@ -1,5 +1,3 @@
-import * as interfaces from '@interfaces/interface';
-
 interface IUserProps {
   [index: string]: string;
   page: string;
