@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 const defaultProps = {
@@ -167,8 +168,9 @@ export default function PostItem({
   type,
   likeThis,
 }:IPostItemProps) {
+  const navigate = useNavigate();
   const clickHandler = ():void => {
-    console.log(`게시물 디테일로 이동 : /board?${articleType}=${articleId}`);
+    navigate(`/board/detail?id=${articleId}`);
   };
 
   return (
