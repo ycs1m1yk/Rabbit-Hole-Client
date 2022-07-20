@@ -25,13 +25,11 @@ export default function AdminProject() {
   });
   console.log(data);
 
-  const clickHandler = (item) => {
+  const clickHandler = (item: any) => {
     console.log(item);
   };
   return (data && (
-    <>
-      <h1>프로젝트 관리</h1>
-    </>
+    <h1>프로젝트 관리</h1>
   )
   );
 }
