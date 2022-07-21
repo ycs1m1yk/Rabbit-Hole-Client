@@ -11,7 +11,6 @@ import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import LogoImage from '@assets/images/rabbit-hole-logo-300.jpg';
 import { isEmptyArray } from '@utils/func';
-import { S3URL } from '@utils/regex';
 import { Editor } from '@toast-ui/react-editor';
 import { useSetRecoilState } from 'recoil';
 import {
@@ -294,7 +293,7 @@ function ProjectDetail() {
         </HeaderContainer>
       </ProjectDetailHeader>
       <ProjectContentContainer>
-        {project.thumbnail.includes(S3URL)
+        {project.thumbnail.includes(`${import.meta.env.VITE_API_S3_URL}`;)
           ? (
             <ProjectImageBox>
               <ProjectImage src={project.thumbnail} />
