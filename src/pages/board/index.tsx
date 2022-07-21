@@ -66,19 +66,19 @@ const boardList = [
   {
     id: 0,
     name: '질문 & 답변',
-    path: '/board?articleType=question&filter=views&page=1&perPage=10',
+    path: '/board?articleType=question&filter=date&page=1&perPage=10',
     selected: true,
   },
   {
     id: 1,
     name: '자유게시판',
-    path: '/board?articleType=free&filter=views&page=1&perPage=10',
+    path: '/board?articleType=free&filter=date&page=1&perPage=10',
     selected: false,
   },
   {
     id: 2,
     name: '스터디 모집',
-    path: '/board?articleType=study&filter=views&page=1&perPage=10',
+    path: '/board?articleType=study&filter=date&page=1&perPage=10',
     selected: false,
   },
 ];

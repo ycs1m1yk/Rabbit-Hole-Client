@@ -39,7 +39,9 @@ const MarkdownEditor = forwardRef<Editor, EditorProps>((props, ref) => {
       if (bug.length) {
         [...Array(bug.length / 2).keys()].forEach((value) => {
           if (value === (bug.length / 2) - 1 && props.initialValue) {
-            bug[value * 2].innerHTML = props.initialValue;
+            if (ref) {
+              ref.current?.getInstance().setMarkdown(props.initialValue);
+            }
           } else {
             bug[value * 2].innerHTML = '';
           }
@@ -64,8 +66,8 @@ const MarkdownEditor = forwardRef<Editor, EditorProps>((props, ref) => {
             let name = '업로드 실패';
             if (blob instanceof File) {
               try {
-                if (blob.size > 5242880) {
-                  throw new Error('5MB 이하의 사진을 업로드해주세요.');
+                if (blob.size > 1024 * 1024 * 10) {
+                  throw new Error('10MB 이하의 사진을 업로드해주세요.');
                 }
                 if (blob.type !== 'image/jpeg' && blob.type !== 'image/jpg' && blob.type !== 'image/gif' && blob.type !== 'image/png') {
                   throw new Error('지원하지 않는 이미지 타입입니다.');
