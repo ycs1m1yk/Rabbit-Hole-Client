@@ -39,7 +39,9 @@ const MarkdownEditor = forwardRef<Editor, EditorProps>((props, ref) => {
       if (bug.length) {
         [...Array(bug.length / 2).keys()].forEach((value) => {
           if (value === (bug.length / 2) - 1 && props.initialValue) {
-            bug[value * 2].innerHTML = props.initialValue;
+            if (ref) {
+              ref.current?.getInstance().setMarkdown(props.initialValue);
+            }
           } else {
             bug[value * 2].innerHTML = '';
           }
