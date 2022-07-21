@@ -339,7 +339,7 @@ function ProjectDetail() {
           )}
 
           <ProjectDetailHeader>
-            답글(
+            댓글(
             {comments.length}
             개)
           </ProjectDetailHeader>
