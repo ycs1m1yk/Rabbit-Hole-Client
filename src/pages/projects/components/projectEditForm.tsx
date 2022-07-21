@@ -112,7 +112,8 @@ function ProjectEditForm() {
       const response = await updateProjectById(authInfo.token, projectId as string, fd);
 
       if (response.status >= 400) {
-        alert('프로젝트 등록에 실패하였습니다. 다시 시도해주세요:(');
+        const resp = await response.data;
+        alert(resp.reason);
       }
       setModal(null);
     }

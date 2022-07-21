@@ -98,7 +98,8 @@ function ProjectForm() {
       const response = await postProject(authInfo.token, fd);
 
       if (response.status >= 400) {
-        alert('프로젝트 등록에 실패하였습니다. 다시 시도해주세요:(');
+        const resp = await response.data;
+        alert(resp.reason);
       }
       setModal(null);
     }
@@ -137,8 +138,8 @@ function ProjectForm() {
           {...register('shortDescription', {
             required: '한 줄 소개는 필수 입력사항입니다:)',
             maxLength: {
-              value: 50,
-              message: '한 줄 소개는 50자 이내로 입력해주세요',
+              value: 100,
+              message: '한 줄 소개는 100자 이내로 입력해주세요',
             },
           })}
         />
