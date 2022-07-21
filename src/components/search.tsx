@@ -9,8 +9,7 @@ import {
   IArticleGetProps, IProjectGetParamsProps,
 } from '@interfaces/interface';
 import { deletePropsFromObj, isEmptyObj } from '@utils/func';
-import useDebounce from '@/hooks/useDebounce';
-import SelectBox from './selectBox';
+import SelectBox from '@components/selectBox';
 
 const SearchInputContainer = styled.div<{ width: number; height: number }>`
     display: flex;
@@ -93,7 +92,6 @@ export default function Search({
   const location = useLocation();
   const [selectedinputType, setSelectedInputType] = useState<string>('제목');
   const [input, setInput] = useState<string>('');
-  const debouncedInput: string = useDebounce<string>(input, 300);
 
   const handleSubmit = useCallback((e: FormEvent) => {
     e.preventDefault();
@@ -103,13 +101,13 @@ export default function Search({
     const query = isEmptyObj(articleQuery) ? projectQuery : articleQuery;
     const queryWithoutInput = deletePropsFromObj(query as {}, 'title', 'author');
     const queryString = new URLSearchParams({
-      [inputTypeMap[selectedinputType]]: debouncedInput, ...queryWithoutInput,
+      [inputTypeMap[selectedinputType]]: input, ...queryWithoutInput,
     });
 
     const to = location.pathname.includes('search') ? `?${queryString}` : `search?${queryString}`;
     navigate(to, { replace: true, state: { from: location } });
     setInput('');
-  }, [debouncedInput, articleQuery, projectQuery]);
+  }, [input, articleQuery, projectQuery]);
 
   const handleChange = ({ target: { value } }: {target: HTMLInputElement}) => {
     setInput(value);
