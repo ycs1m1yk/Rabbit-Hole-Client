@@ -56,7 +56,7 @@ export default function BoardDetail() {
   useEffect(() => {
     setTimeout(() => {
       setIsVisible(false);
-    }, 100);
+    }, 300);
   }, []);
   return (
     <styles.Container>
