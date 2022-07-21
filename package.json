@@ -5,9 +5,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview",
-    "lint": "eslint --fix \"**/*.{js,jsx,ts,tsx}\""
-  },
+    "preview": "vite preview --port 5001 --host 10.178.0.56"
+},
   "dependencies": {
     "@rollup/plugin-alias": "^3.1.9",
     "@toast-ui/editor": "^3.1.7",
