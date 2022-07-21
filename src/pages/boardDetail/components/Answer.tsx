@@ -8,6 +8,8 @@ import { BsFillBookmarkCheckFill, BsBookmarkCheck } from 'react-icons/bs';
 import { useRecoilValue } from 'recoil';
 import { useQueryClient } from 'react-query';
 import { Editor } from '@toast-ui/react-editor';
+import { Viewer } from '@toast-ui/react-editor';
+import { Link } from 'react-router-dom';
 import authAtom from '@/recoil/auth/authAtom';
 import MarkdownViewer from '@/components/markdownViewer';
 import Button from '@/components/button';
@@ -18,7 +20,6 @@ import {
 } from '@/lib/commentApi';
 import useToken from '@/hooks/useToken';
 import MarkdownEditor from '@/components/markdownEditor';
-import { Link } from 'react-router-dom';
 
 interface AnswerProps{
   comment: ICommentProps;
@@ -34,6 +35,7 @@ export default function Answer({
   const { authInfo } = useToken();
   const queryClient = useQueryClient();
   const updateEditor = React.useRef<Editor>(null);
+  const viewer = React.useRef<Viewer>(null);
   const [update, setUpdate] = useState<boolean>(false);
   // user 가 like 눌렀는지 여부 알려주는 함수
   const matchLike = React.useCallback(() => {
@@ -57,16 +59,20 @@ export default function Answer({
           alert('수정되었습니다.');
           setToggleAnswerBox((c) => !c);
           setUpdate((c) => !c);
-          window.location.reload();
+          queryClient.invalidateQueries();
         }
       }
     }
   }, []);
+  React.useEffect(() => {
+    viewer.current?.getInstance().setMarkdown(comment.content);
+  }, [comment]);
   // 댓글 삭제
   const handleDelete = React.useCallback(async () => {
     if (confirm('정말 삭제하시겠습니까?')) {
       const res = await deleteCommentById(authInfo!.token, comment._id as string);
       if (res.status === 200) {
+        alert('삭제되었습니다.');
         queryClient.invalidateQueries();
       } else {
         alert('삭제에 실패하였습니다. 다시 시도해주세요:(');
@@ -94,8 +100,11 @@ export default function Answer({
       const res = await adoptComment(authInfo!.token, comment._id);
       if (res.result === 'Conflict') {
         alert(res.reason);
+        queryClient.invalidateQueries();
+        return;
       }
-      window.location.reload();
+      alert('채택되었습니다.');
+      queryClient.invalidateQueries();
     }
   }, []);
 
@@ -123,7 +132,7 @@ export default function Answer({
         {
           update
             ? <MarkdownEditor initialValue={comment?.content} ref={updateEditor} />
-            : <MarkdownViewer text={comment.content} />
+            : <MarkdownViewer text={comment.content} ref={viewer} />
         }
       </styles.Main>
       {toggleAnswerBox

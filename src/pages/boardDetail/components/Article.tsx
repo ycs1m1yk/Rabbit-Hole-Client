@@ -34,7 +34,7 @@ export default function Article({ article, comments }: ArticleProps) {
       isAdopted === true
     ));
     return adoptedData.length > 0;
-  }, []);
+  }, [comments]);
 
   const handleModalOpen = React.useCallback(() => {
     setModalState('ArticleEdit');

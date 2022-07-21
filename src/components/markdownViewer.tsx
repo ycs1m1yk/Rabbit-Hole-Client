@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import { Viewer } from '@toast-ui/react-editor';
 import '@toast-ui/editor/dist/toastui-editor.css';
 import 'prismjs/themes/prism.css';
@@ -11,11 +11,12 @@ interface ViewerProps{
 }
 
 // markdownViewer
-export default function MarkdownViewer({ text = '' }:ViewerProps) {
-  return (
-    <Viewer
-      initialValue={text}
-      plugins={[[codeSyntaxHighlight, { highlighter: Prism }]]}
-    />
-  );
-}
+const MarkdownViewer = forwardRef<Viewer, ViewerProps>((props, ref) => (
+  <Viewer
+    ref={ref}
+    initialValue={props.text}
+    plugins={[[codeSyntaxHighlight, { highlighter: Prism }]]}
+  />
+));
+
+export default MarkdownViewer;
