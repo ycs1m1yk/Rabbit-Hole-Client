@@ -34,17 +34,15 @@ export default function BoardDetail() {
     enabled: !!articleId,
     select: (fetchData) => ({ article: fetchData.articleInfo, comments: fetchData.commentList }),
     refetchInterval: 30000,
-    onSuccess: () => {
-      window.scrollTo(0, 0);
-    },
   });
+
   const handleAnswer = React.useCallback(async (articleType: string) => {
     try {
       const content = editor.current?.getInstance().getMarkdown();
       const postParams = { commentType: articleType, content };
       await postComment(authInfo!.token, articleId as string, postParams);
-      editor.current?.getInstance().insertText('');
       queryClient.invalidateQueries();
+      editor.current?.getInstance().setMarkdown('');
     } catch (e: any) {
       alert('문제가 발생했습니다. 다시  시도해주세요:(');
     }
@@ -58,6 +56,7 @@ export default function BoardDetail() {
       setIsVisible(false);
     }, 300);
   }, []);
+
   return (
     <styles.Container>
       {data && (
