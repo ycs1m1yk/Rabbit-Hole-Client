@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import NotFoundImg from '@assets/images/error-route.png';
+import NotFoundImg from '/assets/images/error-route.png';
 import Button from '@components/button';
 import { useNavigate } from 'react-router-dom';
 

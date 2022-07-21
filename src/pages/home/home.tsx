@@ -4,9 +4,9 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
 import Slider from '@pages/home/components/Slider';
-import BoardImage from '@assets/images/main_board.avif';
-import ProjectImage from '@assets/images/main_project.avif';
-import MentoringImage from '@assets/images/main_mentoring.avif';
+import BoardImage from '/assets/images/main_board.avif';
+import ProjectImage from '/assets/images/main_project.avif';
+import MentoringImage from '/assets/images/main_mentoring.avif';
 import Card from '@/components/card';
 import PostList from '@/components/postList';
 import { useQuery } from 'react-query';

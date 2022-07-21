@@ -3,7 +3,7 @@ import { AiOutlineLike } from 'react-icons/ai';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { ITagsProps } from '@/interfaces/interface';
-import LogoImage from '@assets/images/rabbit-hole-logo-300.jpg';
+import LogoImage from '/assets/images/rabbit-hole-logo-300.jpg';
 
 const Container = styled.div`
   width: 300px;

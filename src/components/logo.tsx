@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import LogoImage from '@assets/images/rabbit-hole-logo.png';
+import LogoImage from '/assets/images/rabbit-hole-logo.png';
 
 const defaultProps = {
   width: 230,
