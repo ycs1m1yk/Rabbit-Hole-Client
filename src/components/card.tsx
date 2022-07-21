@@ -8,7 +8,7 @@ import { S3URL } from '@utils/regex';
 
 const Container = styled.div`
   width: 300px;
-  height: 350px;
+  height: 380px;
   border: 1px solid ${({ theme }): string => theme.palette.borderGray};
   background-color: #fff;
   margin: 2rem;
