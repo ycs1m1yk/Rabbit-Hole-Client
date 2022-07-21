@@ -1,11 +1,20 @@
-import React, { MouseEvent, useRef } from 'react';
+import React, { MouseEvent, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { lighten } from 'polished';
 import styled from 'styled-components';
 import Logo from '@components/logo';
-import Search from '@components/search';
+
+import { useSetRecoilState } from 'recoil';
+import modalAtom from '@/recoil/modal/modalAtom';
+
+import useToken from '@/hooks/useToken';
 
 const StyledHeader = styled.header`
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  width: 100vw;
+  min-width: 1000px;
   display: flex;
   align-items: center;
   flex-wrap: nowrap;
@@ -14,7 +23,7 @@ const StyledHeader = styled.header`
   border-bottom: 1px solid ${(props) => props.theme.palette.borderGray};
   
   color: ${(props) => props.theme.palette.gray};
-
+  background-color: #FFFF;
   line-height: 1.5;
 `;
 
@@ -31,17 +40,8 @@ const HeaderRight = styled.div`
   display: flex;
   align-items: center;
   
-  & div:first-child {
-    margin-right: 5rem;
-  }
-`;
-
-const Buttons = styled.div`
-  display: flex;
-  align-items: center;
-
-  & :focus {
-    color: ${(props) => props.theme.palette.eliceViolet}
+  & > *:not(:first-child) {
+    margin-left: 2rem;
   }
 `;
 
@@ -50,37 +50,54 @@ const StyledLink = styled(Link)`
   align-items: center;
   justify-content: center;
   height: inherit;
-  padding: 1.6rem;
-
   font-weight: 600;
   font-size: 1.8rem;
+  white-space: nowrap;
 
   & + & {
     margin-left: 2rem;
   }
   &.active {
-    color: ${(props) => props.theme.palette.eliceViolet}
+    color: ${({ theme }) => theme.palette.eliceViolet};
   }
   :hover {
-    background-color: ${(props) => lighten(0.5, props.theme.palette.eliceViolet)};;
+    color: ${({ theme }) => theme.palette.eliceViolet};
+  }
+`;
+
+const StyledAuth = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-weight: 600;
+  font-size: 1.8rem;
+  white-space: nowrap;
+  cursor: pointer;
+  & + & {
+    margin-left: 2rem;
   }
 `;
 
 export default function Header() {
   const anchorRef = useRef<HTMLAnchorElement>();
+  const setModal = useSetRecoilState(modalAtom); // 모달 상태 전역관리
+  const { authInfo, setLogout } = useToken(); // 로그인 상태 확인
 
-  const handleClick = (e: MouseEvent) => {
-    e.preventDefault();
-
+  const handleClick = useCallback((e: MouseEvent) => {
     const target = e.target as HTMLElement;
-    const anchorTarget = target.closest('a') as HTMLAnchorElement;
+    const anchorTarget = target.closest('a') || undefined;
 
     if (anchorRef.current) {
       anchorRef.current.classList.remove('active');
     }
     anchorRef.current = anchorTarget;
-    anchorRef.current.classList.add('active');
-  };
+    anchorRef.current?.classList.add('active');
+  }, []);
+
+  const handleModal = useCallback((type:any) => {
+    setModal(type);
+  }, []);
 
   return (
     <StyledHeader onClick={handleClick}>
@@ -89,15 +106,20 @@ export default function Header() {
       </Link>
       <Nav>
         <StyledLink to="/board">게시판</StyledLink>
-        <StyledLink to="/mentoring">멘토/멘티</StyledLink>
-        <StyledLink to="/projects">프로젝트 갤러리</StyledLink>
+        <StyledLink to="/projects?filter=date&page=1&perPage=8">프로젝트 갤러리</StyledLink>
       </Nav>
       <HeaderRight>
-        <Search />
-        <Buttons>
-          <StyledLink to="/login">로그인</StyledLink>
-          <StyledLink to="/register">회원가입</StyledLink>
-        </Buttons>
+        {
+          authInfo // 로그인 상태 조건부 렌더링
+            ? (
+              <>
+                <StyledAuth onClick={setLogout}>로그아웃</StyledAuth>
+                <StyledLink to="/mypage?type=profile">마이페이지</StyledLink>
+              </>
+            )
+            : <StyledAuth onClick={() => handleModal('Login')}>로그인</StyledAuth>
+        }
+
       </HeaderRight>
     </StyledHeader>
   );

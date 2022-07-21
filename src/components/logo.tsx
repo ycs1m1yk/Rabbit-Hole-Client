@@ -3,12 +3,14 @@ import styled from 'styled-components';
 import LogoImage from '@assets/images/rabbit-hole-logo.png';
 
 const defaultProps = {
+  width: 230,
+  heigth: 70,
   src: LogoImage,
 };
 
 type LogoProps = {
-  width: number;
-  heigth: number;
+  width?: number;
+  heigth?: number;
   src?: string;
 } & typeof defaultProps;
 

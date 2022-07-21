@@ -1,10 +1,19 @@
-import React, { FormEvent, useState } from 'react';
+import React, {
+  Dispatch, FormEvent, SetStateAction, useCallback, useEffect, useState,
+} from 'react';
 import styled from 'styled-components';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { AiOutlineSearch } from 'react-icons/ai';
+
+import {
+  IArticleGetProps, IProjectGetParamsProps,
+} from '@interfaces/interface';
+import { deletePropsFromObj, isEmptyObj } from '@utils/func';
+import useDebounce from '@/hooks/useDebounce';
+import SelectBox from './selectBox';
 
 const SearchInputContainer = styled.div<{ width: number; height: number }>`
     display: flex;
-    flex-direction: row;
     justify-content: space-between;
     align-items: center;
     padding: 1rem 2rem;
@@ -12,17 +21,26 @@ const SearchInputContainer = styled.div<{ width: number; height: number }>`
     width: ${(props) => props.width / 10}rem;
     height: ${(props) => props.height / 10}rem;
 
-    border: 1px solid ${(props) => props.theme.palette.borderGray};
+    border: 2px solid ${({ theme }) => theme.palette.borderGray};
     border-radius: 40px;
-
-    & .icon {
+    & .icon-search {
         width: 1.8rem;
         height: 1.7rem;
+        color: ${({ theme }) => theme.palette.gray};
+    }
+`;
+
+const SelectBoxWrapper = styled.div`
+    margin-right: 1rem;
+    & option {
+      font-size: 1.2rem;
     }
 `;
 
 const SearchForm = styled.form`
-    width: 100%;
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
 `;
 
 const SearchInput = styled.input`
@@ -33,7 +51,7 @@ const SearchInput = styled.input`
     font-size: 1.5rem;
     font-weight: 500;
     padding-right: 1rem;
-    color: ${(props) => props.theme.palette.gray};
+    color: ${({ theme }) => theme.palette.gray};
 
     &::placeholder {
         font-size: 1.5rem;
@@ -45,33 +63,80 @@ const SearchInput = styled.input`
 `;
 
 const defaultProps = {
-  width: 300,
+  width: 400,
   height: 45,
+  articleQuery: {},
+  projectQuery: {},
+  setInputType: null,
 };
 
-// TODO:
-// - [ ] submitHandler 좀 더 고민
-type SearchProps = {
-    width?: number;
-    height?: number;
-    submitHandler: () => void;
-  } & typeof defaultProps
+interface SearchProps {
+  width?: number;
+  height?: number;
+  articleQuery?: IArticleGetProps | {};
+  projectQuery?: IProjectGetParamsProps | {};
+  setInputType?: Dispatch<SetStateAction<string>>;
+}
 
-export default function Search({ width, height, submitHandler }: SearchProps) {
-  const [input, setInput] = useState('');
+export default function Search({
+  width = 400,
+  height = 45,
+  articleQuery = {},
+  projectQuery,
+  setInputType,
+}: SearchProps) {
+  const inputTypeMap: {[index: string] : string} = {
+    제목: 'title',
+    작성자: 'author',
+  };
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [selectedinputType, setSelectedInputType] = useState<string>('제목');
+  const [input, setInput] = useState<string>('');
+  const debouncedInput: string = useDebounce<string>(input, 300);
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = useCallback((e: FormEvent) => {
     e.preventDefault();
 
-    submitHandler();
+    if (input === '') return;
+
+    const query = isEmptyObj(articleQuery) ? projectQuery : articleQuery;
+    const queryWithoutInput = deletePropsFromObj(query as {}, 'title', 'author');
+    const queryString = new URLSearchParams({
+      [inputTypeMap[selectedinputType]]: debouncedInput, ...queryWithoutInput,
+    });
+
+    const to = location.pathname.includes('search') ? `?${queryString}` : `search?${queryString}`;
+    navigate(to, { replace: true, state: { from: location } });
+    setInput('');
+  }, [debouncedInput, articleQuery, projectQuery]);
+
+  const handleChange = ({ target: { value } }: {target: HTMLInputElement}) => {
+    setInput(value);
   };
+
+  useEffect(() => {
+    if (setInputType) {
+      setInputType(inputTypeMap[selectedinputType]);
+    }
+  }, [selectedinputType]);
 
   return (
     <SearchInputContainer width={width} height={height}>
+      <SelectBoxWrapper>
+        <SelectBox
+          options={['제목', '작성자']}
+          defaultValue="검색옵션"
+          selectedOption={selectedinputType}
+          setSelectedOption={setSelectedInputType}
+          width={70}
+          type="register"
+        />
+      </SelectBoxWrapper>
       <SearchForm onSubmit={handleSubmit}>
-        <SearchInput type="search" value={input} onChange={(e) => setInput(e.target.value)} placeholder="Search ..." />
+        <SearchInput type="search" value={input} onChange={handleChange} placeholder="Search ..." />
       </SearchForm>
-      <AiOutlineSearch className="icon" />
+      <AiOutlineSearch className="icon-search" />
     </SearchInputContainer>
   );
 }

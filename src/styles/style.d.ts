@@ -6,6 +6,8 @@ declare module 'styled-components'{
             eliceViolet: string,
             lightViolet: string,
             eliceBlue: string,
+            carrotOrange: string,
+            lightBlue: string,
             borderGray: string,
             gray: string,
             black: string,
