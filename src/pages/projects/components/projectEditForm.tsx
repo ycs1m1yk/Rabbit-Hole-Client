@@ -112,7 +112,8 @@ function ProjectEditForm() {
       const response = await updateProjectById(authInfo.token, projectId as string, fd);
 
       if (response.status >= 400) {
-        alert('프로젝트 등록에 실패하였습니다. 다시 시도해주세요:(');
+        const resp = await response.data;
+        alert(resp.reason);
       }
       setModal(null);
     }
@@ -140,19 +141,34 @@ function ProjectEditForm() {
         <InputTitle>Title</InputTitle>
         <ProjectInput
           defaultValue={prevData?.title}
-          {...register('title')}
+          {...register('title', {
+            maxLength: {
+              value: 50,
+              message: '제목은 50자 이내로 입력해주세요',
+            },
+          })}
         />
         <ErrorMessage>{errors?.title?.message}</ErrorMessage>
-        <InputTitle>작성자</InputTitle>
+        <InputTitle>작성자 또는 팀명</InputTitle>
         <ProjectInput
           defaultValue={prevData?.author}
-          {...register('author')}
+          {...register('author', {
+            maxLength: {
+              value: 50,
+              message: '작성자 또는 팀명은 50자 이내로 입력해주세요',
+            },
+          })}
         />
         <ErrorMessage>{errors?.author?.message}</ErrorMessage>
         <InputTitle>한 줄 소개</InputTitle>
         <ProjectInput
           defaultValue={prevData?.shortDescription}
-          {...register('shortDescription')}
+          {...register('shortDescription', {
+            maxLength: {
+              value: 50,
+              message: '한 줄 소개는 50자 이내로 입력해주세요',
+            },
+          })}
         />
         <ErrorMessage>{errors?.shortDescription?.message}</ErrorMessage>
         <InputTitle>태그</InputTitle>

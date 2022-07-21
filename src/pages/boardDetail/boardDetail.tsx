@@ -54,9 +54,9 @@ export default function BoardDetail() {
   useEffect(() => {
     setTimeout(() => {
       setIsVisible(false);
-      window.scrollTo(0, 0);
-    }, 100);
+    }, 300);
   }, []);
+
   return (
     <styles.Container>
       {data && (

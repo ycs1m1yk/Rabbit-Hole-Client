@@ -11,7 +11,6 @@ import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import LogoImage from '@assets/images/rabbit-hole-logo-300.jpg';
 import { isEmptyArray } from '@utils/func';
-import { S3URL } from '@utils/regex';
 import { Editor } from '@toast-ui/react-editor';
 import { useSetRecoilState } from 'recoil';
 import {
@@ -201,7 +200,9 @@ function ProjectDetail() {
   // data fetching and initializing
   if (projectId) {
     const { data } = useQuery<any>(['projectDetail', projectId], () => getProjectById(projectId), {
+      enabled: !!projectId,
       refetchOnWindowFocus: false,
+      suspense: true,
     });
 
     if (data) {
@@ -212,7 +213,7 @@ function ProjectDetail() {
   }
 
   // 댓글 POST
-  const handleCommentPost = async () => {
+  const handleCommentPost = React.useCallback(async () => {
     try {
       const content = editorRef.current?.getInstance().getMarkdown();
       const postParams = { commentType: 'project', content };
@@ -222,10 +223,10 @@ function ProjectDetail() {
     } catch (e: any) {
       alert('문제가 발생했습니다. 다시  시도해주세요:(');
     }
-  };
+  }, []);
 
   // 프로젝트 삭제
-  const handleProjectDelete = async () => {
+  const handleProjectDelete = React.useCallback(async () => {
     if (confirm('정말 삭제하시겠습니까?')) {
       const response = await deleteProjectById(authInfo!.token, projectId as string);
       if (response.status === 200) {
@@ -235,12 +236,12 @@ function ProjectDetail() {
         window.location.reload();
       }
     }
-  };
+  }, []);
 
   // 프로젝트 수정
-  const handleProjectEdit = async (modalType: ModalTypes) => {
+  const handleProjectEdit = React.useCallback(async (modalType: ModalTypes) => {
     setModal(modalType);
-  };
+  }, []);
 
   // 댓글 삭제
   const handleCommentDelete = async (commentId: string) => {
@@ -263,12 +264,13 @@ function ProjectDetail() {
     if (response.status !== 200) {
       alert('좋아할 수 없어요.. 다시 시도해주세요:(');
     }
+    window.location.reload();
   }, [clicked]);
 
   useEffect(() => {
     setTimeout(() => {
       setIsVisible(false);
-    }, 200);
+    }, 300);
   }, []);
 
   return project && (
@@ -291,7 +293,7 @@ function ProjectDetail() {
         </HeaderContainer>
       </ProjectDetailHeader>
       <ProjectContentContainer>
-        {project.thumbnail.includes(S3URL)
+        {project.thumbnail.includes(`${import.meta.env.VITE_API_S3_URL}`)
           ? (
             <ProjectImageBox>
               <ProjectImage src={project.thumbnail} />
@@ -319,54 +321,67 @@ function ProjectDetail() {
           <ProjectAuthor>{project.shortDescription}</ProjectAuthor>
         </ProjectInfo>
       </ProjectContentContainer>
-      <ProjectDescriptionBox>
-        <ProjectInfoTitle>프로젝트 상세</ProjectInfoTitle>
-        <ProjectDescription>
-          <MarkdownViewer text={project.description} />
-        </ProjectDescription>
-      </ProjectDescriptionBox>
-        {authorId === authInfo?.userId && (
+      {
+        !isVisible && (
+        <>
+          <ProjectDescriptionBox>
+            <ProjectInfoTitle>프로젝트 상세</ProjectInfoTitle>
+            <ProjectDescription>
+              <MarkdownViewer text={project.description} />
+            </ProjectDescription>
+          </ProjectDescriptionBox>
+
+          {authorId === authInfo?.userId && (
           <EditButtonContainer>
             <Button onClick={() => handleProjectEdit('ProjectEdit')}>수정하기</Button>
             <Button onClick={handleProjectDelete}>삭제하기</Button>
           </EditButtonContainer>
-        )}
-      <ProjectDetailHeader>
-        답글(
-        {comments.length}
-        개)
-      </ProjectDetailHeader>
-      {!isVisible && (
-      <ReplyWrapper>
-        {comments.map((comment: ICommentProps) => (
-          <ReplyContainer isMyComment={authInfo?.userId === comment.authorId} key={comment._id}>
-            <ReplyHeader>
-              <ReplyAuthor>
-                작성자:
-                {' '}
-                <AuthorLink to={`/profile?id=${comment.authorId}`}>{comment.author}</AuthorLink>
-              </ReplyAuthor>
-              <ReplyDate>
-                {comment.createdAt.slice(0, 10)}
-              </ReplyDate>
-            </ReplyHeader>
-            <MarkdownViewer text={comment.content} />
-            {
+          )}
+
+          <ProjectDetailHeader>
+            답글(
+            {comments.length}
+            개)
+          </ProjectDetailHeader>
+
+          <ReplyWrapper>
+            {comments.map((comment: ICommentProps) => (
+              <ReplyContainer isMyComment={authInfo?.userId === comment.authorId} key={comment._id}>
+                <ReplyHeader>
+                  <ReplyAuthor>
+                    작성자:
+                    {' '}
+                    <AuthorLink to={`/profile?id=${comment.authorId}`}>{comment.author}</AuthorLink>
+                  </ReplyAuthor>
+                  <ReplyDate>
+                    {comment.createdAt.slice(0, 10)}
+                  </ReplyDate>
+                </ReplyHeader>
+                <MarkdownViewer text={comment.content} />
+                {
                   authInfo?.userId === comment.authorId && (
                   <ButtonContainer>
                     <Button size="small" onClick={() => handleCommentDelete(comment._id)}>삭제</Button>
                   </ButtonContainer>
                   )
                 }
-          </ReplyContainer>
-        ))}
-      </ReplyWrapper>
-      )}
+              </ReplyContainer>
+            ))}
+          </ReplyWrapper>
+        </>
+        )
+      }
+      {
+        authInfo && (
+        <>
+          <MarkdownEditor isVisible={isVisible} ref={editorRef} />
+          <ButtonContainer>
+            <Button onClick={handleCommentPost}>답변하기</Button>
+          </ButtonContainer>
+        </>
+        )
+      }
 
-      <MarkdownEditor isVisible={isVisible} ref={editorRef} />
-      <ButtonContainer>
-        <Button onClick={handleCommentPost}>답변하기</Button>
-      </ButtonContainer>
     </ProjectDetailContainer>
   );
 }

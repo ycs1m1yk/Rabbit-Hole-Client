@@ -4,11 +4,10 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { ITagsProps } from '@/interfaces/interface';
 import LogoImage from '@assets/images/rabbit-hole-logo-300.jpg';
-import { S3URL } from '@utils/regex';
 
 const Container = styled.div`
   width: 300px;
-  height: 350px;
+  height: 380px;
   border: 1px solid ${({ theme }): string => theme.palette.borderGray};
   background-color: #fff;
   margin: 2rem;
@@ -206,7 +205,7 @@ export default function Card({
         </HeaderText>
       </Header>
       {
-        thumbnail?.includes(S3URL) ? (
+        thumbnail?.includes(`${import.meta.env.VITE_API_S3_URL}`) ? (
           <ImgBox>
             <ThumbnailImg src={thumbnail} />
           </ImgBox>
