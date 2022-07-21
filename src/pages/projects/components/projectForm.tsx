@@ -108,7 +108,7 @@ function ProjectForm() {
 
   return (
     <>
-      <ModalTitle>프로젝트 등록(필수)</ModalTitle>
+      <ModalTitle>프로젝트 등록</ModalTitle>
       <ProjectInfomationForm encType="multipart/form-data" onKeyDown={handleEnterSubmit}>
         <InputTitle>Title(필수)</InputTitle>
         <ProjectInput
