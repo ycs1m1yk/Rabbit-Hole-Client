@@ -214,7 +214,7 @@ function ProjectDetail() {
   }
 
   // 댓글 POST
-  const handleCommentPost = async () => {
+  const handleCommentPost = React.useCallback(async () => {
     try {
       const content = editorRef.current?.getInstance().getMarkdown();
       const postParams = { commentType: 'project', content };
@@ -224,10 +224,10 @@ function ProjectDetail() {
     } catch (e: any) {
       alert('문제가 발생했습니다. 다시  시도해주세요:(');
     }
-  };
+  }, []);
 
   // 프로젝트 삭제
-  const handleProjectDelete = async () => {
+  const handleProjectDelete = React.useCallback(async () => {
     if (confirm('정말 삭제하시겠습니까?')) {
       const response = await deleteProjectById(authInfo!.token, projectId as string);
       if (response.status === 200) {
@@ -237,12 +237,12 @@ function ProjectDetail() {
         window.location.reload();
       }
     }
-  };
+  }, []);
 
   // 프로젝트 수정
-  const handleProjectEdit = async (modalType: ModalTypes) => {
+  const handleProjectEdit = React.useCallback(async (modalType: ModalTypes) => {
     setModal(modalType);
-  };
+  }, []);
 
   // 댓글 삭제
   const handleCommentDelete = async (commentId: string) => {
@@ -265,6 +265,7 @@ function ProjectDetail() {
     if (response.status !== 200) {
       alert('좋아할 수 없어요.. 다시 시도해주세요:(');
     }
+    window.location.reload();
   }, [clicked]);
 
   useEffect(() => {
