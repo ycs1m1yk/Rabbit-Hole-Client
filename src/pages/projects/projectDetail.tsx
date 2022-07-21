@@ -201,7 +201,9 @@ function ProjectDetail() {
   // data fetching and initializing
   if (projectId) {
     const { data } = useQuery<any>(['projectDetail', projectId], () => getProjectById(projectId), {
+      enabled: !!projectId,
       refetchOnWindowFocus: false,
+      suspense: true,
     });
 
     if (data) {
@@ -268,7 +270,7 @@ function ProjectDetail() {
   useEffect(() => {
     setTimeout(() => {
       setIsVisible(false);
-    }, 200);
+    }, 300);
   }, []);
 
   return project && (
@@ -319,54 +321,67 @@ function ProjectDetail() {
           <ProjectAuthor>{project.shortDescription}</ProjectAuthor>
         </ProjectInfo>
       </ProjectContentContainer>
-      <ProjectDescriptionBox>
-        <ProjectInfoTitle>프로젝트 상세</ProjectInfoTitle>
-        <ProjectDescription>
-          <MarkdownViewer text={project.description} />
-        </ProjectDescription>
-      </ProjectDescriptionBox>
-        {authorId === authInfo?.userId && (
+      {
+        !isVisible && (
+        <>
+          <ProjectDescriptionBox>
+            <ProjectInfoTitle>프로젝트 상세</ProjectInfoTitle>
+            <ProjectDescription>
+              <MarkdownViewer text={project.description} />
+            </ProjectDescription>
+          </ProjectDescriptionBox>
+
+          {authorId === authInfo?.userId && (
           <EditButtonContainer>
             <Button onClick={() => handleProjectEdit('ProjectEdit')}>수정하기</Button>
             <Button onClick={handleProjectDelete}>삭제하기</Button>
           </EditButtonContainer>
-        )}
-      <ProjectDetailHeader>
-        답글(
-        {comments.length}
-        개)
-      </ProjectDetailHeader>
-      {!isVisible && (
-      <ReplyWrapper>
-        {comments.map((comment: ICommentProps) => (
-          <ReplyContainer isMyComment={authInfo?.userId === comment.authorId} key={comment._id}>
-            <ReplyHeader>
-              <ReplyAuthor>
-                작성자:
-                {' '}
-                <AuthorLink to={`/profile?id=${comment.authorId}`}>{comment.author}</AuthorLink>
-              </ReplyAuthor>
-              <ReplyDate>
-                {comment.createdAt.slice(0, 10)}
-              </ReplyDate>
-            </ReplyHeader>
-            <MarkdownViewer text={comment.content} />
-            {
+          )}
+
+          <ProjectDetailHeader>
+            답글(
+            {comments.length}
+            개)
+          </ProjectDetailHeader>
+
+          <ReplyWrapper>
+            {comments.map((comment: ICommentProps) => (
+              <ReplyContainer isMyComment={authInfo?.userId === comment.authorId} key={comment._id}>
+                <ReplyHeader>
+                  <ReplyAuthor>
+                    작성자:
+                    {' '}
+                    <AuthorLink to={`/profile?id=${comment.authorId}`}>{comment.author}</AuthorLink>
+                  </ReplyAuthor>
+                  <ReplyDate>
+                    {comment.createdAt.slice(0, 10)}
+                  </ReplyDate>
+                </ReplyHeader>
+                <MarkdownViewer text={comment.content} />
+                {
                   authInfo?.userId === comment.authorId && (
                   <ButtonContainer>
                     <Button size="small" onClick={() => handleCommentDelete(comment._id)}>삭제</Button>
                   </ButtonContainer>
                   )
                 }
-          </ReplyContainer>
-        ))}
-      </ReplyWrapper>
-      )}
+              </ReplyContainer>
+            ))}
+          </ReplyWrapper>
+        </>
+        )
+      }
+      {
+        authInfo && (
+        <>
+          <MarkdownEditor isVisible={isVisible} ref={editorRef} />
+          <ButtonContainer>
+            <Button onClick={handleCommentPost}>답변하기</Button>
+          </ButtonContainer>
+        </>
+        )
+      }
 
-      <MarkdownEditor isVisible={isVisible} ref={editorRef} />
-      <ButtonContainer>
-        <Button onClick={handleCommentPost}>답변하기</Button>
-      </ButtonContainer>
     </ProjectDetailContainer>
   );
 }

@@ -108,9 +108,9 @@ function ProjectForm() {
 
   return (
     <>
-      <ModalTitle>프로젝트 등록</ModalTitle>
+      <ModalTitle>프로젝트 등록(필수)</ModalTitle>
       <ProjectInfomationForm encType="multipart/form-data" onKeyDown={handleEnterSubmit}>
-        <InputTitle>Title</InputTitle>
+        <InputTitle>Title(필수)</InputTitle>
         <ProjectInput
           {...register('title', {
             required: '제목은 필수 입력사항입니다:)',
@@ -121,7 +121,7 @@ function ProjectForm() {
           })}
         />
         <ErrorMessage>{errors?.title?.message}</ErrorMessage>
-        <InputTitle>작성자 또는 팀명</InputTitle>
+        <InputTitle>작성자 또는 팀명(필수)</InputTitle>
         <ProjectInput
           {...register('author', {
             required: '작성자 또는 팀명은 필수 입력사항입니다:)',
@@ -132,7 +132,7 @@ function ProjectForm() {
           })}
         />
         <ErrorMessage>{errors?.author?.message}</ErrorMessage>
-        <InputTitle>한 줄 소개</InputTitle>
+        <InputTitle>한 줄 소개(필수)</InputTitle>
         <ProjectInput
           {...register('shortDescription', {
             required: '한 줄 소개는 필수 입력사항입니다:)',
@@ -143,15 +143,15 @@ function ProjectForm() {
           })}
         />
         <ErrorMessage>{errors?.shortDescription?.message}</ErrorMessage>
-        <InputTitle>태그</InputTitle>
+        <InputTitle>태그(선택)</InputTitle>
         <TagContainer>
           <TagsInput tags={tags} setTags={setTags} />
         </TagContainer>
         <EditorContainer style={{ marginBottom: '1rem' }}>
-          <InputTitle style={{ marginBottom: '1rem' }}>본문</InputTitle>
+          <InputTitle style={{ marginBottom: '1rem' }}>본문(필수)</InputTitle>
           <MarkdownEditor ref={editorRef} />
         </EditorContainer>
-        <InputTitle style={{ margin: '1rem 0' }}>프로젝트 이미지</InputTitle>
+        <InputTitle style={{ margin: '1rem 0' }}>프로젝트 이미지(필수)</InputTitle>
         <ProjectImageInput
           {...register('thumbnail', {
             required: '프로젝트 사진은 필수 입력사항입니다:)',
