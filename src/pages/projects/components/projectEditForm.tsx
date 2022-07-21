@@ -154,7 +154,7 @@ function ProjectEditForm() {
           defaultValue={prevData?.author}
           {...register('author', {
             maxLength: {
-              value: 20,
+              value: 50,
               message: '작성자 또는 팀명은 50자 이내로 입력해주세요',
             },
           })}
