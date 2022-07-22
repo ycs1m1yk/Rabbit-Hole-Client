@@ -101,10 +101,12 @@ function MyPageProfile({ data }: {data: IUserProps}) {
   };
 
   const handleUserDelete = async () => {
-    const response = await deleteUser(authInfo!.token);
     if (confirm('정말 떠나실건가요?')) {
+      const response = await deleteUser(authInfo!.token);
       if (response.status !== 200) {
         alert('회원 탈퇴에 성공했습니다. 다음에 다시 만나요:)');
+        const { setLogout } = useToken();
+        setLogout();
         navigate('/');
       } else {
         alert('회원 탈퇴에 실패했습니다. 다시 시도해주세요:(');
