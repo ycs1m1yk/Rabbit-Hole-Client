@@ -96,9 +96,9 @@ export default function ProjectsSearch() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [inputType, setInputType] = useState<string>('title');
-  const [perPage, setPerPage] = useState<string>('8');
+  const [perPage, setPerPage] = useState<string>('6');
   const [query, setQuery] = useState<any>({
-    filter: 'date', page: '1', perPage: '8',
+    filter: 'date', page: '1', perPage: '6',
   });
 
   // 프로젝트 정렬
@@ -138,6 +138,7 @@ export default function ProjectsSearch() {
 
   useEffect(() => {
     searchParams.forEach((v, k) => setQuery((q: any) => ({ ...q, [k]: v })));
+
     refetch();
   }, [searchParams]);
 
@@ -153,7 +154,7 @@ export default function ProjectsSearch() {
         <Alignment onClick={() => handleSort('date')}>최신순</Alignment>
         <Alignment onClick={() => handleSort('views')}>조회순</Alignment>
         <SelectBoxWrapper className="selectbox-perpage">
-          <SelectBox options={['4', '8', '12', '16']} defaultValue="페이지당 개수" selectedOption={perPage} setSelectedOption={setPerPage} requestFunc={handlePerPage} width={70} type="register" />
+          <SelectBox options={['3', '6', '9', '12']} defaultValue="페이지당 개수" selectedOption={perPage} setSelectedOption={setPerPage} requestFunc={handlePerPage} width={70} type="register" />
         </SelectBoxWrapper>
       </Alignments>
       <Content>

@@ -1,6 +1,8 @@
-import React, { ReactNode, useState } from 'react';
+import React, {
+  ReactNode, useEffect, useLayoutEffect, useState,
+} from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 interface ContentProps{
     id:number,
@@ -12,6 +14,7 @@ interface ContentProps{
 
 interface SideBarProps{
     type?: 'myPage' | 'board',
+    select?: string,
     contentsList?: ContentProps[],
 }
 
@@ -65,6 +68,7 @@ const MyPageItem = styled.li<{selected: boolean}>`
 
 const defaultProps = {
   type: 'board',
+  select: '',
   contentsList: [{
     id: 0,
     name: '콘텐츠 속성이 필요합니다.',
@@ -74,10 +78,23 @@ const defaultProps = {
 };
 
 // contentList를 동적 생성 이후에 고려
-export default function SideBar({ type, contentsList = [] }:SideBarProps) {
+export default function SideBar({ type, select, contentsList = [] }:SideBarProps) {
   const navigate = useNavigate(); // 라우팅
-
   const [contents, setContents] = useState<ContentProps[]>(contentsList); // 리스트의 선택 상태 관리
+  const [queryString] = useSearchParams();
+
+  useEffect(() => {
+    const queryType = type === 'board' ? 'articleType' : 'type';
+    if (queryString.get(queryType)) {
+      const queryStringType = queryString.get(queryType);
+      setContents(
+        contents.map((content) => (
+          new URLSearchParams(content.path.split('?')[1]).get(queryType) === queryStringType
+            ? { ...content, selected: true }
+            : { ...content, selected: false })),
+      );
+    }
+  }, [queryString]);
 
   // 리스트 선택 시 selected상태 변경 및 라우팅
   const itemClickHandler = (event: React.MouseEvent<HTMLLIElement>, id: number, path: string) => {

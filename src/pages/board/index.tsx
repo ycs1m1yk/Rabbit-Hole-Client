@@ -101,18 +101,18 @@ export default function Board() {
     searchParams.set('filter', sortType);
     searchParams.set('page', '1');
     setSearchParams(searchParams);
-  }, []);
+  }, [searchParams]);
 
   const handlePage = useCallback((idx: number) => {
     searchParams.set('page', `${idx + 1}`);
     setSearchParams(searchParams);
-  }, []);
+  }, [searchParams]);
 
   const handlePerPage = useCallback((perPageValue: string) => {
     searchParams.set('perPage', perPageValue);
     searchParams.set('page', '1');
     setSearchParams(searchParams);
-  }, []);
+  }, [searchParams]);
 
   const {
     isError, data, error, refetch,
@@ -140,7 +140,7 @@ export default function Board() {
     <BoardContainer>
       <SideBar type="board" contentsList={boardList} />
       <BoardWrapper>
-        <Search articleQuery={query} />
+        <Search width={365} articleQuery={query} />
         <SelectBoxWrapper className="selectbox-perpage" data-user-loged-in={!!authInfo}>
           <SelectBox
             options={['5', '10', '15', '20']}

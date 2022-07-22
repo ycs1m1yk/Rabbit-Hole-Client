@@ -1,6 +1,9 @@
-import React, { MouseEvent, useRef, useCallback } from 'react';
-import { Link } from 'react-router-dom';
-import { lighten } from 'polished';
+import React, {
+  useCallback,
+} from 'react';
+import {
+  Link, useLocation,
+} from 'react-router-dom';
 import styled from 'styled-components';
 import Logo from '@components/logo';
 
@@ -13,8 +16,6 @@ const StyledHeader = styled.header`
   position: sticky;
   top: 0;
   z-index: 50;
-  width: 100vw;
-  min-width: 1000px;
   display: flex;
   align-items: center;
   flex-wrap: nowrap;
@@ -25,6 +26,16 @@ const StyledHeader = styled.header`
   color: ${(props) => props.theme.palette.gray};
   background-color: #FFFF;
   line-height: 1.5;
+  min-width: 1440px;
+  width: -webkit-fill-available;
+`;
+
+const HeaderContents = styled.div`
+  display: flex;
+  flex: 1 1 auto;
+  max-width: 1280px;
+  margin: 0 auto;
+  justify-self: center;
 `;
 
 const Nav = styled.nav`
@@ -32,8 +43,8 @@ const Nav = styled.nav`
   align-items: center;
   flex: 1 1 0%;
   height: inherit;
-  margin-left: 3rem;
-  gap: 2rem;
+  margin-left: 4rem;
+  gap: 4rem;
 `;
 
 const HeaderRight = styled.div`
@@ -45,7 +56,7 @@ const HeaderRight = styled.div`
   }
 `;
 
-const StyledLink = styled(Link)`
+const StyledLink = styled(Link)<{ismatch:string}>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -54,12 +65,9 @@ const StyledLink = styled(Link)`
   font-size: 1.8rem;
   white-space: nowrap;
 
-  & + & {
-    margin-left: 2rem;
-  }
-  &.active {
-    color: ${({ theme }) => theme.palette.eliceViolet};
-  }
+
+  color: ${({ theme, ismatch }) => ismatch === 'true' && theme.palette.eliceViolet};
+
   :hover {
     color: ${({ theme }) => theme.palette.eliceViolet};
   }
@@ -80,47 +88,37 @@ const StyledAuth = styled.div`
 `;
 
 export default function Header() {
-  const anchorRef = useRef<HTMLAnchorElement>();
   const setModal = useSetRecoilState(modalAtom); // 모달 상태 전역관리
   const { authInfo, setLogout } = useToken(); // 로그인 상태 확인
-
-  const handleClick = useCallback((e: MouseEvent) => {
-    const target = e.target as HTMLElement;
-    const anchorTarget = target.closest('a') || undefined;
-
-    if (anchorRef.current) {
-      anchorRef.current.classList.remove('active');
-    }
-    anchorRef.current = anchorTarget;
-    anchorRef.current?.classList.add('active');
-  }, []);
+  const { pathname } = useLocation();
 
   const handleModal = useCallback((type:any) => {
     setModal(type);
   }, []);
 
   return (
-    <StyledHeader onClick={handleClick}>
-      <Link to="/">
-        <Logo />
-      </Link>
-      <Nav>
-        <StyledLink to="/board">게시판</StyledLink>
-        <StyledLink to="/projects?filter=date&page=1&perPage=8">프로젝트 갤러리</StyledLink>
-      </Nav>
-      <HeaderRight>
-        {
-          authInfo // 로그인 상태 조건부 렌더링
-            ? (
-              <>
-                <StyledAuth onClick={setLogout}>로그아웃</StyledAuth>
-                <StyledLink to="/mypage?type=profile">마이페이지</StyledLink>
-              </>
-            )
-            : <StyledAuth onClick={() => handleModal('Login')}>로그인</StyledAuth>
-        }
-
-      </HeaderRight>
+    <StyledHeader>
+      <HeaderContents>
+        <Link to="/">
+          <Logo />
+        </Link>
+        <Nav>
+          <StyledLink ismatch={String(pathname.includes('/board'))} to="/board?articleType=question&filter=date&page=1&perPage=10">게시판</StyledLink>
+          <StyledLink ismatch={String(pathname.includes('/projects'))} to="/projects?filter=date&page=1&perPage=6">프로젝트 갤러리</StyledLink>
+        </Nav>
+        <HeaderRight>
+          {
+            authInfo // 로그인 상태 조건부 렌더링
+              ? (
+                <>
+                  <StyledAuth onClick={setLogout}>로그아웃</StyledAuth>
+                  <StyledLink ismatch={String(pathname.includes('/mypage'))} to="/mypage?type=profile">마이페이지</StyledLink>
+                </>
+              )
+              : <StyledAuth onClick={() => handleModal('Login')}>로그인</StyledAuth>
+          }
+        </HeaderRight>
+      </HeaderContents>
     </StyledHeader>
   );
 }

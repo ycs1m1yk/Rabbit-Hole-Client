@@ -11,7 +11,7 @@ import MyPageContent from './myPageContainer';
 
 const MyPageContainer = styled.div`
   display: flex;
-  flex-direction: row;
+  width: 100%;
 `;
 
 const SidebarContainer = styled.div`

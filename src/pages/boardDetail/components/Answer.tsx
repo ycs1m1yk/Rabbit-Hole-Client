@@ -7,14 +7,13 @@ import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
 import { BsFillBookmarkCheckFill, BsBookmarkCheck } from 'react-icons/bs';
 import { useRecoilValue } from 'recoil';
 import { useQueryClient } from 'react-query';
-import { Editor } from '@toast-ui/react-editor';
-import { Viewer } from '@toast-ui/react-editor';
+import { Editor, Viewer } from '@toast-ui/react-editor';
 import { Link } from 'react-router-dom';
 import authAtom from '@/recoil/auth/authAtom';
 import MarkdownViewer from '@/components/markdownViewer';
 import Button from '@/components/button';
 import * as styles from '@/pages/boardDetail/styled';
-import { ICommentProps } from '@/interfaces/interface';
+import { ICommentProps, IArticleProps } from '@/interfaces/interface';
 import {
   adoptComment, deleteCommentById, increaseCommentLikes, updateCommentById,
 } from '@/lib/commentApi';
@@ -25,12 +24,12 @@ interface AnswerProps{
   comment: ICommentProps;
   toggleAnswerBox: boolean;
   setToggleAnswerBox: React.Dispatch<React.SetStateAction<boolean>>;
+  article: IArticleProps;
 }
 
 export default function Answer({
-  comment, setToggleAnswerBox, toggleAnswerBox,
+  comment, setToggleAnswerBox, toggleAnswerBox, article,
 }: AnswerProps) {
-  // const auth = React.useMemo(() => useRecoilValue(authAtom), [useRecoilValue(authAtom)]);
   const auth = useRecoilValue(authAtom);
   const { authInfo } = useToken();
   const queryClient = useQueryClient();
@@ -56,10 +55,8 @@ export default function Answer({
       if (confirm('정말 수정하시겠습니까?')) {
         const res = await updateCommentById(authInfo!.token, comment._id as string, body);
         if (res) {
-          alert('수정되었습니다.');
           setToggleAnswerBox((c) => !c);
           setUpdate((c) => !c);
-          queryClient.invalidateQueries();
         }
       }
     }
@@ -72,7 +69,6 @@ export default function Answer({
     if (confirm('정말 삭제하시겠습니까?')) {
       const res = await deleteCommentById(authInfo!.token, comment._id as string);
       if (res.status === 200) {
-        alert('삭제되었습니다.');
         queryClient.invalidateQueries();
       } else {
         alert('삭제에 실패하였습니다. 다시 시도해주세요:(');
@@ -103,7 +99,6 @@ export default function Answer({
         queryClient.invalidateQueries();
         return;
       }
-      alert('채택되었습니다.');
       queryClient.invalidateQueries();
     }
   }, []);
@@ -116,7 +111,7 @@ export default function Answer({
             {comment.commentType === 'question' && (
               comment.isAdopted
                 ? <BsFillBookmarkCheckFill size={30} />
-                : auth?.userId === comment.authorId && (
+                : auth?.userId !== comment.authorId && article.authorId === auth?.userId && (
                 <styles.AdoptedBox>
                   <BsBookmarkCheck size={30} onClick={handleAdopted} />
                 </styles.AdoptedBox>
