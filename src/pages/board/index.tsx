@@ -101,18 +101,18 @@ export default function Board() {
     searchParams.set('filter', sortType);
     searchParams.set('page', '1');
     setSearchParams(searchParams);
-  }, []);
+  }, [searchParams]);
 
   const handlePage = useCallback((idx: number) => {
     searchParams.set('page', `${idx + 1}`);
     setSearchParams(searchParams);
-  }, []);
+  }, [searchParams]);
 
   const handlePerPage = useCallback((perPageValue: string) => {
     searchParams.set('perPage', perPageValue);
     searchParams.set('page', '1');
     setSearchParams(searchParams);
-  }, []);
+  }, [searchParams]);
 
   const {
     isError, data, error, refetch,
