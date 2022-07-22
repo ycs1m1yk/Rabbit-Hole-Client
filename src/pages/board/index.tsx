@@ -153,7 +153,7 @@ export default function Board() {
           />
         </SelectBoxWrapper>
         {authInfo
-      && <Button className="button-posting" size="medium" onClick={handleModalOpen}>게시글 등록</Button>}
+      && authInfo.role !== 'guest' && <Button className="button-posting" size="medium" onClick={handleModalOpen}>게시글 등록</Button>}
         <PostList posts={data.articleList} sortHandler={handleSort} />
         <Pagination
           length={data.totalPage}
