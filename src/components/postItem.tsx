@@ -26,7 +26,7 @@ const Post = styled.div<{type: string}>`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  width: ${({ type }) => (type === 'main' ? '500px' : '800px')};
+  width: ${({ type }) => (type === 'main' ? '550px' : '800px')};
   padding: 0px 20px;
   color: ${({ theme }) => theme.palette.gray};
   isolation: isolate;
