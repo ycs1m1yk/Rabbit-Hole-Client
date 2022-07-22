@@ -20,7 +20,7 @@ const Container = styled.div`
   align-items: center;
   max-width: 1280px;
 
-  &>div {
+  &>div:not(:last-child) {
     width: 100%
   }
 `;
@@ -48,10 +48,10 @@ const ProjectSliderContainer = styled.div`
 
 const ContentContainer = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: flex-start;
+  width: 1280px;
   margin: 10rem 0;
-  padding: 0 1.5rem;
 `;
 
 export default function Home() {
