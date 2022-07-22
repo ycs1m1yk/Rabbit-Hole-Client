@@ -6,6 +6,9 @@ import { ITagsProps } from '@/interfaces/interface';
 import LogoImage from '@assets/images/rabbit-hole-logo-300.jpg';
 
 const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   width: 300px;
   height: 380px;
   border: 1px solid ${({ theme }): string => theme.palette.borderGray};
