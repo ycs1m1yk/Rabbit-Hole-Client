@@ -31,7 +31,7 @@ const defaultProps = {
  * ref const ref = useRef<Editor>(null) 방식으로 선언한 ref필요 (null로 initializing 필요)
  * Ref.current?.getInstance().getMarkdown(); 방식으로 string value 얻음
  */
-const MarkdownEditor = forwardRef<Editor, EditorProps>((props, ref) => {
+const MarkdownEditor = forwardRef<Editor, EditorProps>((props, ref: any) => {
   const { authInfo } = useToken();
   useEffect(
     () => {
