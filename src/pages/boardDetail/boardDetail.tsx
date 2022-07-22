@@ -35,6 +35,7 @@ export default function BoardDetail() {
   useEffect(() => {
     setTimeout(() => {
       setIsVisible(false);
+      window.scrollTo(0, 0);
     }, 300);
     getArticleViewById(articleId as string).then(setViews);
   }, []);
