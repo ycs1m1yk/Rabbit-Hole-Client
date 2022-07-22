@@ -7,8 +7,7 @@ import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
 import { BsFillBookmarkCheckFill, BsBookmarkCheck } from 'react-icons/bs';
 import { useRecoilValue } from 'recoil';
 import { useQueryClient } from 'react-query';
-import { Editor } from '@toast-ui/react-editor';
-import { Viewer } from '@toast-ui/react-editor';
+import { Editor, Viewer } from '@toast-ui/react-editor';
 import { Link } from 'react-router-dom';
 import authAtom from '@/recoil/auth/authAtom';
 import MarkdownViewer from '@/components/markdownViewer';
@@ -59,7 +58,6 @@ export default function Answer({
           alert('수정되었습니다.');
           setToggleAnswerBox((c) => !c);
           setUpdate((c) => !c);
-          queryClient.invalidateQueries();
         }
       }
     }
@@ -73,7 +71,6 @@ export default function Answer({
       const res = await deleteCommentById(authInfo!.token, comment._id as string);
       if (res.status === 200) {
         alert('삭제되었습니다.');
-        queryClient.invalidateQueries();
       } else {
         alert('삭제에 실패하였습니다. 다시 시도해주세요:(');
       }
@@ -116,7 +113,7 @@ export default function Answer({
             {comment.commentType === 'question' && (
               comment.isAdopted
                 ? <BsFillBookmarkCheckFill size={30} />
-                : auth?.userId === comment.authorId && (
+                : auth?.userId === comment.authorId && comment.authorId !== auth.userId && (
                 <styles.AdoptedBox>
                   <BsBookmarkCheck size={30} onClick={handleAdopted} />
                 </styles.AdoptedBox>
