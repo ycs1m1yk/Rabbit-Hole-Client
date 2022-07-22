@@ -316,7 +316,7 @@ function ProjectDetail() {
         </HeaderContainer>
       </ProjectDetailHeader>
       <ProjectContentContainer>
-        {project.thumbnail.includes(`${import.meta.env.VITE_API_S3_URL}`)
+        {project.thumbnail
           ? (
             <ProjectImageBox>
               <ProjectImage src={project.thumbnail} />
