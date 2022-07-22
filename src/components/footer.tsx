@@ -2,13 +2,21 @@ import React from 'react';
 import styled from 'styled-components';
 
 const Container = styled.footer`
-  background: linear-gradient(to right, #582A72, #9775AA);
-  width: 100%;
-  min-width: 1000px;
-  height: 7.5rem;
   display: flex;
+  min-width: 1440px;
+  width: -webkit-fill-available;
+  height: 7.5rem;
+  background: linear-gradient(to right, #582A72, #9775AA);
   position: absolute;
   bottom: 0;
+`;
+
+const FooterContents = styled.div`
+  display: flex;
+  flex: 1 1 auto;
+  max-width: 1280px;
+  margin: 0 auto;
+  justify-self: center;
 `;
 
 const FooterItem = styled.a`
@@ -32,10 +40,12 @@ const FooterItem = styled.a`
 function Footer() {
   return (
     <Container>
-      <FooterItem href="#">서비스 이용약관</FooterItem>
-      <FooterItem href="#">개인정보 처리 방침</FooterItem>
-      <FooterItem href="#">고객센터</FooterItem>
-      <FooterItem href="https://www.notion.so/elice/8-6f218abdd0014712b95d485c295dd7af" target="_blank">프로젝트 소개</FooterItem>
+      <FooterContents>
+        <FooterItem href="#">서비스 이용약관</FooterItem>
+        <FooterItem href="#">개인정보 처리 방침</FooterItem>
+        <FooterItem href="#">고객센터</FooterItem>
+        <FooterItem href="https://www.notion.so/elice/8-6f218abdd0014712b95d485c295dd7af" target="_blank">프로젝트 소개</FooterItem>
+      </FooterContents>
     </Container>
   );
 }

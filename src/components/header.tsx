@@ -16,8 +16,6 @@ const StyledHeader = styled.header`
   position: sticky;
   top: 0;
   z-index: 50;
-  width: 100vw;
-  min-width: 1000px;
   display: flex;
   align-items: center;
   flex-wrap: nowrap;
@@ -28,6 +26,16 @@ const StyledHeader = styled.header`
   color: ${(props) => props.theme.palette.gray};
   background-color: #FFFF;
   line-height: 1.5;
+  min-width: 1440px;
+  width: -webkit-fill-available;
+`;
+
+const HeaderContents = styled.div`
+  display: flex;
+  flex: 1 1 auto;
+  max-width: 1280px;
+  margin: 0 auto;
+  justify-self: center;
 `;
 
 const Nav = styled.nav`
@@ -35,8 +43,8 @@ const Nav = styled.nav`
   align-items: center;
   flex: 1 1 0%;
   height: inherit;
-  margin-left: 3rem;
-  gap: 2rem;
+  margin-left: 4rem;
+  gap: 4rem;
 `;
 
 const HeaderRight = styled.div`
@@ -90,26 +98,27 @@ export default function Header() {
 
   return (
     <StyledHeader>
-      <Link to="/">
-        <Logo />
-      </Link>
-      <Nav>
-        <StyledLink ismatch={pathname.includes('/board')} to="/board">게시판</StyledLink>
-        <StyledLink ismatch={pathname.includes('/projects')} to="/projects?filter=date&page=1&perPage=6">프로젝트 갤러리</StyledLink>
-      </Nav>
-      <HeaderRight>
-        {
-          authInfo // 로그인 상태 조건부 렌더링
-            ? (
-              <>
-                <StyledAuth onClick={setLogout}>로그아웃</StyledAuth>
-                <StyledLink ismatch={pathname.includes('/mypage')} to="/mypage?type=profile">마이페이지</StyledLink>
-              </>
-            )
-            : <StyledAuth onClick={() => handleModal('Login')}>로그인</StyledAuth>
-        }
-
-      </HeaderRight>
+      <HeaderContents>
+        <Link to="/">
+          <Logo />
+        </Link>
+        <Nav>
+          <StyledLink ismatch={pathname.includes('/board')} to="/board">게시판</StyledLink>
+          <StyledLink ismatch={pathname.includes('/projects')} to="/projects?filter=date&page=1&perPage=6">프로젝트 갤러리</StyledLink>
+        </Nav>
+        <HeaderRight>
+          {
+            authInfo // 로그인 상태 조건부 렌더링
+              ? (
+                <>
+                  <StyledAuth onClick={setLogout}>로그아웃</StyledAuth>
+                  <StyledLink ismatch={pathname.includes('/mypage')} to="/mypage?type=profile">마이페이지</StyledLink>
+                </>
+              )
+              : <StyledAuth onClick={() => handleModal('Login')}>로그인</StyledAuth>
+          }
+        </HeaderRight>
+      </HeaderContents>
     </StyledHeader>
   );
 }

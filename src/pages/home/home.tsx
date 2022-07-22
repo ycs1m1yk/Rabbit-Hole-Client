@@ -15,8 +15,14 @@ import { IProjectProps } from '@/interfaces/interface';
 import { getAllProjects } from '@/lib/projectApi';
 
 const Container = styled.div`
-  width: 100vw;
-  min-width: 1440px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 1280px;
+
+  &>div {
+    width: 100%
+  }
 `;
 
 const MainSliderContainer = styled.div`
@@ -41,12 +47,11 @@ const ProjectSliderContainer = styled.div`
 `;
 
 const ContentContainer = styled.div`
-  margin-top: 10rem;
   display: flex;
-  gap: 5rem;
-  justify-content: center;
+  justify-content: space-between;
   align-items: flex-start;
-  margin: 10rem auto; 
+  margin: 10rem 0;
+  padding: 0 1.5rem;
 `;
 
 export default function Home() {

@@ -140,7 +140,7 @@ export default function Board() {
     <BoardContainer>
       <SideBar type="board" contentsList={boardList} />
       <BoardWrapper>
-        <Search articleQuery={query} />
+        <Search width={365} articleQuery={query} />
         <SelectBoxWrapper className="selectbox-perpage" data-user-loged-in={!!authInfo}>
           <SelectBox
             options={['5', '10', '15', '20']}
