@@ -97,27 +97,33 @@ export default function Home() {
           <Link to="/projects"><MainSliderImage src={ProjectImage} /></Link>
         </Slider>
       </MainSliderContainer>
-      <Title>프로젝트</Title>
-      <ProjectSliderContainer>
-        <Slider settings={projectSettings}>
-          {projects?.projectList.map((project: IProjectProps) => (
-            <Card
-              key={project._id}
-              projectId={project._id}
-              title={project.title}
-              author={project.author}
-              shortDescription={project.shortDescription}
-              description={project.description}
-              thumbnail={project.thumbnail}
-              likes={project.likes.length}
-              tags={project.tags}
-              date={project.createdAt}
-              views={project.views}
-              type="project"
-            />
-          ))}
-        </Slider>
-      </ProjectSliderContainer>
+      {
+        projects !== undefined ? (
+          <>
+            <Title>프로젝트</Title>
+            <ProjectSliderContainer>
+              <Slider settings={projectSettings}>
+                {projects?.projectList.map((project: IProjectProps) => (
+                  <Card
+                    key={project._id}
+                    projectId={project._id}
+                    title={project.title}
+                    author={project.author}
+                    shortDescription={project.shortDescription}
+                    description={project.description}
+                    thumbnail={project.thumbnail}
+                    likes={project.likes.length}
+                    tags={project.tags}
+                    date={project.createdAt}
+                    views={project.views}
+                    type="project"
+                  />
+                ))}
+              </Slider>
+            </ProjectSliderContainer>
+          </>
+        ) : null
+      }
       <ContentContainer>
         {freePosts && <PostList type="main" title="자유게시판" posts={freePosts.articleList.slice(0, 5)} />}
         {questionPosts && <PostList type="main" title="질의응답" posts={questionPosts.articleList.slice(0, 5)} />}

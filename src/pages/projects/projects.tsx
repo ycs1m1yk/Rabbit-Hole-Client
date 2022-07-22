@@ -34,21 +34,19 @@ const Alignments = styled.ul`
   margin: 1rem 0;
 `;
 
-const Alignment = styled.li`
+const Alignment = styled.li<{current: boolean}>`
   vertical-align: middle;
   margin-left: 2rem;
   list-style-type: disc;
-  color: ${({ theme }) => theme.palette.gray};
+  color: ${(props) => (props.current ? props.theme.palette.eliceViolet : props.theme.palette.gray)};
   font-size: 1.5rem;
-  font-weight: 500;
+  font-weight: ${(props) => (props.current ? '700' : '500')};
   line-height: 26px;
   cursor: pointer;
-
-  &[selected],
-  &:hover{
+  &:hover {
+    color: ${(props) => (props.theme.palette.eliceViolet)};
     font-weight: 700;
-    color: ${({ theme }) => theme.palette.eliceViolet};
-  }  
+  }
 `;
 
 const ProjectHeader = styled.div`
@@ -104,6 +102,7 @@ export default function Projects() {
   const { authInfo } = useToken();
   const sortRef = useRef<HTMLLIElement | null>(null);
   const [searchParams, setSearchParams] = useSearchParams();
+  const currentFilter = searchParams.get('filter');
 
   const [perPage, setPerPage] = useState<string>('8');
   const [query, setQuery] = useState<IProjectGetParamsProps>({
@@ -166,8 +165,8 @@ export default function Projects() {
         </RightHead>
       </ProjectHeader>
       <Alignments>
-        <Alignment onClick={(e) => handleSort(e, 'date')}>최신순</Alignment>
-        <Alignment onClick={(e) => handleSort(e, 'views')}>조회순</Alignment>
+        <Alignment current={currentFilter === 'date'} onClick={(e) => handleSort(e, 'date')}>최신순</Alignment>
+        <Alignment current={currentFilter === 'views'} onClick={(e) => handleSort(e, 'views')}>조회순</Alignment>
         <SelectBoxWrapper className="selectbox-perpage">
           <SelectBox options={['4', '8', '12', '16']} defaultValue="페이지당 개수" selectedOption={perPage} setSelectedOption={setPerPage} requestFunc={handlePerPage} width={70} type="register" />
         </SelectBoxWrapper>

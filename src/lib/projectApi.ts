@@ -22,6 +22,10 @@ export const getProjectById = (projectId: string, params?: interfaces.IProjectGe
     .then((res) => res.json());
 };
 
+// 프로젝트 조회수
+export const getProjectViewsById = (projectId: string | null) => fetch(`${BASE_URL}/projects/${projectId}/views`)
+  .then((res) => res.json());
+
 // 프로젝트 작성
 export const postProject = (token: string, bodyData: FormData) => fetch(`${BASE_URL}/projects`, {
   method: 'POST',

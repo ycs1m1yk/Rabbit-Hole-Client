@@ -6,7 +6,7 @@ import React, {
   useEffect,
   useRef, useState,
 } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import LogoImage from '@assets/images/rabbit-hole-logo-300.jpg';
@@ -18,7 +18,9 @@ import {
 } from 'react-icons/ai';
 import { lighten } from 'polished';
 import MarkdownViewer from '@/components/markdownViewer';
-import { deleteProjectById, getProjectById, increaseProjectLikes } from '@/lib/projectApi';
+import {
+  deleteProjectById, getProjectById, getProjectViewsById, increaseProjectLikes,
+} from '@/lib/projectApi';
 import { ICommentProps, ITagsProps } from '@/interfaces/interface';
 import MarkdownEditor from '@/components/markdownEditor';
 import Button from '@/components/button';
@@ -185,12 +187,14 @@ const ProjectDescriptionBox = styled.div`
 
 function ProjectDetail() {
   const [searchParams] = useSearchParams();
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { authInfo } = useToken();
   const editorRef = useRef<Editor>(null);
   const setModal = useSetRecoilState(modalAtom);
   const [clicked, setClicked] = useState<boolean>(false);
   const [isVisible, setIsVisible] = useState<boolean>(true);
+  const [views, setViews] = useState<number>(0);
 
   const projectId = searchParams.get('projectId');
   let project: any;
@@ -218,8 +222,7 @@ function ProjectDetail() {
       const content = editorRef.current?.getInstance().getMarkdown();
       const postParams = { commentType: 'project', content };
       await postComment(authInfo!.token, projectId as string, postParams);
-
-      window.location.reload();
+      queryClient.invalidateQueries(['projectDetail', projectId]);
     } catch (e: any) {
       alert('문제가 발생했습니다. 다시  시도해주세요:(');
     }
@@ -229,12 +232,13 @@ function ProjectDetail() {
   const handleProjectDelete = React.useCallback(async () => {
     if (confirm('정말 삭제하시겠습니까?')) {
       const response = await deleteProjectById(authInfo!.token, projectId as string);
+      const resp = await response.data;
       if (response.status === 200) {
         navigate('/projects?filter=date&page=1&perPage=8');
       } else {
-        alert('삭제에 실패하였습니다. 다시 시도해주세요:(');
-        window.location.reload();
+        alert(resp.reason);
       }
+      queryClient.invalidateQueries(['projectDetail', projectId]);
     }
   }, []);
 
@@ -244,13 +248,14 @@ function ProjectDetail() {
   }, []);
 
   // 댓글 삭제
-  const handleCommentDelete = async (commentId: string) => {
+  const handleCommentDelete = React.useCallback(async (commentId: string) => {
     const response = await deleteCommentById(authInfo!.token, commentId);
+    const resp = await response.data;
     if (response.status !== 200) {
-      alert('댓글 삭제 오류가 발생하였습니다. 다시 시도해주세요:(');
+      alert(resp.reason);
     }
-    window.location.reload();
-  };
+    queryClient.invalidateQueries(['projectDetail', projectId]);
+  }, []);
 
   // 좋아요 눌렀는지 체크
   const matchLike = React.useCallback(() => {
@@ -259,19 +264,31 @@ function ProjectDetail() {
   }, [project, authInfo]);
 
   const handleToggleLike = React.useCallback(async () => {
+    if (!authInfo) {
+      alert('회원가입을 진행해주세요:)');
+      return;
+    }
     setClicked((prev) => !prev);
     const response = await increaseProjectLikes(authInfo!.token, projectId as string);
     if (response.status !== 200) {
       alert('좋아할 수 없어요.. 다시 시도해주세요:(');
     }
-    window.location.reload();
+    queryClient.invalidateQueries(['projectDetail', projectId]);
   }, [clicked]);
+
+  useEffect(() => {
+    const getProjectViews = async () => {
+      const response = await getProjectViewsById(projectId);
+      setViews(response);
+    };
+    getProjectViews();
+  }, []);
 
   useEffect(() => {
     setTimeout(() => {
       setIsVisible(false);
     }, 300);
-  }, []);
+  }, [projectId]);
 
   return project && (
     <ProjectDetailContainer>
@@ -287,7 +304,7 @@ function ProjectDetail() {
             </LikeBox>
             <ViewContainer>
               <AiOutlineEye size={30} />
-              <ViewCount>{project.views.toLocaleString()}</ViewCount>
+              <ViewCount>{views.toLocaleString()}</ViewCount>
             </ViewContainer>
           </ProjectDataContainer>
         </HeaderContainer>
