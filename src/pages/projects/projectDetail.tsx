@@ -204,9 +204,6 @@ function ProjectDetail() {
       enabled: !!projectId,
       refetchOnWindowFocus: false,
       suspense: true,
-      onSettled: () => {
-        queryClient.invalidateQueries(['projectDetail', projectId]);
-      },
     });
 
     if (data) {
@@ -280,7 +277,7 @@ function ProjectDetail() {
     setTimeout(() => {
       setIsVisible(false);
     }, 300);
-  }, [projectId, clicked]);
+  }, [projectId]);
 
   return project && (
     <ProjectDetailContainer>
