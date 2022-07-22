@@ -24,11 +24,13 @@ export default function BoardDetail() {
   const articleId = query.get('id');
   const [toggleAnswerBox, setToggleAnswerBox] = React.useState<boolean>(false);
   const [isVisible, setIsVisible] = useState<boolean>(true);
-
+  const { authInfo } = useToken();
+  if (auth?.role === 'guest') {
+    return (<styles.EmptyField>guest는 접근할 수 없습니다.</styles.EmptyField>);
+  }
   if (!articleId) {
     return (<styles.EmptyField>일치하는 게시글이 없습니다.</styles.EmptyField>);
   }
-  const { authInfo } = useToken();
 
   const { data, isError } = useQuery<any>(['boardDetail', articleId], () => getArticleById(articleId), {
     enabled: !!articleId,
