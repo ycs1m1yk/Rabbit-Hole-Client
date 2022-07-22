@@ -77,6 +77,7 @@ const Title = styled.h3<{type: string}>`
   font-weight: 700;
   letter-spacing: 0.15px;
   color : ${({ theme }) => theme.palette.black};
+  height: 25px;
 
   overflow: hidden;
   text-overflow: ellipsis;
