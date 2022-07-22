@@ -106,7 +106,7 @@ export default function Header() {
       </Link>
       <Nav>
         <StyledLink to="/board">게시판</StyledLink>
-        <StyledLink to="/projects?filter=date&page=1&perPage=8">프로젝트 갤러리</StyledLink>
+        <StyledLink to="/projects?filter=date&page=1&perPage=6">프로젝트 갤러리</StyledLink>
       </Nav>
       <HeaderRight>
         {
