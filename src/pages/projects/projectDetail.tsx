@@ -26,7 +26,6 @@ import useToken from '@/hooks/useToken';
 import { deleteCommentById, postComment } from '@/lib/commentApi';
 import modalAtom from '@/recoil/modal/modalAtom';
 import { ModalTypes } from '@/interfaces/type';
-import { useForm } from 'react-hook-form';
 
 const ProjectDetailContainer = styled.div`
   max-width: 1000px;
@@ -205,6 +204,9 @@ function ProjectDetail() {
       enabled: !!projectId,
       refetchOnWindowFocus: false,
       suspense: true,
+      onSettled: () => {
+        queryClient.invalidateQueries(['projectDetail', projectId]);
+      },
     });
 
     if (data) {
@@ -220,7 +222,6 @@ function ProjectDetail() {
       const content = editorRef.current?.getInstance().getMarkdown();
       const postParams = { commentType: 'project', content };
       await postComment(authInfo!.token, projectId as string, postParams);
-
       queryClient.invalidateQueries(['projectDetail', projectId]);
     } catch (e: any) {
       alert('문제가 발생했습니다. 다시  시도해주세요:(');
@@ -263,6 +264,10 @@ function ProjectDetail() {
   }, [project, authInfo]);
 
   const handleToggleLike = React.useCallback(async () => {
+    if (!authInfo) {
+      alert('회원가입을 진행해주세요:)');
+      return;
+    }
     setClicked((prev) => !prev);
     const response = await increaseProjectLikes(authInfo!.token, projectId as string);
     if (response.status !== 200) {
@@ -275,7 +280,7 @@ function ProjectDetail() {
     setTimeout(() => {
       setIsVisible(false);
     }, 300);
-  }, [projectId]);
+  }, [projectId, clicked]);
 
   return project && (
     <ProjectDetailContainer>
