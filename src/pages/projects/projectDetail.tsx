@@ -6,7 +6,7 @@ import React, {
   useEffect,
   useRef, useState,
 } from 'react';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import LogoImage from '@assets/images/rabbit-hole-logo-300.jpg';
@@ -26,6 +26,7 @@ import useToken from '@/hooks/useToken';
 import { deleteCommentById, postComment } from '@/lib/commentApi';
 import modalAtom from '@/recoil/modal/modalAtom';
 import { ModalTypes } from '@/interfaces/type';
+import { useForm } from 'react-hook-form';
 
 const ProjectDetailContainer = styled.div`
   max-width: 1000px;
@@ -185,6 +186,7 @@ const ProjectDescriptionBox = styled.div`
 
 function ProjectDetail() {
   const [searchParams] = useSearchParams();
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { authInfo } = useToken();
   const editorRef = useRef<Editor>(null);
@@ -219,7 +221,7 @@ function ProjectDetail() {
       const postParams = { commentType: 'project', content };
       await postComment(authInfo!.token, projectId as string, postParams);
 
-      window.location.reload();
+      queryClient.invalidateQueries(['projectDetail', projectId]);
     } catch (e: any) {
       alert('문제가 발생했습니다. 다시  시도해주세요:(');
     }
@@ -229,12 +231,13 @@ function ProjectDetail() {
   const handleProjectDelete = React.useCallback(async () => {
     if (confirm('정말 삭제하시겠습니까?')) {
       const response = await deleteProjectById(authInfo!.token, projectId as string);
+      const resp = await response.data;
       if (response.status === 200) {
         navigate('/projects?filter=date&page=1&perPage=8');
       } else {
-        alert('삭제에 실패하였습니다. 다시 시도해주세요:(');
-        window.location.reload();
+        alert(resp.reason);
       }
+      queryClient.invalidateQueries(['projectDetail', projectId]);
     }
   }, []);
 
@@ -244,13 +247,14 @@ function ProjectDetail() {
   }, []);
 
   // 댓글 삭제
-  const handleCommentDelete = async (commentId: string) => {
+  const handleCommentDelete = React.useCallback(async (commentId: string) => {
     const response = await deleteCommentById(authInfo!.token, commentId);
+    const resp = await response.data;
     if (response.status !== 200) {
-      alert('댓글 삭제 오류가 발생하였습니다. 다시 시도해주세요:(');
+      alert(resp.reason);
     }
-    window.location.reload();
-  };
+    queryClient.invalidateQueries(['projectDetail', projectId]);
+  }, []);
 
   // 좋아요 눌렀는지 체크
   const matchLike = React.useCallback(() => {
@@ -264,14 +268,14 @@ function ProjectDetail() {
     if (response.status !== 200) {
       alert('좋아할 수 없어요.. 다시 시도해주세요:(');
     }
-    window.location.reload();
+    queryClient.invalidateQueries(['projectDetail', projectId]);
   }, [clicked]);
 
   useEffect(() => {
     setTimeout(() => {
       setIsVisible(false);
     }, 300);
-  }, []);
+  }, [projectId]);
 
   return project && (
     <ProjectDetailContainer>
