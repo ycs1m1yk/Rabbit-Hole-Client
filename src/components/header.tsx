@@ -48,7 +48,7 @@ const HeaderRight = styled.div`
   }
 `;
 
-const StyledLink = styled(Link)<{ismatch:boolean}>`
+const StyledLink = styled(Link)<{ismatch:string}>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -58,7 +58,7 @@ const StyledLink = styled(Link)<{ismatch:boolean}>`
   white-space: nowrap;
 
 
-  color: ${({ theme, ismatch }) => ismatch && theme.palette.eliceViolet};
+  color: ${({ theme, ismatch }) => ismatch === 'true' && theme.palette.eliceViolet};
 
   :hover {
     color: ${({ theme }) => theme.palette.eliceViolet};
@@ -83,7 +83,7 @@ export default function Header() {
   const setModal = useSetRecoilState(modalAtom); // 모달 상태 전역관리
   const { authInfo, setLogout } = useToken(); // 로그인 상태 확인
   const { pathname } = useLocation();
-  console.log(pathname);
+
   const handleModal = useCallback((type:any) => {
     setModal(type);
   }, []);
@@ -94,8 +94,8 @@ export default function Header() {
         <Logo />
       </Link>
       <Nav>
-        <StyledLink ismatch={pathname.includes('/board')} to="/board">게시판</StyledLink>
-        <StyledLink ismatch={pathname.includes('/projects')} to="/projects?filter=date&page=1&perPage=6">프로젝트 갤러리</StyledLink>
+        <StyledLink ismatch={String(pathname.includes('/board'))} to="/board">게시판</StyledLink>
+        <StyledLink ismatch={String(pathname.includes('/projects'))} to="/projects?filter=date&page=1&perPage=6">프로젝트 갤러리</StyledLink>
       </Nav>
       <HeaderRight>
         {
@@ -103,7 +103,7 @@ export default function Header() {
             ? (
               <>
                 <StyledAuth onClick={setLogout}>로그아웃</StyledAuth>
-                <StyledLink ismatch={pathname.includes('/mypage')} to="/mypage?type=profile">마이페이지</StyledLink>
+                <StyledLink ismatch={String(pathname.includes('/mypage'))} to="/mypage?type=profile">마이페이지</StyledLink>
               </>
             )
             : <StyledAuth onClick={() => handleModal('Login')}>로그인</StyledAuth>
