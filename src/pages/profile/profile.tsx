@@ -116,6 +116,9 @@ export default function name() {
   if (data && data.result === 'CastError') {
     return (<EmptyField>일치하는 유저가 없습니다.</EmptyField>);
   }
+  if (data && data.result === 'NotFound') {
+    return (<EmptyField>{data.reason}</EmptyField>);
+  }
   return (
     <ProfileContainer>
       {data && (
