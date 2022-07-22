@@ -18,6 +18,7 @@ const EmptyField = styled.p`
 `;
 
 const Image = styled.img`
+  max-width: 800px;
 `;
 
 export default function Certificate() {
