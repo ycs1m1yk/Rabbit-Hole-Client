@@ -47,6 +47,12 @@ const CarrotsInfo = styled.div`
   }
 `;
 
+const UserRole = styled.div`
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-top: 2rem;
+`;
+
 const ImageContainer = styled.div``;
 
 const ProfileImage = styled.img`
@@ -133,6 +139,11 @@ function MyPageProfile({ data }: {data: IUserProps}) {
           <FaCarrot />
           {`: ${authInfo?.carrots}개`}
         </CarrotsInfo>
+        <UserRole>
+          권한:
+          {' '}
+          {authInfo?.role}
+        </UserRole>
       </ImageContainer>
     </Container>
   );
