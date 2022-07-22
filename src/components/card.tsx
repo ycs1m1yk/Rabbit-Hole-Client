@@ -208,7 +208,7 @@ export default function Card({
         </HeaderText>
       </Header>
       {
-        thumbnail?.includes(`${import.meta.env.VITE_API_S3_URL}`) ? (
+        thumbnail ? (
           <ImgBox>
             <ThumbnailImg src={thumbnail} />
           </ImgBox>
