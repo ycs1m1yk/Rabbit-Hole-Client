@@ -203,6 +203,10 @@ function ArticleForm() {
 
   // Form 데이터가 유효한 경우 호출되는 함수
   const onValid = useCallback((data: any) => {
+    if (board === '게시판 선택') {
+      alert('게시판을 선택해주세요.');
+      return;
+    }
     const formData: IArticleForm = {
       ...data,
       articleType: boardMap[board],
