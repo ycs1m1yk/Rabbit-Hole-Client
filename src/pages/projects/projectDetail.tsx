@@ -6,7 +6,7 @@ import React, {
   useEffect,
   useRef, useState,
 } from 'react';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import LogoImage from '@assets/images/rabbit-hole-logo-300.jpg';
@@ -18,7 +18,9 @@ import {
 } from 'react-icons/ai';
 import { lighten } from 'polished';
 import MarkdownViewer from '@/components/markdownViewer';
-import { deleteProjectById, getProjectById, increaseProjectLikes } from '@/lib/projectApi';
+import {
+  deleteProjectById, getProjectById, getProjectViewsById, increaseProjectLikes,
+} from '@/lib/projectApi';
 import { ICommentProps, ITagsProps } from '@/interfaces/interface';
 import MarkdownEditor from '@/components/markdownEditor';
 import Button from '@/components/button';
@@ -192,6 +194,7 @@ function ProjectDetail() {
   const setModal = useSetRecoilState(modalAtom);
   const [clicked, setClicked] = useState<boolean>(false);
   const [isVisible, setIsVisible] = useState<boolean>(true);
+  const [views, setViews] = useState<number>(0);
 
   const projectId = searchParams.get('projectId');
   let project: any;
@@ -274,6 +277,14 @@ function ProjectDetail() {
   }, [clicked]);
 
   useEffect(() => {
+    const getProjectViews = async () => {
+      const response = await getProjectViewsById(projectId);
+      setViews(response);
+    };
+    getProjectViews();
+  }, []);
+
+  useEffect(() => {
     setTimeout(() => {
       setIsVisible(false);
     }, 300);
@@ -293,7 +304,7 @@ function ProjectDetail() {
             </LikeBox>
             <ViewContainer>
               <AiOutlineEye size={30} />
-              <ViewCount>{project.views.toLocaleString()}</ViewCount>
+              <ViewCount>{views.toLocaleString()}</ViewCount>
             </ViewContainer>
           </ProjectDataContainer>
         </HeaderContainer>
