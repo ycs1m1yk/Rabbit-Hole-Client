@@ -3,6 +3,7 @@ import React, { MouseEvent, useRef } from 'react';
 import styled from 'styled-components';
 import PostItem from '@components/postItem';
 import { IArticleProps } from '@/interfaces/interface';
+import { useSearchParams } from 'react-router-dom';
 
 const Container = styled.div`
   display: flex;
@@ -25,20 +26,19 @@ const Alignments = styled.ul`
   gap: 1.5rem;
 `;
 
-const Alignment = styled.li`
+const Alignment = styled.li<{current: boolean}>`
   vertical-align: middle;
   margin-left: 2rem;
   list-style-type: disc;
-  color: ${({ theme }) => theme.palette.gray};
+  color: ${(props) => (props.current ? props.theme.palette.eliceViolet : props.theme.palette.gray)};
   font-size: 1.5rem;
-  font-weight: 500;
+  font-weight: ${(props) => (props.current ? '700' : '500')};
   line-height: 26px;
   cursor: pointer;
 
   &[selected],
   &:hover{
     font-weight: 700;
-    color: ${({ theme }) => theme.palette.eliceViolet};
   }  
 `;
 
@@ -79,6 +79,8 @@ export default function PostList({
   type, title, posts, userId, sortHandler,
 } : postList) {
   const sortRef = useRef<HTMLLIElement | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentFilter = searchParams.get('filter');
 
   // 기준에 맞춰 정렬된 데이터 불러오기
   const handleClick = (e: MouseEvent<HTMLLIElement>, sortType: string) => {
@@ -97,8 +99,8 @@ export default function PostList({
       {type !== 'main'
         ? (
           <Alignments>
-            <Alignment onClick={(e) => handleClick(e, 'date')}>최신순</Alignment>
-            <Alignment onClick={(e) => handleClick(e, 'views')}>조회순</Alignment>
+            <Alignment current={currentFilter === 'date'} onClick={(e) => handleClick(e, 'date')}>최신순</Alignment>
+            <Alignment current={currentFilter === 'views'} onClick={(e) => handleClick(e, 'views')}>조회순</Alignment>
           </Alignments>
         ) : null}
       <Posts>
