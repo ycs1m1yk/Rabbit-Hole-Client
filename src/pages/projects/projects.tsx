@@ -19,7 +19,6 @@ import { IProjectGetParamsProps, IProjectProps } from '@/interfaces/interface';
 import { getAllProjects } from '@/lib/projectApi';
 
 const ProjectContainer = styled.div`
-  max-width: 1440px;
   padding: 3rem;
   margin-left: auto;
   margin-right: auto;
@@ -65,6 +64,7 @@ const RightHead = styled.div`
   display: flex;
   gap: 3rem;
   flex-direction: row;
+  place-items: center;
 `;
 
 const SearchContainer = styled.div`
@@ -78,7 +78,8 @@ const ButtonContainer = styled.div`
 
 const Content = styled.div`
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
+  place-items: center;
 `;
 
 const PaginationContainer = styled.div`
@@ -106,7 +107,7 @@ export default function Projects() {
 
   const [perPage, setPerPage] = useState<string>('8');
   const [query, setQuery] = useState<IProjectGetParamsProps>({
-    filter: 'date', page: '1', perPage: '8',
+    filter: 'date', page: '1', perPage: '6',
   });
 
   // Modal Control
@@ -168,7 +169,7 @@ export default function Projects() {
         <Alignment current={currentFilter === 'date'} onClick={(e) => handleSort(e, 'date')}>최신순</Alignment>
         <Alignment current={currentFilter === 'views'} onClick={(e) => handleSort(e, 'views')}>조회순</Alignment>
         <SelectBoxWrapper className="selectbox-perpage">
-          <SelectBox options={['4', '8', '12', '16']} defaultValue="페이지당 개수" selectedOption={perPage} setSelectedOption={setPerPage} requestFunc={handlePerPage} width={70} type="register" />
+          <SelectBox options={['3', '6', '9', '12']} defaultValue="6" selectedOption={perPage} setSelectedOption={setPerPage} requestFunc={handlePerPage} width={70} type="register" />
         </SelectBoxWrapper>
       </Alignments>
       <Content>
