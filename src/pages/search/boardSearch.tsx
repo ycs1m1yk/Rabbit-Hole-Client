@@ -32,11 +32,7 @@ const BoardWrapper = styled.div`
     align-self: flex-end;
     position: absolute;
     top: 8.2rem;
-    right: 11rem;
-
-    &[data-user-loged-in="false"] {
-      right: 1rem;    
-    }  
+    right: 1rem;
   }
   & .button-posting {
     align-self: flex-end;
