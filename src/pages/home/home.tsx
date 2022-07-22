@@ -45,7 +45,7 @@ const ContentContainer = styled.div`
   display: flex;
   gap: 5rem;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   margin: 10rem auto; 
 `;
 
