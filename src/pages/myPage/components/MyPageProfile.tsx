@@ -10,6 +10,7 @@ import { deleteUser, updateUserProfile } from '@/lib/userApi';
 import useToken from '@/hooks/useToken';
 import { IUserProps } from '@/interfaces/interface';
 import { FaCarrot } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
   margin: 6rem 2rem 2rem 6rem;
@@ -75,6 +76,7 @@ function MyPageProfile({ data }: {data: IUserProps}) {
   const { register, handleSubmit } = useForm<IForm>();
   const setModal = useSetRecoilState(modalAtom);
   const profileImageUrl = localStorage.getItem('imageUrl');
+  const navigate = useNavigate();
 
   const onValid = async (formData: IForm) => {
     const response = await updateUserProfile(authInfo!.token, formData);
@@ -94,10 +96,13 @@ function MyPageProfile({ data }: {data: IUserProps}) {
 
   const handleUserDelete = async () => {
     const response = await deleteUser(authInfo!.token);
-    if (response.status !== 200) {
-      alert('회원 탈퇴에 성공했습니다. 다음에 다시 만나요:)');
-    } else {
-      alert('회원 탈퇴에 실패했습니다. 다시 시도해주세요:(');
+    if (confirm('정말 떠나실건가요?')) {
+      if (response.status !== 200) {
+        alert('회원 탈퇴에 성공했습니다. 다음에 다시 만나요:)');
+        navigate('/');
+      } else {
+        alert('회원 탈퇴에 실패했습니다. 다시 시도해주세요:(');
+      }
     }
   };
 
