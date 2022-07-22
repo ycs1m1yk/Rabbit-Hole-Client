@@ -103,7 +103,7 @@ export default function Header() {
             ? (
               <>
                 <StyledAuth onClick={setLogout}>로그아웃</StyledAuth>
-                <StyledLink ismatch={String(pathname.includes('/mypage'))} to="/mypage">마이페이지</StyledLink>
+                <StyledLink ismatch={String(pathname.includes('/mypage'))} to="/mypage?type=profile">마이페이지</StyledLink>
               </>
             )
             : <StyledAuth onClick={() => handleModal('Login')}>로그인</StyledAuth>
