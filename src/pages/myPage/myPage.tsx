@@ -66,7 +66,6 @@ function MyPage() {
       alert('접근 권한이 없습니다.');
       navigate('/');
     }
-    navigate('/mypage?type=profile');
   }, []);
 
   return authInfo && (
