@@ -256,7 +256,7 @@ export default function AdminTable({ items, setItems }:TableProps) {
               .map((item:any, index:number):React.ReactNode => {
                 if (item.type === 'article') {
                   return (
-                    <TableRow>
+                    <TableRow key={item._id}>
                       <TableItem><NormalCheck type="checkbox" name="article" value={item._id} checked={item.selected} onChange={checkHandler} /></TableItem>
                       <TableItem onClick={(e) => { detailHandler(e, item.path); }}>
                         {(page - 1) * perPage + 1 + index }

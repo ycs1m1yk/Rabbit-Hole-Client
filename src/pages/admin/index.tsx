@@ -13,7 +13,7 @@ import AdminProject from './project';
 
 const AdminContainer = styled.div`
   display: flex;
-  flex-direction: row;
+  width: 100%;
 `;
 
 const SidebarContainer = styled.div`
