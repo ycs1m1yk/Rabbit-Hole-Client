@@ -35,6 +35,9 @@ export const deleteArticleById = (token: string, articleId: string) => fetch(`${
 export const getArticleById = (articleId: string) => fetch(`${BASE_URL}/articles/${articleId}`)
   .then((res) => res.json());
 
+export const getArticleViewById = (articleId: string) => fetch(`${BASE_URL}/articles/${articleId}/views`)
+  .then((res) => res.json());
+
 /*
 전체 게시글 조회
 params: articleId, filter, page, perPage
