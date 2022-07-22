@@ -226,6 +226,7 @@ function ProjectDetail() {
       const content = editorRef.current?.getInstance().getMarkdown();
       const postParams = { commentType: 'project', content };
       await postComment(authInfo!.token, projectId as string, postParams);
+      editorRef.current?.getInstance().setMarkdown('');
       queryClient.invalidateQueries(['projectDetail', projectId]);
     } catch (e: any) {
       alert('문제가 발생했습니다. 다시  시도해주세요:(');

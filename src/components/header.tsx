@@ -1,8 +1,9 @@
 import React, {
-  MouseEvent, useRef, useCallback, useEffect,
+  useCallback,
 } from 'react';
-import { Link, useMatch, useParams } from 'react-router-dom';
-import { lighten } from 'polished';
+import {
+  Link, useLocation,
+} from 'react-router-dom';
 import styled from 'styled-components';
 import Logo from '@components/logo';
 
@@ -10,7 +11,6 @@ import { useSetRecoilState } from 'recoil';
 import modalAtom from '@/recoil/modal/modalAtom';
 
 import useToken from '@/hooks/useToken';
-import { isReadable } from 'stream';
 
 const StyledHeader = styled.header`
   position: sticky;
@@ -48,7 +48,7 @@ const HeaderRight = styled.div`
   }
 `;
 
-const StyledLink = styled(Link)<{isMatch:boolean}>`
+const StyledLink = styled(Link)<{ismatch:boolean}>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -58,7 +58,7 @@ const StyledLink = styled(Link)<{isMatch:boolean}>`
   white-space: nowrap;
 
 
-  color: ${({ theme, isMatch }) => isMatch && theme.palette.eliceViolet};
+  color: ${({ theme, ismatch }) => ismatch && theme.palette.eliceViolet};
 
   :hover {
     color: ${({ theme }) => theme.palette.eliceViolet};
@@ -82,10 +82,8 @@ const StyledAuth = styled.div`
 export default function Header() {
   const setModal = useSetRecoilState(modalAtom); // 모달 상태 전역관리
   const { authInfo, setLogout } = useToken(); // 로그인 상태 확인
-  const board = useMatch('/board');
-  const projects = useMatch('/projects');
-  const mypage = useMatch('/mypage');
-
+  const { pathname } = useLocation();
+  console.log(pathname);
   const handleModal = useCallback((type:any) => {
     setModal(type);
   }, []);
@@ -96,8 +94,8 @@ export default function Header() {
         <Logo />
       </Link>
       <Nav>
-        <StyledLink isMatch={Boolean(board)} to="/board">게시판</StyledLink>
-        <StyledLink isMatch={Boolean(projects)} to="/projects?filter=date&page=1&perPage=8">프로젝트 갤러리</StyledLink>
+        <StyledLink ismatch={pathname.includes('/board')} to="/board">게시판</StyledLink>
+        <StyledLink ismatch={pathname.includes('/projects')} to="/projects?filter=date&page=1&perPage=6">프로젝트 갤러리</StyledLink>
       </Nav>
       <HeaderRight>
         {
@@ -105,7 +103,7 @@ export default function Header() {
             ? (
               <>
                 <StyledAuth onClick={setLogout}>로그아웃</StyledAuth>
-                <StyledLink isMatch={Boolean(mypage)} to="/mypage?type=profile">마이페이지</StyledLink>
+                <StyledLink ismatch={pathname.includes('/mypage')} to="/mypage?type=profile">마이페이지</StyledLink>
               </>
             )
             : <StyledAuth onClick={() => handleModal('Login')}>로그인</StyledAuth>
