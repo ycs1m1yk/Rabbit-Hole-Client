@@ -1,6 +1,9 @@
-import React, { MouseEvent, useRef, useCallback } from 'react';
-import { Link } from 'react-router-dom';
-import { lighten } from 'polished';
+import React, {
+  useCallback,
+} from 'react';
+import {
+  Link, useLocation,
+} from 'react-router-dom';
 import styled from 'styled-components';
 import Logo from '@components/logo';
 
@@ -45,7 +48,7 @@ const HeaderRight = styled.div`
   }
 `;
 
-const StyledLink = styled(Link)`
+const StyledLink = styled(Link)<{ismatch:boolean}>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -54,12 +57,9 @@ const StyledLink = styled(Link)`
   font-size: 1.8rem;
   white-space: nowrap;
 
-  & + & {
-    margin-left: 2rem;
-  }
-  &.active {
-    color: ${({ theme }) => theme.palette.eliceViolet};
-  }
+
+  color: ${({ theme, ismatch }) => ismatch && theme.palette.eliceViolet};
+
   :hover {
     color: ${({ theme }) => theme.palette.eliceViolet};
   }
@@ -80,33 +80,22 @@ const StyledAuth = styled.div`
 `;
 
 export default function Header() {
-  const anchorRef = useRef<HTMLAnchorElement>();
   const setModal = useSetRecoilState(modalAtom); // 모달 상태 전역관리
   const { authInfo, setLogout } = useToken(); // 로그인 상태 확인
-
-  const handleClick = useCallback((e: MouseEvent) => {
-    const target = e.target as HTMLElement;
-    const anchorTarget = target.closest('a') || undefined;
-
-    if (anchorRef.current) {
-      anchorRef.current.classList.remove('active');
-    }
-    anchorRef.current = anchorTarget;
-    anchorRef.current?.classList.add('active');
-  }, []);
-
+  const { pathname } = useLocation();
+  console.log(pathname);
   const handleModal = useCallback((type:any) => {
     setModal(type);
   }, []);
 
   return (
-    <StyledHeader onClick={handleClick}>
+    <StyledHeader>
       <Link to="/">
         <Logo />
       </Link>
       <Nav>
-        <StyledLink to="/board">게시판</StyledLink>
-        <StyledLink to="/projects?filter=date&page=1&perPage=6">프로젝트 갤러리</StyledLink>
+        <StyledLink ismatch={pathname.includes('/board')} to="/board">게시판</StyledLink>
+        <StyledLink ismatch={pathname.includes('/projects')} to="/projects?filter=date&page=1&perPage=6">프로젝트 갤러리</StyledLink>
       </Nav>
       <HeaderRight>
         {
@@ -114,7 +103,7 @@ export default function Header() {
             ? (
               <>
                 <StyledAuth onClick={setLogout}>로그아웃</StyledAuth>
-                <StyledLink to="/mypage?type=profile">마이페이지</StyledLink>
+                <StyledLink ismatch={pathname.includes('/mypage')} to="/mypage?type=profile">마이페이지</StyledLink>
               </>
             )
             : <StyledAuth onClick={() => handleModal('Login')}>로그인</StyledAuth>
