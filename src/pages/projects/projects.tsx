@@ -157,7 +157,7 @@ export default function Projects() {
           <SearchContainer>
             <Search projectQuery={query} />
           </SearchContainer>
-          {authInfo?.token && (
+          {authInfo?.token && authInfo.role !== 'guest' && (
           <ButtonContainer>
             <Button size="medium" onClick={() => handleProjectEnrollment('ProjectRegister')}>프로젝트 등록</Button>
           </ButtonContainer>

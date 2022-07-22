@@ -219,6 +219,10 @@ function ProjectDetail() {
   // 댓글 POST
   const handleCommentPost = React.useCallback(async () => {
     try {
+      if (authInfo?.role === 'guest') {
+        alert('racer로 등록된 회원만 이용할 수 있습니다. 승인을 기다려주세요:(');
+        return;
+      }
       const content = editorRef.current?.getInstance().getMarkdown();
       const postParams = { commentType: 'project', content };
       await postComment(authInfo!.token, projectId as string, postParams);
@@ -268,6 +272,7 @@ function ProjectDetail() {
       alert('회원가입을 진행해주세요:)');
       return;
     }
+
     setClicked((prev) => !prev);
     const response = await increaseProjectLikes(authInfo!.token, projectId as string);
     if (response.status !== 200) {
@@ -354,13 +359,11 @@ function ProjectDetail() {
             <Button onClick={handleProjectDelete}>삭제하기</Button>
           </EditButtonContainer>
           )}
-
           <ProjectDetailHeader>
             댓글(
             {comments.length}
             개)
           </ProjectDetailHeader>
-
           <ReplyWrapper>
             {comments.map((comment: ICommentProps) => (
               <ReplyContainer isMyComment={authInfo?.userId === comment.authorId} key={comment._id}>
@@ -398,7 +401,6 @@ function ProjectDetail() {
         </>
         )
       }
-
     </ProjectDetailContainer>
   );
 }
