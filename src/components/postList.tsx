@@ -5,7 +5,6 @@ import PostItem from '@components/postItem';
 import { IArticleProps } from '@/interfaces/interface';
 
 const Container = styled.div`
-  max-width: 800px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;

@@ -11,7 +11,7 @@ import MarkdownEditor from '@/components/markdownEditor';
 import Button from '@/components/button';
 import Article from '@/pages/boardDetail/components/Article';
 import Answer from '@/pages/boardDetail/components/Answer';
-import { getArticleById } from '@/lib/articleApi';
+import { getArticleById, getArticleViewById } from '@/lib/articleApi';
 import useToken from '@/hooks/useToken';
 import { postComment } from '@/lib/commentApi';
 import { ICommentProps } from '@/interfaces/interface';
@@ -24,18 +24,20 @@ export default function BoardDetail() {
   const articleId = query.get('id');
   const [toggleAnswerBox, setToggleAnswerBox] = React.useState<boolean>(false);
   const [isVisible, setIsVisible] = useState<boolean>(true);
-
-  if (!articleId) {
-    return (<styles.EmptyField>일치하는 게시글이 없습니다.</styles.EmptyField>);
-  }
+  const [views, setViews] = React.useState<number>(0);
   const { authInfo } = useToken();
-
-  const { data, isError } = useQuery<any>(['boardDetail', articleId], () => getArticleById(articleId), {
+  const { data, isError } = useQuery<any>(['boardDetail', articleId], () => getArticleById(articleId as string), {
     enabled: !!articleId,
     select: (fetchData) => ({ article: fetchData.articleInfo, comments: fetchData.commentList }),
     refetchInterval: 30000,
   });
 
+  useEffect(() => {
+    setTimeout(() => {
+      setIsVisible(false);
+    }, 300);
+    getArticleViewById(articleId as string).then(setViews);
+  }, []);
   const handleAnswer = React.useCallback(async (articleType: string) => {
     try {
       const content = editor.current?.getInstance().getMarkdown();
@@ -47,25 +49,17 @@ export default function BoardDetail() {
       alert('문제가 발생했습니다. 다시  시도해주세요:(');
     }
   }, []);
-  if (isError || (data && typeof data.article === 'undefined')) {
-    return (<styles.EmptyField>일치하는 게시글이 없습니다.</styles.EmptyField>);
-  }
-
-  useEffect(() => {
-    setTimeout(() => {
-      setIsVisible(false);
-    }, 300);
-  }, []);
 
   return (
     <styles.Container>
-      {data && (
+      {data && typeof data.article !== 'undefined' && (
         <Article
           article={data.article}
           comments={data.comments}
+          views={views}
         />
       )}
-      { data && (data.comments.length > 0 || auth) && (
+      { data && typeof data.article !== 'undefined' && (data.comments.length > 0 || auth) && (
         <styles.AnswerSection>
           {data && data.comments.map((comment:ICommentProps) => !isVisible && (
           <Answer
@@ -73,9 +67,10 @@ export default function BoardDetail() {
             comment={comment}
             setToggleAnswerBox={setToggleAnswerBox}
             toggleAnswerBox={toggleAnswerBox}
+            article={data.article}
           />
           ))}
-            {!toggleAnswerBox && auth && (
+            {!toggleAnswerBox && auth && auth?.role !== 'guest' && (
               <styles.AnswerBox>
                 <styles.InfoHead>
                   <styles.InfoHeadBox>
@@ -94,6 +89,10 @@ export default function BoardDetail() {
             )}
         </styles.AnswerSection>
       )}
+      {
+        (!articleId || isError || (data && typeof data.article === 'undefined'))
+        && (<styles.EmptyField>일치하는 게시글이 없습니다.</styles.EmptyField>)
+      }
     </styles.Container>
   );
 }

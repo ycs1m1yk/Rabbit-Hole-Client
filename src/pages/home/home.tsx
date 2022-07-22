@@ -15,8 +15,14 @@ import { IProjectProps } from '@/interfaces/interface';
 import { getAllProjects } from '@/lib/projectApi';
 
 const Container = styled.div`
-  width: 100vw;
-  min-width: 1440px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 1280px;
+
+  &>div {
+    width: 100%
+  }
 `;
 
 const MainSliderContainer = styled.div`
@@ -41,12 +47,11 @@ const ProjectSliderContainer = styled.div`
 `;
 
 const ContentContainer = styled.div`
-  margin-top: 10rem;
   display: flex;
-  gap: 5rem;
-  justify-content: center;
-  align-items: center;
-  margin: 10rem auto; 
+  justify-content: space-between;
+  align-items: flex-start;
+  margin: 10rem 0;
+  padding: 0 1.5rem;
 `;
 
 export default function Home() {
@@ -93,31 +98,37 @@ export default function Home() {
       <MainSliderContainer>
         <Slider>
           <Link to="/board"><MainSliderImage src={BoardImage} /></Link>
-          <Link to="/mentoring"><MainSliderImage src={MentoringImage} /></Link>
+          <Link to="#;"><MainSliderImage src={MentoringImage} /></Link>
           <Link to="/projects"><MainSliderImage src={ProjectImage} /></Link>
         </Slider>
       </MainSliderContainer>
-      <Title>프로젝트</Title>
-      <ProjectSliderContainer>
-        <Slider settings={projectSettings}>
-          {projects?.projectList.map((project: IProjectProps) => (
-            <Card
-              key={project._id}
-              projectId={project._id}
-              title={project.title}
-              author={project.author}
-              shortDescription={project.shortDescription}
-              description={project.description}
-              thumbnail={project.thumbnail}
-              likes={project.likes.length}
-              tags={project.tags}
-              date={project.createdAt}
-              views={project.views}
-              type="project"
-            />
-          ))}
-        </Slider>
-      </ProjectSliderContainer>
+      {
+        projects !== undefined ? (
+          <>
+            <Title>프로젝트</Title>
+            <ProjectSliderContainer>
+              <Slider settings={projectSettings}>
+                {projects?.projectList.map((project: IProjectProps) => (
+                  <Card
+                    key={project._id}
+                    projectId={project._id}
+                    title={project.title}
+                    author={project.author}
+                    shortDescription={project.shortDescription}
+                    description={project.description}
+                    thumbnail={project.thumbnail}
+                    likes={project.likes.length}
+                    tags={project.tags}
+                    date={project.createdAt}
+                    views={project.views}
+                    type="project"
+                  />
+                ))}
+              </Slider>
+            </ProjectSliderContainer>
+          </>
+        ) : null
+      }
       <ContentContainer>
         {freePosts && <PostList type="main" title="자유게시판" posts={freePosts.articleList.slice(0, 5)} />}
         {questionPosts && <PostList type="main" title="질의응답" posts={questionPosts.articleList.slice(0, 5)} />}

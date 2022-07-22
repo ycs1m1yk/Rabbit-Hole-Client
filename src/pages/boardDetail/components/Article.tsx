@@ -18,9 +18,10 @@ import modalAtom from '@/recoil/modal/modalAtom';
 export interface ArticleProps{
   article: IArticleProps;
   comments: ICommentProps[];
+  views: number;
 }
 
-export default function Article({ article, comments }: ArticleProps) {
+export default function Article({ article, comments, views }: ArticleProps) {
   const setModalState = useSetRecoilState(modalAtom);
   const auth = useRecoilValue(authAtom);
   const [query] = useSearchParams();
@@ -80,7 +81,7 @@ export default function Article({ article, comments }: ArticleProps) {
             <styles.Author><Link to={`/profile?id=${article.authorId}`}>{article.author}</Link></styles.Author>
             <styles.ViewBox>
               <AiFillEye />
-              <styles.View>{`${article.views}회`}</styles.View>
+              <styles.View>{`${views}회`}</styles.View>
             </styles.ViewBox>
             {article.articleType === 'question' && (
               <styles.CarrotBox>

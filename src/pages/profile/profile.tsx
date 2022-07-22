@@ -91,7 +91,7 @@ const Category = styled.span`
   color: ${({ theme }) => theme.palette.black};
 `;
 const EmptyField = styled.p`
-  width: 70rem;
+  width: 100%;
   text-align: center;
   margin-top: 23rem;
   margin-bottom: 18rem;

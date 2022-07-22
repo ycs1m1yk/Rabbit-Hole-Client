@@ -19,7 +19,6 @@ import { IProjectGetParamsProps, IProjectProps } from '@/interfaces/interface';
 import { getAllProjects } from '@/lib/projectApi';
 
 const ProjectContainer = styled.div`
-  max-width: 1440px;
   padding: 3rem;
   margin-left: auto;
   margin-right: auto;
@@ -34,21 +33,19 @@ const Alignments = styled.ul`
   margin: 1rem 0;
 `;
 
-const Alignment = styled.li`
+const Alignment = styled.li<{current: boolean}>`
   vertical-align: middle;
   margin-left: 2rem;
   list-style-type: disc;
-  color: ${({ theme }) => theme.palette.gray};
+  color: ${(props) => (props.current ? props.theme.palette.eliceViolet : props.theme.palette.gray)};
   font-size: 1.5rem;
-  font-weight: 500;
+  font-weight: ${(props) => (props.current ? '700' : '500')};
   line-height: 26px;
   cursor: pointer;
-
-  &[selected],
-  &:hover{
+  &:hover {
+    color: ${(props) => (props.theme.palette.eliceViolet)};
     font-weight: 700;
-    color: ${({ theme }) => theme.palette.eliceViolet};
-  }  
+  }
 `;
 
 const ProjectHeader = styled.div`
@@ -67,6 +64,7 @@ const RightHead = styled.div`
   display: flex;
   gap: 3rem;
   flex-direction: row;
+  place-items: center;
 `;
 
 const SearchContainer = styled.div`
@@ -80,7 +78,8 @@ const ButtonContainer = styled.div`
 
 const Content = styled.div`
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
+  place-items: center;
 `;
 
 const PaginationContainer = styled.div`
@@ -104,10 +103,11 @@ export default function Projects() {
   const { authInfo } = useToken();
   const sortRef = useRef<HTMLLIElement | null>(null);
   const [searchParams, setSearchParams] = useSearchParams();
+  const currentFilter = searchParams.get('filter');
 
   const [perPage, setPerPage] = useState<string>('8');
   const [query, setQuery] = useState<IProjectGetParamsProps>({
-    filter: 'date', page: '1', perPage: '8',
+    filter: 'date', page: '1', perPage: '6',
   });
 
   // Modal Control
@@ -158,7 +158,7 @@ export default function Projects() {
           <SearchContainer>
             <Search projectQuery={query} />
           </SearchContainer>
-          {authInfo?.token && (
+          {authInfo?.token && authInfo.role !== 'guest' && (
           <ButtonContainer>
             <Button size="medium" onClick={() => handleProjectEnrollment('ProjectRegister')}>프로젝트 등록</Button>
           </ButtonContainer>
@@ -166,10 +166,10 @@ export default function Projects() {
         </RightHead>
       </ProjectHeader>
       <Alignments>
-        <Alignment onClick={(e) => handleSort(e, 'date')}>최신순</Alignment>
-        <Alignment onClick={(e) => handleSort(e, 'views')}>조회순</Alignment>
+        <Alignment current={currentFilter === 'date'} onClick={(e) => handleSort(e, 'date')}>최신순</Alignment>
+        <Alignment current={currentFilter === 'views'} onClick={(e) => handleSort(e, 'views')}>조회순</Alignment>
         <SelectBoxWrapper className="selectbox-perpage">
-          <SelectBox options={['4', '8', '12', '16']} defaultValue="페이지당 개수" selectedOption={perPage} setSelectedOption={setPerPage} requestFunc={handlePerPage} width={70} type="register" />
+          <SelectBox options={['3', '6', '9', '12']} defaultValue="6" selectedOption={perPage} setSelectedOption={setPerPage} requestFunc={handlePerPage} width={70} type="register" />
         </SelectBoxWrapper>
       </Alignments>
       <Content>
