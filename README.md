@@ -138,11 +138,6 @@
 ![Jest](https://img.shields.io/badge/Jest-C21325?style=for-the-badge&logo=Jest&logoColor=white)<br/>
 ![nginx](https://img.shields.io/badge/NGINX-009639?style=for-the-badge&logo=NGINX&logoColor=white)
 
-<br />
-
-###  :spider_web: 프로젝트 구조도 *(!!!구조도 작성 필요!!!)*
-<br />
-![architecture](https://user-images.githubusercontent.com/76507701/155487920-b65771b1-c6a5-48ba-a6f4-5b5df31735cc.png)
 
 <br />
 
