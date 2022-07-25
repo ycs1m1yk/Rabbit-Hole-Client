@@ -23,7 +23,7 @@ export default function useSocket() {
 
   useEffect(() => {
     if (!chatSocket || !siteSocket) {
-      setChatSocket(io(`${import.meta.env.VITE_API_ORIGIN_URL}/chat`));
+      setChatSocket(io(`${import.meta.env.VITE_API_ORIGIN_URL}/chat`, {transports: ['websocket', 'polling', 'flashsocket']}));
       setSiteSocket(io(`${import.meta.env.VITE_API_ORIGIN_URL}/site`));
     }
     if (chatSocket && chatSocket.disconnected) {
