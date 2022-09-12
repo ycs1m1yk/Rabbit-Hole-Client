@@ -3,10 +3,9 @@
 
 # 🐇 Rabbit-Hole: 엘리스 레이서 커뮤니티 서비스 
 > 레이서들의 원활한 레이스를 위한<br />
-> 레이서들의 참담한 앞길에 한 줄기 빛이 될<br />
-> 보다 효율적인 학습을 위한<br />
-> 레이서의, 레이서에 의한, 레이서를 위한<br />
 > 엘리스 레이서 지망생 및 수강생의 정보 공유 및 네트워킹을 위한 커뮤니티 서비스입니다.
+
+[🎥🎥 **데모영상**](https://youtu.be/sCwVnRh5fJM)
 
 <br />
 
@@ -24,8 +23,6 @@
 >저희가 했던 고민을 그들도 똑같이 하고 있기 때문에 우리가 해결해온 고민들을 공유하고, 더욱 더 빠른 성장을 이루어 낼 수 있을 것입니다.
 
 - 레이서가 원활한 레이스를 펼칠 수 있도록, 졸업생 및 동료 레이서와 질의응답을 할 수 있습니다.
-
-- ~~졸업생 레이서가 ‘당근’을 활용하여 저렴하고 실용적인 멘토링 서비스를 제공합니다.~~
 
 - 레이서가 제작한 개인 / 팀 프로젝트를 게시하고 홍보할 수 있습니다.
 
@@ -120,11 +117,11 @@
 
 ### 📋 프로젝트 구조도
 
-<img src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/4dac4005-b11d-4b08-9a92-b1a765b2b832/%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8%EA%B5%AC%EC%A1%B0%EB%8F%84.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220727%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220727T051603Z&X-Amz-Expires=86400&X-Amz-Signature=876cc96c96e9be23b98dccc0134da24df04916de3f0b8492a6d7dc515cc06ccf&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22%25ED%2594%2584%25EB%25A1%259C%25EC%25A0%259D%25ED%258A%25B8%25EA%25B5%25AC%25EC%25A1%25B0%25EB%258F%2584.png%22&x-id=GetObject" width=1000/>
-
-###  :tools: Tech
+<img src="https://user-images.githubusercontent.com/27720475/189670404-64aba46b-6f7d-4df0-99a8-077443f5eaa2.png" width=1000/>
 
 <br />
+
+###  🛠️ Tech
 
 #### :hammer: 프론트엔드
 <br />
@@ -154,6 +151,8 @@
 ### ERD
 
 - [Rabbit-hole-Schema.drawio](https://app.diagrams.net/#G1qNIzJQOb63OoJ2LYzeWAhqwIY7_L_KvA)
+
+<img src="https://user-images.githubusercontent.com/27720475/189671202-afb2bec7-6f6f-4e78-875e-9b8481bc6c44.png" width=1000/>
 
 <br />
 
